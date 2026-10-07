@@ -7,9 +7,10 @@ import travelImg from '../assets/images/kosnora_travel_art_1791272238854.jpg';
 
 interface HeroSectionProps {
   onCtaClick: () => void;
+  isFirstPurchase?: boolean;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick, isFirstPurchase = true }) => {
   const previewOptions = [
     { id: 'art', label: 'Minimalist', src: heroImg },
     { id: 'couple', label: 'Couple', src: coupleImg },
@@ -85,14 +86,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
 
               <div className="text-center sm:text-left">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-xl font-black text-neutral-950">$59.90</span>
-                  <span className="text-xs font-bold text-neutral-400 line-through">$79.90</span>
-                  <span className="text-[10px] font-black uppercase text-[#9333EA] bg-[#FAF5FF] px-2 py-0.5 rounded-full border border-[#E9D5FF]">
-                    SAVE 50% ON BUNDLE
+                  <span className="text-xl font-black text-neutral-950">
+                    {isFirstPurchase ? '$59.90' : '$79.90'}
+                  </span>
+                  {isFirstPurchase && (
+                    <span className="text-xs font-bold text-neutral-400 line-through">$79.90</span>
+                  )}
+                  <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                    isFirstPurchase
+                      ? 'text-[#9333EA] bg-[#FAF5FF] border-[#E9D5FF]'
+                      : 'text-neutral-700 bg-neutral-100 border-neutral-200'
+                  }`}>
+                    {isFirstPurchase ? 'FIRST PURCHASE OFFER' : 'STANDARD PRICE'}
                   </span>
                 </div>
                 <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider block">
-                  Battery-Free NFC Smart Case
+                  {isFirstPurchase
+                    ? 'Special pricing on your first order only'
+                    : 'Battery-Free NFC Smart Case'}
                 </span>
               </div>
             </div>

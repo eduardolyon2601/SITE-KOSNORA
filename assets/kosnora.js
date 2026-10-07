@@ -120,16 +120,111 @@ function initDrawer() {
   const propModelInput = document.getElementById('drawer-prop-model');
   const propColorInput = document.getElementById('drawer-prop-color');
 
-  const OFFERS = {
+  function checkCustomerFirstPurchase() {
+    if (window.KOSNORA_CUSTOMER) {
+      if (window.KOSNORA_CUSTOMER.hasPreviousPurchase === true || (window.KOSNORA_CUSTOMER.ordersCount && window.KOSNORA_CUSTOMER.ordersCount > 0)) {
+        return false;
+      }
+    }
+    try {
+      if (localStorage.getItem('kosnora_has_purchased') === 'true') {
+        return false;
+      }
+      const rawOrders = localStorage.getItem('kosnora_customer_orders');
+      if (rawOrders && JSON.parse(rawOrders).length > 0) {
+        return false;
+      }
+    } catch (e) {}
+    return true;
+  }
+
+  const PROMO_OFFERS = {
     1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Smart Case' },
     2: { qty: 2, unitPrice: 69.90, total: 139.80, savings: 20.00, label: '2x KOSNORA Smart Case' },
     3: { qty: 3, unitPrice: 59.90, total: 179.70, savings: 60.00, label: '3x KOSNORA Smart Case' }
   };
 
+  const REGULAR_OFFERS = {
+    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Smart Case' },
+    2: { qty: 2, unitPrice: 79.90, total: 159.80, savings: 0, label: '2x KOSNORA Smart Case' },
+    3: { qty: 3, unitPrice: 79.90, total: 239.70, savings: 0, label: '3x KOSNORA Smart Case' }
+  };
+
+  function getActiveOffers() {
+    return checkCustomerFirstPurchase() ? PROMO_OFFERS : REGULAR_OFFERS;
+  }
+
   let currentQty = 1;
   let currentUnitPrice = 79.90;
   let currentTotal = 79.90;
   let currentSavings = 0;
+
+  function syncEligibilityUI() {
+    const isFirst = checkCustomerFirstPurchase();
+    const offers = getActiveOffers();
+
+    // Sync Offer Section on page
+    const kicker = document.getElementById('pricing-offer-kicker');
+    if (kicker) {
+      kicker.textContent = isFirst ? 'EXCLUSIVE FIRST-PURCHASE OFFER' : 'PRODUCT & OFFER';
+    }
+    const subheadline = document.getElementById('pricing-offer-subheadline');
+    if (subheadline) {
+      subheadline.textContent = isFirst 
+        ? 'Special promotional pricing available on your first order only.' 
+        : 'Select your iPhone model and quantity bundle.';
+    }
+
+    const badge2 = document.getElementById('pricing-badge-2');
+    if (badge2) {
+      badge2.style.display = isFirst ? 'block' : 'none';
+    }
+    const badge3 = document.getElementById('pricing-badge-3');
+    if (badge3) {
+      badge3.style.display = isFirst ? 'block' : 'none';
+    }
+
+    const unitPrice2 = document.getElementById('pricing-unit-price-2');
+    if (unitPrice2) unitPrice2.textContent = `$${offers[2].unitPrice.toFixed(2)}`;
+    const totalPrice2 = document.getElementById('pricing-total-price-2');
+    if (totalPrice2) totalPrice2.textContent = `$${offers[2].total.toFixed(2)} TOTAL`;
+
+    const unitPrice3 = document.getElementById('pricing-unit-price-3');
+    if (unitPrice3) unitPrice3.textContent = `$${offers[3].unitPrice.toFixed(2)}`;
+    const totalPrice3 = document.getElementById('pricing-total-price-3');
+    if (totalPrice3) totalPrice3.textContent = `$${offers[3].total.toFixed(2)} TOTAL`;
+
+    // Sync bundle card details inside drawer
+    bundleCards.forEach(card => {
+      const q = parseInt(card.getAttribute('data-bundle-quantity'), 10);
+      const offer = offers[q];
+      if (!offer) return;
+
+      const priceDiv = card.querySelector(':scope > div:last-child > div:first-child');
+      if (priceDiv) priceDiv.textContent = `$${offer.total.toFixed(2)}`;
+
+      const savingsDiv = card.querySelector(':scope > div:last-child > div:nth-child(2)');
+      if (savingsDiv) {
+        if (offer.savings > 0 && isFirst) {
+          savingsDiv.style.display = 'block';
+          savingsDiv.textContent = `Save $${offer.savings.toFixed(2)}`;
+        } else {
+          savingsDiv.style.display = 'none';
+        }
+      }
+
+      const descDiv = card.querySelector(':scope > div:first-child > div:last-child > div:last-child');
+      if (descDiv) {
+        if (q === 1) {
+          descDiv.textContent = '$79.90 single case';
+        } else {
+          descDiv.textContent = isFirst 
+            ? `$${offer.unitPrice.toFixed(2)} each · $${offer.total.toFixed(2)} total`
+            : `$${offer.unitPrice.toFixed(2)} each · $${offer.total.toFixed(2)} total`;
+        }
+      }
+    });
+  }
 
   function updateSummary() {
     if (summaryQty) summaryQty.textContent = `${currentQty}x KOSNORA Smart Case`;
@@ -138,7 +233,7 @@ function initDrawer() {
     if (qtyInput) qtyInput.value = currentQty;
 
     if (summarySavings) {
-      if (currentSavings > 0) {
+      if (currentSavings > 0 && checkCustomerFirstPurchase()) {
         summarySavings.textContent = `-$${currentSavings.toFixed(2)}`;
         summarySavings.parentElement.style.display = 'flex';
       } else {
@@ -149,12 +244,13 @@ function initDrawer() {
 
   function setQuantity(qty) {
     qty = parseInt(qty, 10);
-    if (!OFFERS[qty]) qty = 1;
+    const offers = getActiveOffers();
+    if (!offers[qty]) qty = 1;
 
     currentQty = qty;
-    currentUnitPrice = OFFERS[qty].unitPrice;
-    currentTotal = OFFERS[qty].total;
-    currentSavings = OFFERS[qty].savings;
+    currentUnitPrice = offers[qty].unitPrice;
+    currentTotal = offers[qty].total;
+    currentSavings = offers[qty].savings;
 
     if (qtyInput) qtyInput.value = currentQty;
 
@@ -194,6 +290,18 @@ function initDrawer() {
 
     updateSummary();
   }
+
+  // Subscribe to purchase completed event
+  window.addEventListener('kosnora:purchase-completed', () => {
+    syncEligibilityUI();
+    setQuantity(currentQty);
+  });
+  window.addEventListener('storage', () => {
+    syncEligibilityUI();
+    setQuantity(currentQty);
+  });
+
+  syncEligibilityUI();
 
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -280,12 +388,17 @@ function initDrawer() {
               quantity: currentQty,
               properties: {
                 'iPhone Model': selectedModelVal,
-                'Case Color': selectedColorVal
+                'Case Color': selectedColorVal,
+                'Promotion Eligibility': checkCustomerFirstPurchase() ? 'First Purchase Offer Applied' : 'Standard Purchase',
+                'Pricing Structure': '$' + currentUnitPrice.toFixed(2) + ' each · $' + currentTotal.toFixed(2) + ' total'
               }
             }]
           })
         })
         .then(() => {
+          try {
+            localStorage.setItem('kosnora_has_purchased', 'true');
+          } catch(e) {}
           window.location.href = root + 'checkout';
         })
         .catch(() => {
@@ -304,6 +417,25 @@ function initDrawer() {
       if (checkoutArea && configArea) {
         configArea.style.display = 'none';
         checkoutArea.style.display = 'block';
+
+        const doneBtn = checkoutArea.querySelector('[data-close-drawer]');
+        if (doneBtn) {
+          doneBtn.addEventListener('click', () => {
+            try {
+              localStorage.setItem('kosnora_has_purchased', 'true');
+              const raw = localStorage.getItem('kosnora_customer_orders');
+              const orders = raw ? JSON.parse(raw) : [];
+              orders.push({
+                orderNumber: 'KNR-' + Math.floor(100000 + Math.random() * 900000),
+                quantity: currentQty,
+                total: currentTotal,
+                timestamp: Date.now()
+              });
+              localStorage.setItem('kosnora_customer_orders', JSON.stringify(orders));
+              window.dispatchEvent(new CustomEvent('kosnora:purchase-completed'));
+            } catch (e) {}
+          }, { once: true });
+        }
       }
     });
   }

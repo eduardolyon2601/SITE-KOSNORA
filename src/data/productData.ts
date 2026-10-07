@@ -40,7 +40,8 @@ export const COMPATIBLE_IPHONE_MODELS: IPhoneModel[] = [
   { id: 'ip-12', name: 'iPhone 12', series: 'iPhone 12' },
 ];
 
-export const PRICING_TIERS: PricingTier[] = [
+// First-Purchase Only Promotional Pricing
+export const PROMOTIONAL_PRICING_TIERS: PricingTier[] = [
   {
     id: 'single',
     quantity: 1,
@@ -73,6 +74,47 @@ export const PRICING_TIERS: PricingTier[] = [
     tagline: '3 KOSNORA Smart Phone Cases',
   },
 ];
+
+// Regular / Original Pricing (Applied after First Purchase)
+export const REGULAR_PRICING_TIERS: PricingTier[] = [
+  {
+    id: 'single',
+    quantity: 1,
+    label: '1 CASE',
+    unitPrice: 79.90,
+    totalPrice: 79.90,
+    savingsTotal: 0,
+    tagline: '1 KOSNORA Smart Phone Case',
+  },
+  {
+    id: 'double',
+    quantity: 2,
+    label: '2 CASES',
+    unitPrice: 79.90,
+    totalPrice: 159.80,
+    savingsTotal: 0,
+    savingsPerUnit: 0,
+    popular: true,
+    tagline: '2 KOSNORA Smart Phone Cases',
+  },
+  {
+    id: 'triple',
+    quantity: 3,
+    label: '3 CASES',
+    unitPrice: 79.90,
+    totalPrice: 239.70,
+    savingsTotal: 0,
+    savingsPerUnit: 0,
+    bestValue: true,
+    tagline: '3 KOSNORA Smart Phone Cases',
+  },
+];
+
+export const PRICING_TIERS: PricingTier[] = PROMOTIONAL_PRICING_TIERS;
+
+export function getPricingTiers(isFirstPurchase: boolean = true): PricingTier[] {
+  return isFirstPurchase ? PROMOTIONAL_PRICING_TIERS : REGULAR_PRICING_TIERS;
+}
 
 export const WHATS_INCLUDED = [
   'KOSNORA Smart Phone Case',

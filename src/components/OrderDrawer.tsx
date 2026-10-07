@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check, ShieldCheck, Lock, ArrowRight, Truck, CreditCard } from 'lucide-react';
-import { PRICING_TIERS, COMPATIBLE_IPHONE_MODELS, PRODUCT_COLORS } from '../data/productData';
+import { COMPATIBLE_IPHONE_MODELS, PRODUCT_COLORS, getPricingTiers } from '../data/productData';
 import { PricingTier } from '../types';
+import { checkIsFirstPurchase, recordCompletedPurchase } from '../utils/customerEligibility';
 
 interface OrderDrawerProps {
   isOpen: boolean;
@@ -10,17 +11,45 @@ interface OrderDrawerProps {
   initialModelId?: string;
   initialColorId?: string;
   onTierChange?: (tier: PricingTier) => void;
+  isFirstPurchase?: boolean;
 }
 
 export const OrderDrawer: React.FC<OrderDrawerProps> = ({
   isOpen,
   onClose,
-  initialTier = PRICING_TIERS[0],
+  initialTier,
   initialModelId = COMPATIBLE_IPHONE_MODELS[0].id,
   initialColorId = PRODUCT_COLORS[0].id,
   onTierChange,
+  isFirstPurchase = true,
 }) => {
-  const [selectedTier, setSelectedTier] = useState<PricingTier>(initialTier);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    address: '',
+    city: '',
+    zip: '',
+    paymentMethod: 'card' as 'card' | 'applepay' | 'paypal',
+  });
+
+  const [hasPriorPurchase, setHasPriorPurchase] = useState<boolean>(!isFirstPurchase);
+
+  // Check email entered against previous orders log
+  useEffect(() => {
+    if (formData.email && formData.email.includes('@')) {
+      const isEligible = checkIsFirstPurchase(formData.email);
+      if (!isEligible) {
+        setHasPriorPurchase(true);
+      }
+    }
+  }, [formData.email]);
+
+  const effectiveIsFirstPurchase = isFirstPurchase && !hasPriorPurchase && checkIsFirstPurchase(formData.email);
+  const currentTiers = getPricingTiers(effectiveIsFirstPurchase);
+
+  const [selectedTier, setSelectedTier] = useState<PricingTier>(
+    () => initialTier || currentTiers[0]
+  );
   const [selectedModelId, setSelectedModelId] = useState<string>(initialModelId);
   const [selectedColorId, setSelectedColorId] = useState<string>(initialColorId);
   const [checkoutStep, setCheckoutStep] = useState<'configure' | 'checkout' | 'success'>('configure');
@@ -28,9 +57,20 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
   // Keep state synchronized with caller props whenever drawer opens or tier changes
   useEffect(() => {
     if (initialTier) {
-      setSelectedTier(initialTier);
+      // Find matching tier in current pricing tier list (promotional or regular)
+      const matched = currentTiers.find((t) => t.quantity === initialTier.quantity) || initialTier;
+      setSelectedTier(matched);
     }
-  }, [initialTier, isOpen]);
+  }, [initialTier, isOpen, effectiveIsFirstPurchase]);
+
+  // If eligibility changes while open, update selectedTier pricing
+  useEffect(() => {
+    const matched = currentTiers.find((t) => t.quantity === selectedTier.quantity);
+    if (matched && matched.totalPrice !== selectedTier.totalPrice) {
+      setSelectedTier(matched);
+      if (onTierChange) onTierChange(matched);
+    }
+  }, [effectiveIsFirstPurchase, currentTiers, selectedTier.quantity]);
 
   useEffect(() => {
     if (initialModelId) {
@@ -51,15 +91,6 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
     }
   };
 
-  // Customer checkout form state
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    address: '',
-    city: '',
-    zip: '',
-    paymentMethod: 'card' as 'card' | 'applepay' | 'paypal',
-  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
 
@@ -79,7 +110,18 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      setOrderNumber(`KNR-${Math.floor(100000 + Math.random() * 900000)}`);
+      const newOrderNumber = `KNR-${Math.floor(100000 + Math.random() * 900000)}`;
+      setOrderNumber(newOrderNumber);
+
+      // Permanently record purchase in browser & order log
+      recordCompletedPurchase({
+        orderNumber: newOrderNumber,
+        email: formData.email,
+        quantity: selectedTier.quantity,
+        total: selectedTier.totalPrice,
+      });
+      setHasPriorPurchase(true);
+
       setCheckoutStep('success');
     }, 900);
   };
@@ -326,11 +368,20 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
             <>
               {/* Step 1: Select Bundle */}
               <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-neutral-700 mb-2">
-                  1. Select Bundle:
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-black uppercase tracking-wider text-neutral-700">
+                    1. Select Bundle:
+                  </label>
+                  <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                    effectiveIsFirstPurchase
+                      ? 'text-[#9333EA] bg-[#FAF5FF] border-[#E9D5FF]'
+                      : 'text-neutral-600 bg-neutral-100 border-neutral-200'
+                  }`}>
+                    {effectiveIsFirstPurchase ? 'First Purchase Offer' : 'Standard Pricing'}
+                  </span>
+                </div>
                 <div className="space-y-2.5">
-                  {PRICING_TIERS.map((tier) => {
+                  {currentTiers.map((tier) => {
                     const isSelected = selectedTier.id === tier.id;
                     return (
                       <div
@@ -356,12 +407,12 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                                 <span className="font-black text-sm text-neutral-900 uppercase">
                                   {tier.label}
                                 </span>
-                                {tier.bestValue && (
+                                {tier.bestValue && effectiveIsFirstPurchase && (
                                   <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-[#9333EA] text-white">
                                     BEST VALUE
                                   </span>
                                 )}
-                                {tier.popular && !tier.bestValue && (
+                                {tier.popular && !tier.bestValue && effectiveIsFirstPurchase && (
                                   <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-[#9333EA] text-white">
                                     POPULAR
                                   </span>
@@ -379,7 +430,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                             <div className="text-sm font-black text-neutral-900">
                               ${tier.totalPrice.toFixed(2)}
                             </div>
-                            {tier.savingsTotal > 0 && (
+                            {tier.savingsTotal > 0 && effectiveIsFirstPurchase && (
                               <div className="text-[10px] text-[#9333EA] font-black uppercase">
                                 Save ${tier.savingsTotal.toFixed(2)}
                               </div>

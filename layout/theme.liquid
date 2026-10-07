@@ -32,6 +32,16 @@
 
     {{ content_for_header }}
 
+    <!-- Shopify Customer Eligibility Context for First-Purchase Only Promotion -->
+    <script>
+      window.KOSNORA_CUSTOMER = {
+        loggedIn: {% if customer %}true{% else %}false{% endif %},
+        ordersCount: {{ customer.orders_count | default: 0 }},
+        email: {{ customer.email | default: '' | json }},
+        hasPreviousPurchase: {% if customer and customer.orders_count > 0 %}true{% else %}false{% endif %}
+      };
+    </script>
+
     <!-- KOSNORA Native Styles -->
     {{ 'kosnora.css' | asset_url | stylesheet_tag }}
 

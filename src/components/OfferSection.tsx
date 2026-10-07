@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import { Check, Smartphone, ArrowRight, Lock } from 'lucide-react';
-import { COMPATIBLE_IPHONE_MODELS, PRODUCT_COLORS, PRICING_TIERS } from '../data/productData';
+import { COMPATIBLE_IPHONE_MODELS, PRODUCT_COLORS, getPricingTiers } from '../data/productData';
 import { PricingTier } from '../types';
 
 interface OfferSectionProps {
   onSelectTier: (tier: PricingTier, modelId?: string, colorId?: string) => void;
   onBuyNow?: (tier: PricingTier, modelId?: string, colorId?: string) => void;
   selectedTier?: PricingTier;
+  isFirstPurchase?: boolean;
 }
 
-export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyNow, selectedTier }) => {
+export const OfferSection: React.FC<OfferSectionProps> = ({
+  onSelectTier,
+  onBuyNow,
+  selectedTier,
+  isFirstPurchase = true,
+}) => {
   const [selectedModel, setSelectedModel] = useState<string>(COMPATIBLE_IPHONE_MODELS[0].id);
   const [selectedColor, setSelectedColor] = useState<string>(PRODUCT_COLORS[0].id);
-  const [activeTierId, setActiveTierId] = useState<string>(selectedTier?.id || PRICING_TIERS[0].id);
+  const [activeTierId, setActiveTierId] = useState<string>(selectedTier?.id || 'single');
+
+  const tiers = getPricingTiers(isFirstPurchase);
 
   // Sync if parent updates selectedTier
   React.useEffect(() => {
@@ -21,8 +29,12 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
     }
   }, [selectedTier]);
 
-  const currentTier = PRICING_TIERS.find((t) => t.id === activeTierId) || PRICING_TIERS[0];
+  const currentTier = tiers.find((t) => t.id === activeTierId) || tiers[0];
   const activeColorObj = PRODUCT_COLORS.find((c) => c.id === selectedColor) || PRODUCT_COLORS[0];
+
+  const tier1 = tiers.find((t) => t.id === 'single') || tiers[0];
+  const tier2 = tiers.find((t) => t.id === 'double') || tiers[1];
+  const tier3 = tiers.find((t) => t.id === 'triple') || tiers[2];
 
   const handleAddToCart = () => {
     onSelectTier(currentTier, selectedModel, selectedColor);
@@ -42,13 +54,15 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <span className="text-xs font-black tracking-widest text-[#9333EA] uppercase block mb-1">
-            PRODUCT & OFFER
+            {isFirstPurchase ? 'EXCLUSIVE FIRST-PURCHASE OFFER' : 'PRODUCT & OFFER'}
           </span>
           <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-neutral-950 mb-2">
             CHOOSE YOUR KOSNORA
           </h2>
           <p className="text-sm sm:text-base font-semibold text-neutral-600">
-            Select your iPhone model and quantity bundle.
+            {isFirstPurchase
+              ? 'Special promotional pricing available on your first order only.'
+              : 'Select your iPhone model and quantity bundle.'}
           </p>
         </div>
 
@@ -99,7 +113,7 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
 
         {/* 2. Select Quantity Bundle */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-8">
-          {/* 1 UNIT: $79.90 */}
+          {/* 1 UNIT */}
           <div
             onClick={() => setActiveTierId('single')}
             className={`rounded-2xl p-6 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white ${
@@ -110,10 +124,12 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
           >
             <div>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-black text-neutral-950 uppercase">1 UNIT</h3>
+                <h3 className="text-lg font-black text-neutral-950 uppercase">{tier1.label}</h3>
                 <span className="text-xs font-bold text-neutral-400">Single</span>
               </div>
-              <div className="text-3xl font-black text-neutral-950 mb-1">$79.90</div>
+              <div className="text-3xl font-black text-neutral-950 mb-1">
+                ${tier1.unitPrice.toFixed(2)}
+              </div>
               <span className="text-xs font-semibold text-neutral-500 block mb-4">Standard single case</span>
 
               <ul className="space-y-2 text-xs font-medium text-neutral-700">
@@ -129,14 +145,16 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
             </div>
 
             <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between">
-              <span className="text-xs font-bold text-neutral-500">Total: $79.90</span>
+              <span className="text-xs font-bold text-neutral-500">
+                Total: ${tier1.totalPrice.toFixed(2)}
+              </span>
               <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${activeTierId === 'single' ? 'border-[#9333EA] bg-[#9333EA]' : 'border-neutral-300'}`}>
                 {activeTierId === 'single' && <Check className="w-3 h-3 text-white stroke-[3]" />}
               </span>
             </div>
           </div>
 
-          {/* 2 UNITS: $69.90 EACH / $139.80 TOTAL */}
+          {/* 2 UNITS */}
           <div
             onClick={() => setActiveTierId('double')}
             className={`rounded-2xl p-6 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative ${
@@ -147,13 +165,17 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
           >
             <div>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-black text-neutral-950 uppercase">2 UNITS</h3>
-                <span className="text-xs font-bold text-[#9333EA]">Double Pack</span>
+                <h3 className="text-lg font-black text-neutral-950 uppercase">{tier2.label}</h3>
+                <span className="text-xs font-bold text-[#9333EA]">
+                  {isFirstPurchase ? 'First Order Offer' : 'Double Pack'}
+                </span>
               </div>
               <div className="text-3xl font-black text-neutral-950 mb-0.5">
-                $69.90 <span className="text-sm font-bold text-neutral-500">EACH</span>
+                ${tier2.unitPrice.toFixed(2)} <span className="text-sm font-bold text-neutral-500">EACH</span>
               </div>
-              <span className="text-xs font-black text-[#9333EA] block mb-4">$139.80 TOTAL</span>
+              <span className="text-xs font-black text-[#9333EA] block mb-4">
+                ${tier2.totalPrice.toFixed(2)} TOTAL
+              </span>
 
               <ul className="space-y-2 text-xs font-medium text-neutral-700">
                 <li className="flex items-center gap-2">
@@ -168,14 +190,16 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
             </div>
 
             <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between">
-              <span className="text-xs font-black text-[#9333EA]">Total: $139.80</span>
+              <span className="text-xs font-black text-[#9333EA]">
+                Total: ${tier2.totalPrice.toFixed(2)}
+              </span>
               <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${activeTierId === 'double' ? 'border-[#9333EA] bg-[#9333EA]' : 'border-neutral-300'}`}>
                 {activeTierId === 'double' && <Check className="w-3 h-3 text-white stroke-[3]" />}
               </span>
             </div>
           </div>
 
-          {/* 3 UNITS: $59.90 EACH / $179.70 TOTAL (HIGHLIGHTED BEST VALUE) */}
+          {/* 3 UNITS */}
           <div
             onClick={() => setActiveTierId('triple')}
             className={`rounded-2xl p-6 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative ${
@@ -184,19 +208,25 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
                 : 'border-neutral-200 hover:border-neutral-300'
             }`}
           >
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
-              BEST VALUE
-            </div>
+            {isFirstPurchase && (
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
+                FIRST PURCHASE · BEST VALUE
+              </div>
+            )}
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-black text-neutral-950 uppercase">3 UNITS</h3>
-                <span className="text-xs font-black text-[#9333EA]">Best Price</span>
+                <h3 className="text-lg font-black text-neutral-950 uppercase">{tier3.label}</h3>
+                <span className="text-xs font-black text-[#9333EA]">
+                  {isFirstPurchase ? 'Best Price' : 'Triple Pack'}
+                </span>
               </div>
               <div className="text-3xl font-black text-neutral-950 mb-0.5">
-                $59.90 <span className="text-sm font-bold text-neutral-500">EACH</span>
+                ${tier3.unitPrice.toFixed(2)} <span className="text-sm font-bold text-neutral-500">EACH</span>
               </div>
-              <span className="text-xs font-black text-[#9333EA] block mb-4">$179.70 TOTAL</span>
+              <span className="text-xs font-black text-[#9333EA] block mb-4">
+                ${tier3.totalPrice.toFixed(2)} TOTAL
+              </span>
 
               <ul className="space-y-2 text-xs font-medium text-neutral-700">
                 <li className="flex items-center gap-2">
@@ -211,7 +241,9 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
             </div>
 
             <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between">
-              <span className="text-xs font-black text-[#9333EA]">Total: $179.70</span>
+              <span className="text-xs font-black text-[#9333EA]">
+                Total: ${tier3.totalPrice.toFixed(2)}
+              </span>
               <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${activeTierId === 'triple' ? 'border-[#9333EA] bg-[#9333EA]' : 'border-neutral-300'}`}>
                 {activeTierId === 'triple' && <Check className="w-3 h-3 text-white stroke-[3]" />}
               </span>

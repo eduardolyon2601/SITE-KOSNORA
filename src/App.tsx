@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { HowItWorksSection } from './components/HowItWorksSection';
@@ -8,14 +8,40 @@ import { FaqSection } from './components/FaqSection';
 import { FinalCtaSection } from './components/FinalCtaSection';
 import { Footer } from './components/Footer';
 import { OrderDrawer } from './components/OrderDrawer';
-import { PRICING_TIERS } from './data/productData';
+import { getPricingTiers } from './data/productData';
 import { PricingTier } from './types';
+import { checkIsFirstPurchase } from './utils/customerEligibility';
 
 export default function App() {
+  const [isFirstPurchase, setIsFirstPurchase] = useState<boolean>(() => checkIsFirstPurchase());
+  const initialTiers = getPricingTiers(isFirstPurchase);
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<PricingTier>(PRICING_TIERS[0]); // Option 1 (1 Case - $79.90) default, freely selectable
+  const [selectedTier, setSelectedTier] = useState<PricingTier>(initialTiers[0]); // Option 1 (1 Case - $79.90) default
   const [selectedModelId, setSelectedModelId] = useState<string | undefined>(undefined);
   const [selectedColorId, setSelectedColorId] = useState<string | undefined>(undefined);
+
+  // Subscribe to purchase events and storage updates
+  useEffect(() => {
+    const handleStatusUpdate = () => {
+      const stillFirstPurchase = checkIsFirstPurchase();
+      setIsFirstPurchase(stillFirstPurchase);
+
+      // Sychronize selected tier pricing if eligibility changed
+      const updatedTiers = getPricingTiers(stillFirstPurchase);
+      setSelectedTier((prev) => {
+        const matched = updatedTiers.find((t) => t.quantity === prev.quantity);
+        return matched || updatedTiers[0];
+      });
+    };
+
+    window.addEventListener('kosnora:purchase-completed', handleStatusUpdate);
+    window.addEventListener('storage', handleStatusUpdate);
+    return () => {
+      window.removeEventListener('kosnora:purchase-completed', handleStatusUpdate);
+      window.removeEventListener('storage', handleStatusUpdate);
+    };
+  }, []);
 
   const handleOpenCheckout = (tier?: PricingTier, modelId?: string, colorId?: string) => {
     if (tier) setSelectedTier(tier);
@@ -38,7 +64,10 @@ export default function App() {
 
       <main className="flex-1">
         {/* 1. HERO */}
-        <HeroSection onCtaClick={() => handleOpenCheckout(selectedTier)} />
+        <HeroSection
+          onCtaClick={() => handleOpenCheckout(selectedTier)}
+          isFirstPurchase={isFirstPurchase}
+        />
 
         {/* 2. HOW IT WORKS (3 Steps: Choose, Set, Change) */}
         <HowItWorksSection />
@@ -49,6 +78,7 @@ export default function App() {
         {/* 4. PRODUCT + OFFER (1 Unit $79.90, 2 Units $69.90 ea, 3 Units $59.90 ea, Add to Cart & Buy Now) */}
         <OfferSection
           selectedTier={selectedTier}
+          isFirstPurchase={isFirstPurchase}
           onSelectTier={(tier, mId, cId) => handleOpenCheckout(tier, mId, cId)}
           onBuyNow={(tier, mId, cId) => handleOpenCheckout(tier, mId, cId)}
         />
@@ -70,6 +100,7 @@ export default function App() {
         initialTier={selectedTier}
         initialModelId={selectedModelId}
         initialColorId={selectedColorId}
+        isFirstPurchase={isFirstPurchase}
         onTierChange={(tier) => setSelectedTier(tier)}
       />
     </div>

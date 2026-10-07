@@ -2,14 +2,14 @@
   <div class="kosnora-container">
     <!-- Header -->
     <div style="max-width: 650px; margin: 0 auto; text-align: center; margin-bottom: 2.5rem;">
-      <span style="font-size: 11px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #9333EA; display: block; margin-bottom: 0.5rem;">
-        PRODUCT & OFFER
+      <span id="pricing-offer-kicker" style="font-size: 11px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #9333EA; display: block; margin-bottom: 0.5rem;">
+        {% if customer and customer.orders_count > 0 %}PRODUCT & OFFER{% else %}EXCLUSIVE FIRST-PURCHASE OFFER{% endif %}
       </span>
       <h2 style="font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 0.75rem; color: #111111;">
         {{ section.settings.headline | default: 'CHOOSE YOUR KOSNORA' }}
       </h2>
-      <p style="font-size: 1rem; color: #555555; font-weight: 600; margin: 0;">
-        {{ section.settings.description | default: 'Select your iPhone model, finish, and bundle. Battery-free NFC smart case included.' }}
+      <p id="pricing-offer-subheadline" style="font-size: 1rem; color: #555555; font-weight: 600; margin: 0;">
+        {% if customer and customer.orders_count > 0 %}Select your iPhone model and quantity bundle.{% else %}Special promotional pricing available on your first order only.{% endif %}
       </p>
     </div>
 
@@ -72,16 +72,16 @@
 
       <!-- 2 Cases -->
       <div style="background: #FFFFFF; border: 2px solid #9333EA; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.1);">
-        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #9333EA; color: #FFFFFF; font-size: 10px; font-weight: 900; padding: 3px 12px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">
-          SAVE $20.00
+        <div id="pricing-badge-2" style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #9333EA; color: #FFFFFF; font-size: 10px; font-weight: 900; padding: 3px 12px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">
+          SAVE $20.00 · FIRST PURCHASE
         </div>
         <div>
           <h3 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; color: #111111;">2 CASES</h3>
           <div style="margin-bottom: 1.25rem;">
             <div style="font-size: 2.75rem; font-weight: 900; color: #111111; line-height: 1;">
-              $69.90 <span style="font-size: 0.875rem; color: #555555; font-weight: 700;">EACH</span>
+              <span id="pricing-unit-price-2">$69.90</span> <span style="font-size: 0.875rem; color: #555555; font-weight: 700;">EACH</span>
             </div>
-            <div style="font-size: 0.75rem; font-weight: 800; color: #9333EA; margin-top: 4px;">
+            <div id="pricing-total-price-2" style="font-size: 0.75rem; font-weight: 800; color: #9333EA; margin-top: 4px;">
               $139.80 TOTAL
             </div>
           </div>
@@ -98,16 +98,16 @@
 
       <!-- 3 Cases (Best Value) -->
       <div style="background: #FFFFFF; border: 2px solid #9333EA; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 20px rgba(147, 51, 234, 0.15);">
-        <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #9333EA 0%, #7E22CE 100%); color: #FFF; font-size: 10px; font-weight: 900; padding: 4px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);">
-          SAVE $60.00 · BEST VALUE
+        <div id="pricing-badge-3" style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #9333EA 0%, #7E22CE 100%); color: #FFF; font-size: 10px; font-weight: 900; padding: 4px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);">
+          SAVE $60.00 · FIRST PURCHASE BEST VALUE
         </div>
         <div>
           <h3 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; color: #111111;">3 CASES</h3>
           <div style="margin-bottom: 1.25rem;">
             <div style="font-size: 2.75rem; font-weight: 900; color: #111111; line-height: 1;">
-              $59.90 <span style="font-size: 0.875rem; color: #555555; font-weight: 700;">EACH</span>
+              <span id="pricing-unit-price-3">$59.90</span> <span style="font-size: 0.875rem; color: #555555; font-weight: 700;">EACH</span>
             </div>
-            <div style="font-size: 0.75rem; font-weight: 800; color: #9333EA; margin-top: 4px;">
+            <div id="pricing-total-price-3" style="font-size: 0.75rem; font-weight: 800; color: #9333EA; margin-top: 4px;">
               $179.70 TOTAL
             </div>
           </div>
