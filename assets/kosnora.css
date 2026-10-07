@@ -515,6 +515,43 @@ body {
   transform: translateX(0);
 }
 
+/* Bundle Offer Selection Cards in Drawer */
+.kosnora-bundle-card {
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.kosnora-bundle-card.active-bundle {
+  border: 2px solid #9333EA !important;
+  background-color: #FAF5FF !important;
+  box-shadow: 0 4px 14px rgba(147, 51, 234, 0.12) !important;
+}
+
+.kosnora-bundle-card:not(.active-bundle) {
+  border: 1px solid #E5E5E5 !important;
+  background-color: #FFFFFF !important;
+  box-shadow: none !important;
+}
+
+.kosnora-bundle-card.active-bundle .bundle-radio-circle {
+  border-color: #9333EA !important;
+  background-color: #9333EA !important;
+}
+
+.kosnora-bundle-card.active-bundle .bundle-radio-dot {
+  display: block !important;
+  background-color: #FFFFFF !important;
+}
+
+.kosnora-bundle-card:not(.active-bundle) .bundle-radio-circle {
+  border-color: #D1D5DB !important;
+  background-color: #FFFFFF !important;
+}
+
+.kosnora-bundle-card:not(.active-bundle) .bundle-radio-dot {
+  display: none !important;
+}
+
 /* Policy Modal Backdrop & Modal */
 .kosnora-modal-backdrop {
   position: fixed;

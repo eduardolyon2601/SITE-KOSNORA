@@ -13,7 +13,7 @@ import { PricingTier } from './types';
 
 export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<PricingTier>(PRICING_TIERS[2]); // 3 units best value default
+  const [selectedTier, setSelectedTier] = useState<PricingTier>(PRICING_TIERS[0]); // Option 1 (1 Case - $79.90) default, freely selectable
   const [selectedModelId, setSelectedModelId] = useState<string | undefined>(undefined);
   const [selectedColorId, setSelectedColorId] = useState<string | undefined>(undefined);
 
@@ -31,7 +31,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-['Montserrat',sans-serif] flex flex-col selection:bg-[#F3E8FF] selection:text-[#6B21A8]">
       {/* Header with Official KNR Logo (No KOSNORA text) */}
-      <Header onShopClick={() => handleOpenCheckout(selectedTier)} />
+      <Header
+        onShopClick={() => handleOpenCheckout(selectedTier)}
+        cartCount={selectedTier.quantity}
+      />
 
       <main className="flex-1">
         {/* 1. HERO */}
@@ -45,6 +48,7 @@ export default function App() {
 
         {/* 4. PRODUCT + OFFER (1 Unit $79.90, 2 Units $69.90 ea, 3 Units $59.90 ea, Add to Cart & Buy Now) */}
         <OfferSection
+          selectedTier={selectedTier}
           onSelectTier={(tier, mId, cId) => handleOpenCheckout(tier, mId, cId)}
           onBuyNow={(tier, mId, cId) => handleOpenCheckout(tier, mId, cId)}
         />
@@ -66,6 +70,7 @@ export default function App() {
         initialTier={selectedTier}
         initialModelId={selectedModelId}
         initialColorId={selectedColorId}
+        onTierChange={(tier) => setSelectedTier(tier)}
       />
     </div>
   );

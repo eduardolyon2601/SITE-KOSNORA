@@ -116,16 +116,27 @@ function initDrawer() {
   const summarySavings = document.getElementById('drawer-summary-savings');
   const ctaTotal = document.getElementById('drawer-cta-total');
   const proceedBtn = document.getElementById('drawer-proceed-checkout');
+  const qtyInput = document.getElementById('drawer-quantity-input');
+  const propModelInput = document.getElementById('drawer-prop-model');
+  const propColorInput = document.getElementById('drawer-prop-color');
 
-  let currentQty = 2;
-  let currentUnitPrice = 69.90;
-  let currentTotal = 139.80;
-  let currentSavings = 20.00;
+  const OFFERS = {
+    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Smart Case' },
+    2: { qty: 2, unitPrice: 69.90, total: 139.80, savings: 20.00, label: '2x KOSNORA Smart Case' },
+    3: { qty: 3, unitPrice: 59.90, total: 179.70, savings: 60.00, label: '3x KOSNORA Smart Case' }
+  };
+
+  let currentQty = 1;
+  let currentUnitPrice = 79.90;
+  let currentTotal = 79.90;
+  let currentSavings = 0;
 
   function updateSummary() {
     if (summaryQty) summaryQty.textContent = `${currentQty}x KOSNORA Smart Case`;
     if (summaryTotal) summaryTotal.textContent = `$${currentTotal.toFixed(2)}`;
     if (ctaTotal) ctaTotal.textContent = `$${currentTotal.toFixed(2)}`;
+    if (qtyInput) qtyInput.value = currentQty;
+
     if (summarySavings) {
       if (currentSavings > 0) {
         summarySavings.textContent = `-$${currentSavings.toFixed(2)}`;
@@ -136,26 +147,65 @@ function initDrawer() {
     }
   }
 
+  function setQuantity(qty) {
+    qty = parseInt(qty, 10);
+    if (!OFFERS[qty]) qty = 1;
+
+    currentQty = qty;
+    currentUnitPrice = OFFERS[qty].unitPrice;
+    currentTotal = OFFERS[qty].total;
+    currentSavings = OFFERS[qty].savings;
+
+    if (qtyInput) qtyInput.value = currentQty;
+
+    bundleCards.forEach(card => {
+      const cardQty = parseInt(card.getAttribute('data-bundle-quantity'), 10);
+      const isSelected = cardQty === currentQty;
+      const radio = card.querySelector('.bundle-radio-circle');
+      const dot = card.querySelector('.bundle-radio-dot');
+
+      if (isSelected) {
+        card.classList.add('active-bundle');
+        card.style.setProperty('border', '2px solid #9333EA', 'important');
+        card.style.setProperty('background-color', '#FAF5FF', 'important');
+        card.style.setProperty('box-shadow', '0 4px 14px rgba(147, 51, 234, 0.12)', 'important');
+        if (radio) {
+          radio.style.setProperty('border-color', '#9333EA', 'important');
+          radio.style.setProperty('background-color', '#9333EA', 'important');
+        }
+        if (dot) {
+          dot.style.setProperty('display', 'block', 'important');
+          dot.style.setProperty('background-color', '#FFFFFF', 'important');
+        }
+      } else {
+        card.classList.remove('active-bundle');
+        card.style.setProperty('border', '1px solid #E5E5E5', 'important');
+        card.style.setProperty('background-color', '#FFFFFF', 'important');
+        card.style.setProperty('box-shadow', 'none', 'important');
+        if (radio) {
+          radio.style.setProperty('border-color', '#D1D5DB', 'important');
+          radio.style.setProperty('background-color', '#FFFFFF', 'important');
+        }
+        if (dot) {
+          dot.style.setProperty('display', 'none', 'important');
+        }
+      }
+    });
+
+    updateSummary();
+  }
+
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      const qty = parseInt(btn.getAttribute('data-qty') || '2', 10);
-      if (qty === 1) {
-        currentQty = 1; currentUnitPrice = 79.90; currentTotal = 79.90; currentSavings = 0;
-      } else if (qty === 3) {
-        currentQty = 3; currentUnitPrice = 59.90; currentTotal = 179.70; currentSavings = 60.00;
-      } else {
-        currentQty = 2; currentUnitPrice = 69.90; currentTotal = 139.80; currentSavings = 20.00;
-      }
-
-      bundleCards.forEach(card => {
-        const cardQty = parseInt(card.getAttribute('data-bundle-quantity'), 10);
-        if (cardQty === currentQty) {
-          card.classList.add('active-bundle');
-        } else {
-          card.classList.remove('active-bundle');
+      if (btn.hasAttribute('data-qty')) {
+        const reqQty = parseInt(btn.getAttribute('data-qty'), 10);
+        if ([1, 2, 3].includes(reqQty)) {
+          setQuantity(reqQty);
         }
-      });
+      } else {
+        setQuantity(currentQty);
+      }
 
       // Sync model and finish from section if selected on page
       const sectionModel = document.getElementById('pricing-model-select');
@@ -168,7 +218,6 @@ function initDrawer() {
         summaryColor.textContent = sectionColorLabel.textContent;
       }
 
-      updateSummary();
       if (drawerBackdrop) drawerBackdrop.classList.add('open');
       document.body.style.overflow = 'hidden';
     });
@@ -184,23 +233,14 @@ function initDrawer() {
   bundleCards.forEach(card => {
     card.addEventListener('click', () => {
       const qty = parseInt(card.getAttribute('data-bundle-quantity'), 10);
-      if (qty === 1) {
-        currentQty = 1; currentUnitPrice = 79.90; currentTotal = 79.90; currentSavings = 0;
-      } else if (qty === 3) {
-        currentQty = 3; currentUnitPrice = 59.90; currentTotal = 179.70; currentSavings = 60.00;
-      } else {
-        currentQty = 2; currentUnitPrice = 69.90; currentTotal = 139.80; currentSavings = 20.00;
-      }
-
-      bundleCards.forEach(c => c.classList.remove('active-bundle'));
-      card.classList.add('active-bundle');
-      updateSummary();
+      setQuantity(qty);
     });
   });
 
   if (modelSelect) {
     modelSelect.addEventListener('change', () => {
       if (summaryModel) summaryModel.textContent = modelSelect.value;
+      if (propModelInput) propModelInput.value = modelSelect.value;
     });
   }
 
@@ -210,16 +250,55 @@ function initDrawer() {
       btn.classList.add('active-color');
       const name = btn.getAttribute('data-name');
       if (summaryColor && name) summaryColor.textContent = name;
+      if (propColorInput && name) propColorInput.value = name;
     });
   });
 
   if (proceedBtn) {
     proceedBtn.addEventListener('click', () => {
-      // Direct checkout integration: on real Shopify store, route to /checkout
+      const selectedModelVal = (summaryModel && summaryModel.textContent) || (modelSelect && modelSelect.value) || 'iPhone 17 Pro Max';
+      const selectedColorVal = (summaryColor && summaryColor.textContent) || 'Obsidian Black';
+
+      if (propModelInput) propModelInput.value = selectedModelVal;
+      if (propColorInput) propColorInput.value = selectedColorVal;
+      if (qtyInput) qtyInput.value = currentQty;
+
+      // Direct checkout integration: on real Shopify store, add to cart with selected quantity
       if (window.Shopify && window.Shopify.routes) {
-        window.location.href = (window.Shopify.routes.root || '/') + 'checkout';
+        const variantId = document.getElementById('drawer-variant-id')?.value;
+        const root = window.Shopify.routes.root || '/';
+
+        fetch(root + 'cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            items: [{
+              id: variantId || 1,
+              quantity: currentQty,
+              properties: {
+                'iPhone Model': selectedModelVal,
+                'Case Color': selectedColorVal
+              }
+            }]
+          })
+        })
+        .then(() => {
+          window.location.href = root + 'checkout';
+        })
+        .catch(() => {
+          const form = document.getElementById('kosnora-drawer-cart-form');
+          if (form) {
+            form.submit();
+          } else {
+            window.location.href = root + 'checkout';
+          }
+        });
         return;
       }
+
       const checkoutArea = document.getElementById('drawer-checkout-confirmation');
       const configArea = document.getElementById('drawer-config-area');
       if (checkoutArea && configArea) {
@@ -228,6 +307,9 @@ function initDrawer() {
       }
     });
   }
+
+  // Initialize with Option 1 (1 Case - $79.90) as default
+  setQuantity(1);
 }
 
 // 4. Policy Modals

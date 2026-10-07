@@ -6,14 +6,22 @@ import { PricingTier } from '../types';
 interface OfferSectionProps {
   onSelectTier: (tier: PricingTier, modelId?: string, colorId?: string) => void;
   onBuyNow?: (tier: PricingTier, modelId?: string, colorId?: string) => void;
+  selectedTier?: PricingTier;
 }
 
-export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyNow }) => {
+export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyNow, selectedTier }) => {
   const [selectedModel, setSelectedModel] = useState<string>(COMPATIBLE_IPHONE_MODELS[0].id);
   const [selectedColor, setSelectedColor] = useState<string>(PRODUCT_COLORS[0].id);
-  const [activeTierId, setActiveTierId] = useState<string>(PRICING_TIERS[2].id); // 3 units best value default
+  const [activeTierId, setActiveTierId] = useState<string>(selectedTier?.id || PRICING_TIERS[0].id);
 
-  const currentTier = PRICING_TIERS.find((t) => t.id === activeTierId) || PRICING_TIERS[2];
+  // Sync if parent updates selectedTier
+  React.useEffect(() => {
+    if (selectedTier) {
+      setActiveTierId(selectedTier.id);
+    }
+  }, [selectedTier]);
+
+  const currentTier = PRICING_TIERS.find((t) => t.id === activeTierId) || PRICING_TIERS[0];
   const activeColorObj = PRODUCT_COLORS.find((c) => c.id === selectedColor) || PRODUCT_COLORS[0];
 
   const handleAddToCart = () => {
@@ -172,8 +180,8 @@ export const OfferSection: React.FC<OfferSectionProps> = ({ onSelectTier, onBuyN
             onClick={() => setActiveTierId('triple')}
             className={`rounded-2xl p-6 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative ${
               activeTierId === 'triple'
-                ? 'border-[#9333EA] shadow-lg ring-2 ring-[#9333EA]/30 scale-102'
-                : 'border-[#9333EA]/50 hover:border-[#9333EA]'
+                ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20'
+                : 'border-neutral-200 hover:border-neutral-300'
             }`}
           >
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] text-white text-[11px] font-black uppercase tracking-wider shadow-sm">

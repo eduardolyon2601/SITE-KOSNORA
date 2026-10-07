@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Check, ShieldCheck, Lock, ArrowRight, Truck, CreditCard } from 'lucide-react';
 import { PRICING_TIERS, COMPATIBLE_IPHONE_MODELS, PRODUCT_COLORS } from '../data/productData';
 import { PricingTier } from '../types';
@@ -9,19 +9,47 @@ interface OrderDrawerProps {
   initialTier?: PricingTier;
   initialModelId?: string;
   initialColorId?: string;
+  onTierChange?: (tier: PricingTier) => void;
 }
 
 export const OrderDrawer: React.FC<OrderDrawerProps> = ({
   isOpen,
   onClose,
-  initialTier = PRICING_TIERS[1],
+  initialTier = PRICING_TIERS[0],
   initialModelId = COMPATIBLE_IPHONE_MODELS[0].id,
   initialColorId = PRODUCT_COLORS[0].id,
+  onTierChange,
 }) => {
   const [selectedTier, setSelectedTier] = useState<PricingTier>(initialTier);
   const [selectedModelId, setSelectedModelId] = useState<string>(initialModelId);
   const [selectedColorId, setSelectedColorId] = useState<string>(initialColorId);
   const [checkoutStep, setCheckoutStep] = useState<'configure' | 'checkout' | 'success'>('configure');
+
+  // Keep state synchronized with caller props whenever drawer opens or tier changes
+  useEffect(() => {
+    if (initialTier) {
+      setSelectedTier(initialTier);
+    }
+  }, [initialTier, isOpen]);
+
+  useEffect(() => {
+    if (initialModelId) {
+      setSelectedModelId(initialModelId);
+    }
+  }, [initialModelId, isOpen]);
+
+  useEffect(() => {
+    if (initialColorId) {
+      setSelectedColorId(initialColorId);
+    }
+  }, [initialColorId, isOpen]);
+
+  const handleSelectTier = (tier: PricingTier) => {
+    setSelectedTier(tier);
+    if (onTierChange) {
+      onTierChange(tier);
+    }
+  };
 
   // Customer checkout form state
   const [formData, setFormData] = useState({
@@ -307,7 +335,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
                     return (
                       <div
                         key={tier.id}
-                        onClick={() => setSelectedTier(tier)}
+                        onClick={() => handleSelectTier(tier)}
                         className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                           isSelected
                             ? 'bg-[#FAF5FF] border-[#9333EA] shadow-xs'

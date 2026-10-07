@@ -24,22 +24,32 @@
         </label>
         <div style="display: flex; flex-direction: column; gap: 0.75rem;">
           <!-- 1 Case -->
-          <div data-bundle-quantity="1" style="padding: 1rem; border-radius: 1rem; border: 1px solid #E5E5E5; background: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="font-size: 0.875rem; font-weight: 700; color: #111111;">1 CASE</div>
-              <div style="font-size: 0.75rem; color: #777777;">$79.90 single case</div>
+          <div data-bundle-quantity="1" class="kosnora-bundle-card active-bundle" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
+              </div>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 800; color: #111111;">1 CASE</div>
+                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$79.90 single case</div>
+              </div>
             </div>
             <div style="font-size: 1rem; font-weight: 800; color: #111111;">$79.90</div>
           </div>
 
           <!-- 2 Cases -->
-          <div data-bundle-quantity="2" class="active-bundle" style="padding: 1rem; border-radius: 1rem; border: 2px solid #9333EA; background: #FAF5FF; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="font-size: 0.875rem; font-weight: 700; color: #111111; display: flex; align-items: center; gap: 6px;">
-                <span>2 CASES</span>
-                <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #9333EA; color: #FFFFFF;">POPULAR</span>
+          <div data-bundle-quantity="2" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
               </div>
-              <div style="font-size: 0.75rem; color: #777777;">$69.90 each · $139.80 total</div>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 800; color: #111111; display: flex; align-items: center; gap: 6px;">
+                  <span>2 CASES</span>
+                  <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #9333EA; color: #FFFFFF;">POPULAR</span>
+                </div>
+                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$69.90 each · $139.80 total</div>
+              </div>
             </div>
             <div style="text-align: right;">
               <div style="font-size: 1rem; font-weight: 800; color: #111111;">$139.80</div>
@@ -48,13 +58,18 @@
           </div>
 
           <!-- 3 Cases -->
-          <div data-bundle-quantity="3" style="padding: 1rem; border-radius: 1rem; border: 1px solid #E5E5E5; background: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="font-size: 0.875rem; font-weight: 700; color: #111111; display: flex; align-items: center; gap: 6px;">
-                <span>3 CASES</span>
-                <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #059669; color: #FFFFFF;">BEST VALUE</span>
+          <div data-bundle-quantity="3" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
               </div>
-              <div style="font-size: 0.75rem; color: #777777;">$59.90 each · $179.70 total</div>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 800; color: #111111; display: flex; align-items: center; gap: 6px;">
+                  <span>3 CASES</span>
+                  <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #059669; color: #FFFFFF;">BEST VALUE</span>
+                </div>
+                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$59.90 each · $179.70 total</div>
+              </div>
             </div>
             <div style="text-align: right;">
               <div style="font-size: 1rem; font-weight: 800; color: #111111;">$179.70</div>
@@ -123,7 +138,7 @@
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
           <span>Item:</span>
-          <span id="drawer-summary-qty" style="color: #111111; font-weight: 600;">2x KOSNORA Smart Case</span>
+          <span id="drawer-summary-qty" style="color: #111111; font-weight: 600;">1x KOSNORA Smart Case</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
           <span>Model:</span>
@@ -133,16 +148,24 @@
           <span>Color:</span>
           <span id="drawer-summary-color" style="color: #111111; font-weight: 600;">Obsidian Black</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 13px; color: #059669; margin-bottom: 6px;">
+        <div style="display: none; justify-content: space-between; font-size: 13px; color: #059669; margin-bottom: 6px;">
           <span>Bundle Savings:</span>
-          <span id="drawer-summary-savings" style="font-weight: 700;">-$20.00</span>
+          <span id="drawer-summary-savings" style="font-weight: 700;">-$0.00</span>
         </div>
         <div style="border-top: 1px solid #E5E5E5; padding-top: 8px; margin-top: 8px; display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #111111;">
           <span>Total:</span>
-          <span id="drawer-summary-total">$139.80</span>
+          <span id="drawer-summary-total">$79.90</span>
         </div>
       </div>
     </div>
+
+    <!-- Real Shopify Cart Add Form with Dynamic Quantity -->
+    <form action="{{ routes.cart_add_url | default: '/cart/add' }}" method="post" id="kosnora-drawer-cart-form" enctype="multipart/form-data" style="display: none;">
+      <input type="hidden" name="id" id="drawer-variant-id" value="{{ product.selected_or_first_available_variant.id | default: 1 }}">
+      <input type="hidden" name="quantity" id="drawer-quantity-input" value="1">
+      <input type="hidden" name="properties[iPhone Model]" id="drawer-prop-model" value="iPhone 17 Pro Max">
+      <input type="hidden" name="properties[Case Color]" id="drawer-prop-color" value="Obsidian Black">
+    </form>
 
     <!-- Direct Checkout confirmation state -->
     <div id="drawer-checkout-confirmation" style="display: none; padding: 2rem; text-align: center; background: #FFFFFF;">
@@ -171,7 +194,7 @@
     <!-- Drawer Footer -->
     <div style="padding: 1.25rem 1.5rem; border-top: 1px solid #E5E5E5; background: #FFFFFF;">
       <button type="button" id="drawer-proceed-checkout" class="kosnora-btn-primary" style="width: 100%; justify-content: center;">
-        <span>PROCEED TO CHECKOUT (<span id="drawer-cta-total">$139.80</span>)</span>
+        <span>PROCEED TO CHECKOUT (<span id="drawer-cta-total">$79.90</span>)</span>
         {% render 'icon-arrow-right' %}
       </button>
       <div style="font-size: 11px; color: #777777; text-align: center; margin-top: 8px;">
