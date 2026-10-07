@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "kicker": "BATTERY-FREE SMART DISPLAY",
+        "headline_1": "YOUR PHONE.",
+        "headline_2": "YOUR LOOK.",
+        "subheadline": "Change the picture on your phone whenever you want — in just 5 minutes.",
+        "cta_text": "GET YOUR KOSNORA",
+        "microcopy": "Starting at $59.90 each"
+      }
+    },
+    "how_it_works": {
+      "type": "how-it-works",
+      "settings": {
+        "headline": "HOW IT WORKS"
+      }
+    },
+    "why_kosnora": {
+      "type": "why-kosnora",
+      "settings": {
+        "headline": "ONE CASE. ENDLESS LOOKS."
+      }
+    },
+    "pricing_offer": {
+      "type": "pricing-offer",
+      "settings": {
+        "headline": "CHOOSE YOUR KOSNORA",
+        "description": "Select your bundle and iPhone model. Battery-free NFC smart case included."
+      }
+    },
+    "final_cta_faq": {
+      "type": "final-cta-faq",
+      "settings": {
+        "cta_headline": "MAKE YOUR PHONE YOURS.",
+        "cta_subtitle": "Change your look whenever you want.",
+        "cta_button": "GET YOUR KOSNORA"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "how_it_works",
+    "why_kosnora",
+    "pricing_offer",
+    "final_cta_faq"
+  ]
+}

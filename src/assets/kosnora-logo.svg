@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200" fill="none" class="w-full h-auto">
+  <defs>
+    <!-- Master Electric Purple Gradient matching user logo -->
+    <linearGradient id="knrElectricMain" x1="0%" y1="20%" x2="100%" y2="80%">
+      <stop offset="0%" stop-color="#8015F5" />
+      <stop offset="35%" stop-color="#6B11E6" />
+      <stop offset="70%" stop-color="#5508D6" />
+      <stop offset="100%" stop-color="#4604BD" />
+    </linearGradient>
+
+    <!-- K Upper Diagonal & Speed Feather Gradient -->
+    <linearGradient id="knrSpeedBlade" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6B11E6" />
+      <stop offset="60%" stop-color="#9333EA" />
+      <stop offset="100%" stop-color="#C084FC" />
+    </linearGradient>
+
+    <!-- R Top Curve Metallic Gloss Highlight -->
+    <linearGradient id="knrGlossHighlight" x1="0%" y1="0%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#E9D5FF" stop-opacity="0.6" />
+      <stop offset="80%" stop-color="#A855F7" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- R Right Wing Gradient with 3D Depth -->
+    <linearGradient id="knrWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B2EF7" />
+      <stop offset="50%" stop-color="#600CD9" />
+      <stop offset="100%" stop-color="#3B0764" />
+    </linearGradient>
+
+    <!-- Subtle Ambient Glow Filter for Dark Mode -->
+    <filter id="knrAmbientGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <g filter="url(#knrAmbientGlow)">
+    <!-- ==================== LETTER K ==================== -->
+    <!-- K Vertical Left Stem -->
+    <path d="M 60 76 L 82 76 L 82 152 L 60 152 Z" fill="url(#knrElectricMain)" />
+
+    <!-- K Upper Diagonal with Angled Top Cut -->
+    <path d="M 82 96 L 148 76 L 170 76 L 102 110 Z" fill="url(#knrElectricMain)" />
+
+    <!-- K Speed Slash / Dynamic Feather Blade shooting up-left -->
+    <path d="M 124 82 L 158 64 L 142 80 Z" fill="url(#knrSpeedBlade)" />
+    <path d="M 112 88 L 138 72 L 126 86 Z" fill="url(#knrSpeedBlade)" opacity="0.85" />
+
+    <!-- K Lower Diagonal Leg with Angled Base -->
+    <path d="M 82 108 L 122 136 L 174 152 L 142 152 L 98 122 Z" fill="url(#knrElectricMain)" />
+    <!-- K Lower Joint Wedge -->
+    <path d="M 76 112 L 88 124 L 78 128 Z" fill="#9333EA" opacity="0.6" />
+
+    <!-- ==================== LETTER N ==================== -->
+    <!-- N Left Vertical Column -->
+    <path d="M 172 76 L 192 76 L 192 152 L 172 152 Z" fill="url(#knrElectricMain)" />
+
+    <!-- N Center Diagonal Beam -->
+    <path d="M 188 76 L 256 142 L 256 152 L 236 152 L 176 94 Z" fill="url(#knrElectricMain)" />
+
+    <!-- N Right Vertical Column -->
+    <path d="M 240 76 L 256 76 L 256 152 L 240 152 Z" fill="url(#knrElectricMain)" />
+
+    <!-- ==================== LETTER R ==================== -->
+    <!-- R Left Vertical Stem -->
+    <path d="M 262 76 L 278 76 L 278 152 L 262 152 Z" fill="url(#knrElectricMain)" />
+
+    <!-- R Top Loop Outer Body -->
+    <path d="M 276 76 L 332 76 C 362 76 374 88 374 104 C 374 118 360 128 334 128 L 276 128 Z" fill="url(#knrWingGrad)" />
+
+    <!-- R Top Curved Glossy Edge Highlight -->
+    <path d="M 276 76 L 332 76 C 358 76 372 86 372 102 C 370 90 354 79 330 79 L 278 79 Z" fill="url(#knrGlossHighlight)" />
+
+    <!-- R Inner Cutout (pill shaped negative space) -->
+    <path d="M 288 90 L 328 90 C 342 90 348 95 348 102 C 348 109 342 114 328 114 L 288 114 Z" fill="#000000" />
+
+    <!-- R Horizontal Speed Cut / Aerodynamic Middle Wedge -->
+    <path d="M 288 118 L 354 118 L 372 128 L 288 128 Z" fill="#000000" />
+
+    <!-- R Lower Sweeping Diagonal Leg -->
+    <path d="M 288 118 L 334 118 L 372 152 L 344 152 L 312 128 L 288 128 Z" fill="url(#knrElectricMain)" />
+    <!-- R Bottom Wing Bevel -->
+    <path d="M 334 118 L 372 152 L 360 152 L 326 122 Z" fill="url(#knrSpeedBlade)" opacity="0.8" />
+  </g>
+</svg>

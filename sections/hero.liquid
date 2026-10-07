@@ -1,0 +1,213 @@
+<section class="section-light kosnora-py" style="position: relative; overflow: hidden; background: #FFFFFF; color: #111827; border-bottom: 1px solid #E5E7EB;">
+  <!-- Ambient light -->
+  <div style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 350px; background: rgba(168, 85, 247, 0.06); border-radius: 50%; filter: blur(100px); pointer-events: none;"></div>
+
+  <div class="kosnora-container" style="position: relative; z-index: 2;">
+    <!-- Top Text Center Area -->
+    <div style="max-width: 800px; margin: 0 auto; text-align: center; margin-bottom: 3.5rem;">
+      <div class="kosnora-kicker-badge" style="background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE; padding: 6px 16px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #9333EA; display: inline-block;"></span>
+        <span>{{ section.settings.kicker | default: 'BATTERY-FREE SMART DISPLAY' }}</span>
+      </div>
+
+      <h1 class="kosnora-headline" style="font-size: clamp(2.5rem, 6.5vw, 5rem); margin-bottom: 1.25rem; color: #111827; font-weight: 900; line-height: 1.05;">
+        {{ section.settings.headline_1 | default: 'YOUR PHONE.' }}<br>
+        <span style="color: #9333EA;">{{ section.settings.headline_2 | default: 'YOUR LOOK.' }}</span>
+      </h1>
+
+      <p class="kosnora-subtitle" style="font-size: clamp(1rem, 2vw, 1.25rem); color: #555555; max-width: 640px; margin: 0 auto 2rem; font-weight: 500; line-height: 1.5;">
+        {{ section.settings.subheadline | default: 'Change the picture on the back of your phone whenever you want — in just 5 minutes.' }}
+      </p>
+
+      <!-- 3 Quick Benefits -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-bottom: 2.25rem; font-size: 0.8125rem; color: #111111; font-weight: 600;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; background: #FFFFFF; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #E5E5E5; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+          <span style="color: #9333EA; font-weight: 900;">✓</span>
+          <span>Change your image anytime</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; background: #FFFFFF; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #E5E5E5; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+          <span style="color: #9333EA; font-weight: 900;">✓</span>
+          <span>Battery-free design</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; background: #FFFFFF; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #E5E5E5; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+          <span style="color: #9333EA; font-weight: 900;">✓</span>
+          <span>Make your phone uniquely yours</span>
+        </div>
+      </div>
+
+      <!-- Main CTA Button -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+        <button type="button" data-open-drawer data-qty="2" class="kosnora-btn-primary" style="background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35); padding: 1.15rem 2.75rem; font-size: 0.875rem; border-radius: 12px; border: none; color: #FFF; font-weight: 900; text-transform: uppercase; cursor: pointer;">
+          <span>{{ section.settings.cta_text | default: 'GET YOUR KOSNORA' }}</span>
+          {% render 'icon-arrow-right' %}
+        </button>
+        <span style="font-size: 0.8125rem; color: #6B7280; font-weight: 600;">
+          {{ section.settings.microcopy | default: 'Starting at $59.90 each' }}
+        </span>
+      </div>
+
+      <!-- Compatible models indicator -->
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #E5E5E5; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; font-size: 11px; font-weight: 600; color: #555555;">
+        <span style="color: #111111; margin-right: 0.5rem;">Compatible with:</span>
+        <span style="padding: 2px 8px; border-radius: 4px; background: #FFFFFF; border: 1px solid #E5E5E5;">iPhone 17 Series</span>
+        <span style="padding: 2px 8px; border-radius: 4px; background: #FFFFFF; border: 1px solid #E5E5E5;">iPhone 16 Series</span>
+        <span style="padding: 2px 8px; border-radius: 4px; background: #FFFFFF; border: 1px solid #E5E5E5;">iPhone 15 Series</span>
+        <span style="padding: 2px 8px; border-radius: 4px; background: #FFFFFF; border: 1px solid #E5E5E5;">iPhone 14 Series</span>
+        <span style="padding: 2px 8px; border-radius: 4px; background: #FFFFFF; border: 1px solid #E5E5E5;">iPhone 12 Series</span>
+      </div>
+    </div>
+
+    <!-- Live Interactive Case Simulator -->
+    <div class="simulator-box" style="max-width: 1040px; margin: 0 auto;">
+      <div class="kosnora-grid-2">
+        <!-- Phone Case Mockup Display -->
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <div id="kosnora-mockup" class="phone-mockup">
+            <div class="phone-inner">
+              <!-- Camera Island -->
+              <div class="camera-island">
+                <div class="lens-circle"><div class="lens-core"></div></div>
+                <div class="lens-circle"><div class="lens-core"></div></div>
+                <div class="lens-circle"><div class="lens-core"></div></div>
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">
+                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #FEF3C7;"></span>
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #374151;"></span>
+                </div>
+              </div>
+
+              <!-- E-ink screen display -->
+              <div class="e-ink-screen">
+                <img id="kosnora-screen-img" src="{{ 'kosnora_couple_look.jpg' | asset_url }}" alt="KOSNORA Smart Display Screen">
+                <span class="screen-badge">NFC DISPLAY</span>
+              </div>
+
+              <!-- Brand deboss -->
+              <div class="phone-brand-deboss">
+                KOSNORA
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem; font-size: 11px; font-weight: 600; color: #9CA3AF; display: flex; align-items: center; gap: 6px;">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #34D399; display: inline-block;"></span>
+            <span>Interactive Simulator · Instant Screen Refresh</span>
+          </div>
+        </div>
+
+        <!-- Controls Column -->
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #9333EA; margin-bottom: 0.5rem;">
+            Live Customization Preview
+          </div>
+          <h3 class="kosnora-title" style="font-size: 1.75rem; color: #111111; margin-bottom: 0.75rem;">
+            One Case. Any Picture. Any Time.
+          </h3>
+          <p style="font-size: 0.875rem; color: #555555; margin-bottom: 1.5rem; line-height: 1.6;">
+            Test how different moments look on the back of your phone. Switch between styles in seconds, or upload your own favorite photo right now.
+          </p>
+
+          <!-- 1. Color Selector -->
+          <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #E5E5E5;">
+            <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.75rem;">
+              1. Choose Case Finish: <span id="active-color-label" style="color: #111111; text-transform: none; font-weight: 700;">Obsidian Black</span>
+            </label>
+            <div style="display: flex; gap: 0.75rem;">
+              <button type="button" data-simulator-color data-hex="#161618" data-name="Obsidian Black" class="active-color" style="width: 36px; height: 36px; border-radius: 50%; background: #161618; border: 2px solid #555; cursor: pointer;"></button>
+              <button type="button" data-simulator-color data-hex="#4A4C50" data-name="Titanium Gray" style="width: 36px; height: 36px; border-radius: 50%; background: #4A4C50; border: 2px solid #666; cursor: pointer;"></button>
+              <button type="button" data-simulator-color data-hex="#EAEAEA" data-name="Cloud White" style="width: 36px; height: 36px; border-radius: 50%; background: #EAEAEA; border: 2px solid #AAA; cursor: pointer;"></button>
+              <button type="button" data-simulator-color data-hex="#1C2433" data-name="Midnight Navy" style="width: 36px; height: 36px; border-radius: 50%; background: #1C2433; border: 2px solid #2563EB; cursor: pointer;"></button>
+            </div>
+          </div>
+
+          <!-- 2. Display Look Selector -->
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.75rem;">
+              2. Switch The Display Look:
+            </label>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 0.75rem;">
+              <button type="button" data-simulator-look data-src="{{ 'kosnora_couple_look.jpg' | asset_url }}" class="active-look" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                Couple Photo
+              </button>
+              <button type="button" data-simulator-look data-src="{{ 'kosnora_pet_look.jpg' | asset_url }}" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                Pet Memory
+              </button>
+              <button type="button" data-simulator-look data-src="{{ 'kosnora_travel_art.jpg' | asset_url }}" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                Travel Horizon
+              </button>
+              <button type="button" data-simulator-look data-src="{{ 'kosnora_hero_case.jpg' | asset_url }}" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                Minimalist Art
+              </button>
+            </div>
+
+            <!-- Upload Custom File -->
+            <input type="file" id="kosnora-upload-input" accept="image/*" style="display: none;">
+            <button type="button" id="kosnora-upload-btn" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: 1px dashed #9333EA; background: #FFFFFF; color: #555555; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
+              Upload your own photo to test it on the case
+            </button>
+          </div>
+
+          <!-- Bottom Action -->
+          <button type="button" data-open-drawer data-qty="2" class="kosnora-btn-primary" style="width: 100%; justify-content: center;">
+            <span>GET YOUR KOSNORA CASE</span>
+            <span style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85);">— From $59.90</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker Badge",
+      "default": "KOSNORA Ink NFC Smart Phone Case"
+    },
+    {
+      "type": "text",
+      "id": "headline_1",
+      "label": "Headline Line 1",
+      "default": "YOUR PHONE."
+    },
+    {
+      "type": "text",
+      "id": "headline_2",
+      "label": "Headline Line 2",
+      "default": "YOUR PICTURE."
+    },
+    {
+      "type": "text",
+      "id": "headline_3",
+      "label": "Headline Line 3",
+      "default": "YOUR MOOD."
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Subheadline",
+      "default": "Change the picture on the back of your phone whenever you want — in just 5 minutes."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "GET YOUR KOSNORA CASE"
+    },
+    {
+      "type": "text",
+      "id": "microcopy",
+      "label": "Microcopy",
+      "default": "Available for selected iPhone models"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Section"
+    }
+  ]
+}
+{% endschema %}

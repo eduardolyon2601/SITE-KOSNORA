@@ -1,0 +1,148 @@
+<header class="kosnora-header" style="position: sticky; top: 0; z-index: 50; width: 100%; background: #FFFFFF; border-bottom: 1px solid #E5E5E5; height: 4.25rem; display: flex; align-items: center;">
+  <div class="kosnora-container" style="width: 100%;">
+    <div class="kosnora-header-grid" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%;">
+
+      <!-- LEFT COLUMN: Three Horizontal Underlines (Pure Underlines, No Border/Box) -->
+      <div class="kosnora-header-left" style="display: flex; align-items: center; justify-content: flex-start; position: relative;">
+        <button
+          type="button"
+          id="kosnora-menu-toggle"
+          class="kosnora-underlines-btn"
+          aria-label="Toggle Menu"
+          title="Menu"
+          style="background: transparent; border: none; outline: none; padding: 8px 4px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 5px; cursor: pointer; transition: opacity 0.2s;"
+        >
+          <span class="kosnora-underline" style="display: block; width: 20px; height: 2px; background-color: #111111; border-radius: 9999px; transition: all 0.2s ease;"></span>
+          <span class="kosnora-underline" style="display: block; width: 20px; height: 2px; background-color: #111111; border-radius: 9999px; transition: all 0.2s ease;"></span>
+          <span class="kosnora-underline" style="display: block; width: 20px; height: 2px; background-color: #111111; border-radius: 9999px; transition: all 0.2s ease;"></span>
+        </button>
+
+        <!-- DROPDOWN MENU BOX (Opens when 3 underlines are clicked) -->
+        <div
+          id="kosnora-menu-dropdown"
+          class="kosnora-menu-box"
+          style="display: none; position: absolute; top: calc(100% + 12px); left: 0; width: 260px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 16px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08); padding: 12px; z-index: 100;"
+        >
+          <div style="padding: 6px 12px 10px; border-bottom: 1px solid #F3F4F6; margin-bottom: 6px;">
+            <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #9333EA;">
+              NAVEGAÇÃO
+            </span>
+          </div>
+
+          <nav style="display: flex; flex-direction: column; gap: 4px;">
+            <a href="#pricing" class="kosnora-dropdown-link" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1F2937; text-decoration: none; transition: all 0.15s ease;">
+              <span>SHOP</span>
+              <span style="color: #9CA3AF; font-size: 14px;">→</span>
+            </a>
+            <a href="#how-it-works" class="kosnora-dropdown-link" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1F2937; text-decoration: none; transition: all 0.15s ease;">
+              <span>HOW IT WORKS</span>
+              <span style="color: #9CA3AF; font-size: 14px;">→</span>
+            </a>
+            <a href="#why-kosnora" class="kosnora-dropdown-link" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1F2937; text-decoration: none; transition: all 0.15s ease;">
+              <span>WHY KOSNORA</span>
+              <span style="color: #9CA3AF; font-size: 14px;">→</span>
+            </a>
+            <a href="#faq" class="kosnora-dropdown-link" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1F2937; text-decoration: none; transition: all 0.15s ease;">
+              <span>FAQ</span>
+              <span style="color: #9CA3AF; font-size: 14px;">→</span>
+            </a>
+          </nav>
+
+          <div style="padding-top: 10px; margin-top: 6px; border-top: 1px solid #F3F4F6;">
+            <button
+              type="button"
+              data-open-drawer
+              data-qty="2"
+              class="kosnora-dropdown-cta"
+              style="width: 100%; padding: 11px; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFFFFF; font-weight: 900; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 10px; border: none; cursor: pointer; text-align: center; transition: all 0.15s ease;"
+            >
+              GET YOUR KOSNORA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER COLUMN: Official Brand Logo perfectly centered -->
+      <div class="kosnora-header-center" style="display: flex; align-items: center; justify-content: center;">
+        <a href="{{ routes.root_url | default: '/' }}" class="kosnora-logo" style="display: flex; align-items: center; justify-content: center; text-decoration: none;" aria-label="KOSNORA">
+          <img
+            src="{{ 'kosnora-brand-logo.png' | asset_url }}"
+            alt="KOSNORA Logo"
+            style="height: 24px; width: auto; max-width: 100px; object-fit: contain; display: block;"
+          />
+        </a>
+      </div>
+
+      <!-- RIGHT COLUMN: Only the Cart Bag ("sacolinha"), NO "BUY NOW" -->
+      <div class="kosnora-header-right" style="display: flex; align-items: center; justify-content: flex-end;">
+        <button
+          type="button"
+          data-open-drawer
+          class="kosnora-cart-bag-btn"
+          aria-label="View Cart"
+          title="Open Cart"
+          style="position: relative; padding: 10px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E5E5E5; color: #111111; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s ease;"
+        >
+          <!-- Sacolinha SVG Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+            <path d="M3 6h18"></path>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span
+            class="kosnora-cart-badge"
+            style="position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; background: #9333EA; color: #FFFFFF; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(147, 51, 234, 0.4);"
+          >
+            {{ cart.item_count | default: 1 }}
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var toggleBtn = document.getElementById('kosnora-menu-toggle');
+    var dropdown = document.getElementById('kosnora-menu-dropdown');
+
+    if (toggleBtn && dropdown) {
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var isOpen = dropdown.style.display === 'block';
+        dropdown.style.display = isOpen ? 'none' : 'block';
+        toggleBtn.classList.toggle('is-open', !isOpen);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
+          dropdown.style.display = 'none';
+          toggleBtn.classList.remove('is-open');
+        }
+      });
+
+      var links = dropdown.querySelectorAll('a, button');
+      links.forEach(function(link) {
+        link.addEventListener('click', function() {
+          dropdown.style.display = 'none';
+          toggleBtn.classList.remove('is-open');
+        });
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "default": "KOSNORA"
+    }
+  ]
+}
+{% endschema %}

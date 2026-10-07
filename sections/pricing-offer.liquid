@@ -1,0 +1,170 @@
+<section id="pricing" class="section-light" style="background: #FFFFFF; padding: 4.5rem 0; border-bottom: 1px solid #E5E5E5; color: #111111;">
+  <div class="kosnora-container">
+    <!-- Header -->
+    <div style="max-width: 650px; margin: 0 auto; text-align: center; margin-bottom: 2.5rem;">
+      <span style="font-size: 11px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #9333EA; display: block; margin-bottom: 0.5rem;">
+        PRODUCT & OFFER
+      </span>
+      <h2 style="font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 0.75rem; color: #111111;">
+        {{ section.settings.headline | default: 'CHOOSE YOUR KOSNORA' }}
+      </h2>
+      <p style="font-size: 1rem; color: #555555; font-weight: 600; margin: 0;">
+        {{ section.settings.description | default: 'Select your iPhone model, finish, and bundle. Battery-free NFC smart case included.' }}
+      </p>
+    </div>
+
+    <!-- 1. Model & Finish Quick Configurator -->
+    <div style="max-width: 800px; margin: 0 auto 2.5rem; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 16px; padding: 1.25rem 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03);">
+      <!-- Model Dropdown -->
+      <div style="flex: 1; min-width: 240px;">
+        <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.5rem;">
+          1. Select iPhone Model:
+        </label>
+        <select id="pricing-model-select" style="width: 100%; background: #FFFFFF; border: 1px solid #D1D5DB; color: #111111; font-weight: 700; font-size: 13px; padding: 0.65rem 0.85rem; border-radius: 10px; outline: none; cursor: pointer;">
+          <option value="iphone-17-pro-max">iPhone 17 Pro Max</option>
+          <option value="iphone-17-pro">iPhone 17 Pro</option>
+          <option value="iphone-17">iPhone 17</option>
+          <option value="iphone-16-pro-max">iPhone 16 Pro Max</option>
+          <option value="iphone-16-pro">iPhone 16 Pro</option>
+          <option value="iphone-16">iPhone 16</option>
+          <option value="iphone-15-pro-max">iPhone 15 Pro Max</option>
+          <option value="iphone-15-pro">iPhone 15 Pro</option>
+          <option value="iphone-15">iPhone 15</option>
+          <option value="iphone-14-pro-max">iPhone 14 Pro Max</option>
+          <option value="iphone-14-pro">iPhone 14 Pro</option>
+          <option value="iphone-12">iPhone 12 Series</option>
+        </select>
+      </div>
+
+      <!-- Color Swatches -->
+      <div>
+        <label style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.5rem;">
+          Finish: <span id="pricing-finish-label" style="color: #111111; font-weight: 700;">Obsidian Black</span>
+        </label>
+        <div style="display: flex; gap: 0.65rem; align-items: center;">
+          <button type="button" class="pricing-color-swatch active" data-color="Obsidian Black" style="width: 32px; height: 32px; border-radius: 50%; background: #161618; border: 2px solid #9333EA; cursor: pointer;"></button>
+          <button type="button" class="pricing-color-swatch" data-color="Titanium Gray" style="width: 32px; height: 32px; border-radius: 50%; background: #4A4C50; border: 2px solid #E5E5E5; cursor: pointer;"></button>
+          <button type="button" class="pricing-color-swatch" data-color="Cloud White" style="width: 32px; height: 32px; border-radius: 50%; background: #EAEAEA; border: 2px solid #E5E5E5; cursor: pointer;"></button>
+          <button type="button" class="pricing-color-swatch" data-color="Midnight Navy" style="width: 32px; height: 32px; border-radius: 50%; background: #1C2433; border: 2px solid #E5E5E5; cursor: pointer;"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 3 Simple Pricing Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1050px; margin: 0 auto;">
+      <!-- 1 Case -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; color: #111111;">1 CASE</h3>
+          <div style="font-size: 2.75rem; font-weight: 900; color: #111111; line-height: 1; margin-bottom: 1.25rem;">
+            $79.90
+          </div>
+          <ul style="list-style: none; padding: 0; margin: 0 0 2rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 600;">
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> 1x KOSNORA Smart Phone Case</li>
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> Battery-free passive NFC display</li>
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> Shock-absorbing protective frame</li>
+          </ul>
+        </div>
+        <button type="button" data-open-drawer data-qty="1" class="kosnora-btn-secondary" style="width: 100%; padding: 1rem; font-size: 0.8125rem; background: #111111; color: #FFFFFF; font-weight: 900; text-transform: uppercase; border-radius: 12px; cursor: pointer; border: none; text-align: center;">
+          GET MY KOSNORA
+        </button>
+      </div>
+
+      <!-- 2 Cases -->
+      <div style="background: #FFFFFF; border: 2px solid #9333EA; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.1);">
+        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #9333EA; color: #FFFFFF; font-size: 10px; font-weight: 900; padding: 3px 12px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">
+          SAVE $20.00
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; color: #111111;">2 CASES</h3>
+          <div style="margin-bottom: 1.25rem;">
+            <div style="font-size: 2.75rem; font-weight: 900; color: #111111; line-height: 1;">
+              $69.90 <span style="font-size: 0.875rem; color: #555555; font-weight: 700;">EACH</span>
+            </div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: #9333EA; margin-top: 4px;">
+              $139.80 TOTAL
+            </div>
+          </div>
+          <ul style="list-style: none; padding: 0; margin: 0 0 2rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 600;">
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> 2x KOSNORA Smart Phone Cases</li>
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> Battery-free passive NFC display</li>
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> Shock-absorbing protective frame</li>
+          </ul>
+        </div>
+        <button type="button" data-open-drawer data-qty="2" class="kosnora-btn-primary" style="width: 100%; padding: 1rem; font-size: 0.8125rem; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFFFFF; font-weight: 900; text-transform: uppercase; border-radius: 12px; cursor: pointer; border: none; text-align: center;">
+          GET MY KOSNORA
+        </button>
+      </div>
+
+      <!-- 3 Cases (Best Value) -->
+      <div style="background: #FFFFFF; border: 2px solid #9333EA; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 20px rgba(147, 51, 234, 0.15);">
+        <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #9333EA 0%, #7E22CE 100%); color: #FFF; font-size: 10px; font-weight: 900; padding: 4px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);">
+          SAVE $60.00 · BEST VALUE
+        </div>
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; color: #111111;">3 CASES</h3>
+          <div style="margin-bottom: 1.25rem;">
+            <div style="font-size: 2.75rem; font-weight: 900; color: #111111; line-height: 1;">
+              $59.90 <span style="font-size: 0.875rem; color: #555555; font-weight: 700;">EACH</span>
+            </div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: #9333EA; margin-top: 4px;">
+              $179.70 TOTAL
+            </div>
+          </div>
+          <ul style="list-style: none; padding: 0; margin: 0 0 2rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 600;">
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> 3x KOSNORA Smart Phone Cases</li>
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> Battery-free passive NFC display</li>
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #9333EA; font-weight: 900;">✓</span> Shock-absorbing protective frame</li>
+          </ul>
+        </div>
+        <button type="button" data-open-drawer data-qty="3" class="kosnora-btn-primary" style="width: 100%; padding: 1rem; font-size: 0.8125rem; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFF; font-weight: 900; text-transform: uppercase; border-radius: 12px; cursor: pointer; border: none; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35); text-align: center;">
+          GET MY KOSNORA
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var swatches = document.querySelectorAll('.pricing-color-swatch');
+    var label = document.getElementById('pricing-finish-label');
+    swatches.forEach(function(s) {
+      s.addEventListener('click', function() {
+        swatches.forEach(function(x) {
+          x.style.borderColor = '#E5E5E5';
+        });
+        s.style.borderColor = '#9333EA';
+        var col = s.getAttribute('data-color');
+        if (label && col) {
+          label.textContent = col;
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Offer & Pricing",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "CHOOSE YOUR KOSNORA"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Select your iPhone model, finish, and bundle. Battery-free NFC smart case included."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offer & Pricing"
+    }
+  ]
+}
+{% endschema %}

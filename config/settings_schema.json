@@ -1,0 +1,71 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "KOSNORA Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "KOSNORA",
+    "theme_documentation_url": "https://kosnora.com",
+    "theme_support_url": "https://kosnora.com"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_bg_main",
+        "label": "Main Background",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_bg_card",
+        "label": "Card Background",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Brand Purple Accent",
+        "default": "#9333EA"
+      },
+      {
+        "type": "color",
+        "id": "color_text_main",
+        "label": "Primary Text",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "color_text_secondary",
+        "label": "Secondary Text",
+        "default": "#555555"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "KOSNORA Theme strictly utilizes Montserrat across all weights and components."
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram Handle",
+        "default": "@kosnora"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok",
+        "label": "TikTok Handle",
+        "default": "@kosnora"
+      }
+    ]
+  }
+]

@@ -1,0 +1,90 @@
+<footer class="section-light" style="border-top: 1px solid #E5E5E5; padding: 4rem 0 3rem; color: #555555; background: #FFFFFF;">
+  <div class="kosnora-container">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid #E5E5E5;">
+      <!-- Brand Column with Official Brand Logo -->
+      <div>
+        <a href="{{ routes.root_url | default: '/' }}" class="kosnora-logo" style="display: inline-flex; align-items: center; margin-bottom: 1.25rem; text-decoration: none;" aria-label="KOSNORA">
+          <img src="{{ 'kosnora-brand-logo.png' | asset_url }}" alt="KOSNORA Logo" style="height: 24px; width: auto; max-width: 100px; object-fit: contain;" />
+        </a>
+        <p class="kosnora-subtitle" style="font-size: 0.95rem; color: #111111; margin-bottom: 0.75rem; font-weight: 700; text-transform: uppercase;">
+          Make your phone uniquely yours.
+        </p>
+        <p style="font-size: 0.8125rem; color: #555555; line-height: 1.6; max-width: 320px;">
+          Battery-free smart NFC phone cases engineered for endless personalized self-expression.
+        </p>
+      </div>
+
+      <!-- Quick Nav Links -->
+      <div>
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #111111; margin-bottom: 1.25rem;">
+          Navigation
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem; font-weight: 600;">
+          <a href="#how-it-works" style="color: #555555; text-decoration: none;">How It Works</a>
+          <a href="#benefits" style="color: #555555; text-decoration: none;">Benefits</a>
+          <a href="#compatibility" style="color: #555555; text-decoration: none;">Compatibility</a>
+          <a href="#faq" style="color: #555555; text-decoration: none;">FAQ</a>
+        </div>
+      </div>
+
+      <!-- Policies & Legal -->
+      <div>
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #111111; margin-bottom: 1.25rem;">
+          Customer Care
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
+          <button type="button" data-policy-trigger="contact" style="background: none; border: none; color: #555555; text-align: left; cursor: pointer; padding: 0; font-size: 0.8125rem;">
+            Contact Support
+          </button>
+          <button type="button" data-policy-trigger="shipping" style="background: none; border: none; color: #555555; text-align: left; cursor: pointer; padding: 0; font-size: 0.8125rem;">
+            Shipping Policy
+          </button>
+          <button type="button" data-policy-trigger="return" style="background: none; border: none; color: #9CA3AF; text-align: left; cursor: pointer; padding: 0; font-size: 0.8125rem;">
+            Return Policy
+          </button>
+          <button type="button" data-policy-trigger="privacy" style="background: none; border: none; color: #9CA3AF; text-align: left; cursor: pointer; padding: 0; font-size: 0.8125rem;">
+            Privacy Policy
+          </button>
+          <button type="button" data-policy-trigger="terms" style="background: none; border: none; color: #9CA3AF; text-align: left; cursor: pointer; padding: 0; font-size: 0.8125rem;">
+            Terms of Service
+          </button>
+        </div>
+      </div>
+
+      <!-- Social Media Placeholders -->
+      <div>
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #111111; margin-bottom: 1.25rem;">
+          Social Connect
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8125rem; color: #555555;">
+          <span>Instagram: [Insert @kosnora]</span>
+          <span>TikTok: [Insert @kosnora]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div style="padding-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; font-size: 0.75rem;">
+      <div>
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name | default: 'KOSNORA' }}. All rights reserved.
+      </div>
+      <div>
+        iPhone is a trademark of Apple Inc. KOSNORA is an independent accessory brand.
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "default": "KOSNORA"
+    }
+  ]
+}
+{% endschema %}

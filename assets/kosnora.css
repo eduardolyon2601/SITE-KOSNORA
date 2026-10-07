@@ -1,0 +1,547 @@
+/* KOSNORA - Native Shopify Theme CSS (Clean White/Light Theme) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');
+
+:root {
+  --font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-bg-main: #FFFFFF;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-card: #FFFFFF;
+  --color-border-subtle: #E5E5E5;
+  --color-border-card: #E5E5E5;
+  --color-text-main: #111111;
+  --color-text-secondary: #555555;
+  --color-text-muted: #777777;
+  --color-accent-purple: #9333EA;
+  --color-accent-purple-hover: #7E22CE;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family) !important;
+}
+
+html {
+  font-family: var(--font-family) !important;
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-family) !important;
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Container */
+.kosnora-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .kosnora-container {
+    padding: 0 2rem;
+  }
+}
+
+/* Typography Rules */
+.kosnora-headline {
+  font-weight: 800 !important;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--color-text-main);
+}
+
+.kosnora-title {
+  font-weight: 700 !important;
+  line-height: 1.2;
+  color: var(--color-text-main);
+}
+
+.kosnora-cta-text {
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kosnora-subtitle {
+  font-weight: 500 !important;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.kosnora-body {
+  font-weight: 400 !important;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* Primary CTA Buttons */
+.kosnora-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 1.1rem 2.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(147, 51, 234, 0.25);
+  text-decoration: none;
+  width: auto;
+}
+
+.kosnora-btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(147, 51, 234, 0.35);
+}
+
+.kosnora-btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #111111;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid #111111;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.kosnora-btn-dark:hover {
+  background-color: #222222;
+  color: #FFFFFF;
+}
+
+/* Header Section for Shopify */
+.kosnora-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--color-border-subtle);
+  height: 4.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.kosnora-header-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+}
+
+.kosnora-header-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.kosnora-header-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kosnora-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* 3 Underlines Button (No Border, No Box, Pure Underlines) */
+.kosnora-underlines-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.kosnora-underlines-btn:hover {
+  opacity: 0.7;
+}
+
+.kosnora-underline {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: #111111;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.kosnora-underlines-btn.is-open .kosnora-underline:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.kosnora-underlines-btn.is-open .kosnora-underline:nth-child(2) {
+  opacity: 0;
+}
+
+.kosnora-underlines-btn.is-open .kosnora-underline:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Dropdown Menu Box */
+.kosnora-menu-box {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: 260px;
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  z-index: 100;
+}
+
+.kosnora-dropdown-link:hover {
+  background-color: #FFFFFF;
+  color: #9333EA !important;
+}
+
+.kosnora-dropdown-cta:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* Cart Bag "Sacolinha" Button (Right Header) */
+.kosnora-cart-bag-btn {
+  position: relative;
+  padding: 10px;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.kosnora-cart-bag-btn:hover {
+  color: #9333EA;
+  border-color: rgba(147, 51, 234, 0.4);
+  background-color: #FFFFFF;
+}
+
+.kosnora-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.kosnora-logo img {
+  height: 24px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Sections - All converted to clean 100% pure white theme */
+.section-dark,
+.section-tech,
+.section-light,
+.section-neutral,
+.section-secondary {
+  background-color: #FFFFFF !important;
+  color: var(--color-text-main) !important;
+}
+
+.kosnora-py {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 640px) {
+  .kosnora-py {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+}
+
+/* Badge */
+.kosnora-kicker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background-color: #FAF5FF;
+  border: 1px solid #E9D5FF;
+  color: #7E22CE;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+/* Cards */
+.kosnora-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-card);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.kosnora-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FFFFFF;
+}
+::-webkit-scrollbar-thumb {
+  background: #E5E5E5;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #CCCCCC;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-33.333%); }
+}
+
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+
+/* Grid Utilities */
+.kosnora-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 860px) {
+  .kosnora-grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Phone Mockup Frame & Interactive Simulator */
+.phone-mockup {
+  width: 280px;
+  height: 560px;
+  background-color: #161618;
+  border-radius: 46px;
+  padding: 12px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .phone-mockup {
+    width: 300px;
+    height: 600px;
+    padding: 14px;
+    border-radius: 50px;
+  }
+}
+
+.phone-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 38px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.camera-island {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 105px;
+  height: 110px;
+  background: rgba(22, 22, 24, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 26px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 8px;
+  gap: 6px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.lens-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #0D0D10;
+  border: 2px solid #333336;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lens-core {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #222230 0%, #000 80%);
+  border: 1px solid #444;
+}
+
+.e-ink-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 36px;
+  overflow: hidden;
+  position: relative;
+  background: #FFFFFF;
+}
+
+.e-ink-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.screen-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.phone-brand-deboss {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Order Drawer Backdrop & Slide-out Drawer */
+.kosnora-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.kosnora-drawer-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.kosnora-drawer {
+  width: 100%;
+  max-width: 540px;
+  height: 100%;
+  background-color: #FFFFFF;
+  color: #111111;
+  border-left: 1px solid #E5E5E5;
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kosnora-drawer-backdrop.open .kosnora-drawer {
+  transform: translateX(0);
+}
+
+/* Policy Modal Backdrop & Modal */
+.kosnora-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  padding: 1.25rem;
+}
+
+.kosnora-modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.kosnora-modal {
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kosnora-modal-backdrop.open .kosnora-modal {
+  transform: scale(1);
+}
+

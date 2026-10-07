@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "hero",
+      "settings": {
+        "kicker": "404 Error",
+        "headline_1": "PAGE NOT",
+        "headline_2": "FOUND.",
+        "headline_3": "GO HOME.",
+        "subheadline": "The page you are looking for does not exist or has been moved.",
+        "cta_text": "BACK TO HOME"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

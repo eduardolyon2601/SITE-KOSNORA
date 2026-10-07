@@ -1,0 +1,6 @@
+{
+  "name": "KOSNORA — Smart NFC Phone Case",
+  "description": "Meet KOSNORA, a customizable smart phone case designed to change the image on the back of your phone whenever you want.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

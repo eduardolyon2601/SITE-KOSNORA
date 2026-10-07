@@ -1,0 +1,40 @@
+<section class="section-light kosnora-py" style="background: #FFFFFF; color: #111111;">
+  <div class="kosnora-container">
+    <div class="kosnora-grid-2">
+      <div style="border-radius: 1.5rem; overflow: hidden; border: 1px solid #E5E5E5; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+        {% if product.featured_image %}
+          <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" style="width: 100%; height: auto; display: block;">
+        {% else %}
+          <img src="{{ 'kosnora_hero_case.jpg' | asset_url }}" alt="KOSNORA Smart Phone Case" style="width: 100%; height: auto; display: block;">
+        {% endif %}
+      </div>
+
+      <div>
+        <div class="kosnora-kicker-badge" style="background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE;">
+          <span>KOSNORA Smart Phone Case</span>
+        </div>
+        <h1 class="kosnora-headline" style="font-size: 2.5rem; color: #111111; margin-bottom: 1rem;">
+          {{ product.title | default: 'KOSNORA Ink NFC Smart Phone Case' }}
+        </h1>
+        <div style="font-size: 2rem; font-weight: 800; color: #111111; margin-bottom: 1.5rem;">
+          {{ product.price | default: 7990 | money }}
+        </div>
+        <div style="font-size: 0.95rem; color: #555555; line-height: 1.6; margin-bottom: 2rem;">
+          {{ product.description | default: 'DIY Picture Smart Screen Phone Case for iPhone 17 / 16 / 15 / 14 / 12 Pro Max. Four colors, battery-free passive NFC technology.' }}
+        </div>
+
+        <button type="button" data-open-drawer data-qty="1" class="kosnora-btn-primary" style="width: 100%; justify-content: center;">
+          <span>CONFIGURE YOUR CASE</span>
+          {% render 'icon-arrow-right' %}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main Product",
+  "settings": []
+}
+{% endschema %}

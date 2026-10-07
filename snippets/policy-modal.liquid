@@ -1,0 +1,26 @@
+<div id="kosnora-policy-modal" class="kosnora-modal-backdrop" aria-hidden="true">
+  <div class="kosnora-modal" role="dialog" aria-modal="true" style="background: #FFFFFF; color: #111111; border: 1px solid #E5E5E5; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 16px; padding: 1.5rem; max-width: 500px; width: 90%;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+      <h3 id="policy-modal-title" style="font-size: 1.125rem; font-weight: 700; color: #111111;">
+        Policy Notice
+      </h3>
+      <button type="button" data-close-modal style="background: none; border: none; color: #555555; cursor: pointer; padding: 4px;">
+        {% render 'icon-close' %}
+      </button>
+    </div>
+
+    <div style="font-size: 12px; font-weight: 600; color: #B45309; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); padding: 8px 12px; border-radius: 8px; margin-bottom: 1rem;">
+      [Notice: This document is ready for real operational terms.]
+    </div>
+
+    <div id="policy-modal-body" style="font-size: 0.875rem; color: #555555; line-height: 1.6; max-height: 50vh; overflow-y: auto; white-space: pre-line; margin-bottom: 1.5rem;">
+      Loading policy content...
+    </div>
+
+    <div style="display: flex; justify-content: flex-end;">
+      <button type="button" data-close-modal style="padding: 0.6rem 1.25rem; background: #111111; color: #FFFFFF; border-radius: 0.5rem; font-size: 0.8125rem; font-weight: 600; border: none; cursor: pointer;">
+        Close Window
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<section id="why-kosnora" class="section-light" style="background: #FFFFFF; padding: 4.5rem 0; border-bottom: 1px solid #E5E5E5; color: #111111; position: relative;">
+  <div class="kosnora-container">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto 3rem;">
+      <span style="font-size: 11px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #9333EA; display: block; margin-bottom: 0.5rem;">
+        WHY KOSNORA
+      </span>
+      <h2 style="font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; margin: 0; color: #111111;">
+        {{ section.settings.headline | default: 'ONE CASE. ENDLESS LOOKS.' }}
+      </h2>
+    </div>
+
+    <!-- 4 Key Benefits Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+      <!-- PERSONAL -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: #FAF5FF; border: 1px solid #E9D5FF; display: flex; align-items: center; justify-content: center; color: #9333EA; margin-bottom: 1.25rem; font-size: 20px;">
+          👤
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; color: #111111;">
+            PERSONAL
+          </h3>
+          <p style="font-size: 0.875rem; color: #555555; font-weight: 600; margin: 0; line-height: 1.4;">
+            Make your phone feel like yours.
+          </p>
+        </div>
+      </div>
+
+      <!-- CHANGEABLE -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: #FAF5FF; border: 1px solid #E9D5FF; display: flex; align-items: center; justify-content: center; color: #9333EA; margin-bottom: 1.25rem; font-size: 20px;">
+          🔄
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; color: #111111;">
+            CHANGEABLE
+          </h3>
+          <p style="font-size: 0.875rem; color: #555555; font-weight: 600; margin: 0; line-height: 1.4;">
+            Switch your image whenever you want.
+          </p>
+        </div>
+      </div>
+
+      <!-- BATTERY-FREE -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: #FAF5FF; border: 1px solid #E9D5FF; display: flex; align-items: center; justify-content: center; color: #9333EA; margin-bottom: 1.25rem; font-size: 20px;">
+          ⚡
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; color: #111111;">
+            BATTERY-FREE
+          </h3>
+          <p style="font-size: 0.875rem; color: #555555; font-weight: 600; margin: 0; line-height: 1.4;">
+            No charging required for the display concept.
+          </p>
+        </div>
+      </div>
+
+      <!-- DIFFERENT -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: #FAF5FF; border: 1px solid #E9D5FF; display: flex; align-items: center; justify-content: center; color: #9333EA; margin-bottom: 1.25rem; font-size: 20px;">
+          ✨
+        </div>
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; color: #111111;">
+            DIFFERENT
+          </h3>
+          <p style="font-size: 0.875rem; color: #555555; font-weight: 600; margin: 0; line-height: 1.4;">
+            Stand out from ordinary phone cases.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Why Kosnora",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "ONE CASE. ENDLESS LOOKS."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Kosnora"
+    }
+  ]
+}
+{% endschema %}
