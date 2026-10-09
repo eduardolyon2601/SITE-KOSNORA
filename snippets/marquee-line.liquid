@@ -1,0 +1,101 @@
+{% comment %}
+  KOSNORA - Infinite Marquee Line (100% Shopify Compatible & Performance Optimized)
+  - Placed right on top of header
+  - Slow, fluid GPU-accelerated motion (translate3d, 42s)
+  - Purple gradient tone (#7E22CE -> #9333EA -> #6B21A8)
+  - English CTA messages with Free Shipping included
+  - Zero layout shift, zero conflict with Shopify apps or themes
+  - Accessible (role="region", aria-hidden on duplicated track)
+  - Auto-pauses on hover
+{% endcomment %}
+
+<style>
+  .kosnora-marquee-bar {
+    width: 100%;
+    background: linear-gradient(135deg, #7E22CE 0%, #9333EA 50%, #6B21A8 100%);
+    color: #FFFFFF;
+    overflow: hidden;
+    padding: 6px 0;
+    font-size: 10.5px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(88, 28, 135, 0.4);
+    user-select: none;
+    -webkit-user-select: none;
+    contain: layout paint;
+    position: relative;
+    z-index: 51;
+    line-height: 1.2;
+    transition: filter 0.2s ease;
+  }
+  .kosnora-marquee-bar:hover {
+    filter: brightness(1.06);
+  }
+  .kosnora-marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    animation: kosnoraMarquee 42s linear infinite;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  .kosnora-marquee-bar:hover .kosnora-marquee-track {
+    animation-play-state: paused;
+  }
+  .kosnora-marquee-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .kosnora-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 1.5rem;
+  }
+  .kosnora-marquee-bullet {
+    color: #D8B4FE;
+    margin-left: 1rem;
+  }
+  @keyframes kosnoraMarquee {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+</style>
+
+<div
+  class="kosnora-marquee-bar"
+  onclick="window.location.href='#pricing'"
+  role="region"
+  aria-label="Promotions Announcement"
+  title="Click to view offers"
+>
+  <div class="kosnora-marquee-track">
+    <!-- Loop 1 -->
+    <div class="kosnora-marquee-group">
+      <span class="kosnora-marquee-item">🔥 GET YOUR KOSNORA <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">🚚 FREE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">⚡ 1 FOR $79.90 · 2 FOR 139.90 · 3 FOR 194.90 <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">✨ BUY 2 OR MORE & SAVE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">🛡️ 30-DAY MONEY-BACK GUARANTEE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">🔒 100% SECURE CHECKOUT <span class="kosnora-marquee-bullet">•</span></span>
+    </div>
+    <!-- Loop 2 (seamless duplication for infinite continuous motion) -->
+    <div class="kosnora-marquee-group" aria-hidden="true">
+      <span class="kosnora-marquee-item">🔥 GET YOUR KOSNORA <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">🚚 FREE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">⚡ 1 FOR $79.90 · 2 FOR 139.90 · 3 FOR 194.90 <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">✨ BUY 2 OR MORE & SAVE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">🛡️ 30-DAY MONEY-BACK GUARANTEE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">🔒 100% SECURE CHECKOUT <span class="kosnora-marquee-bullet">•</span></span>
+    </div>
+  </div>
+</div>
