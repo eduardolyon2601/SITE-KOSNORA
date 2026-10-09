@@ -67,7 +67,18 @@ export const OfferSection: React.FC<OfferSectionProps> = ({
         </div>
 
         {/* 1. Select iPhone Model & Finish */}
-        <div className="max-w-3xl mx-auto bg-white border border-neutral-200 rounded-2xl p-4 sm:p-5 mb-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-3xl mx-auto bg-white border border-neutral-200 rounded-2xl p-4 sm:p-5 mb-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-5">
+          {/* Framed Selected Color Photo Preview (Sem cortes) */}
+          {activeColorObj.imageUrl && (
+            <div className="w-16 h-20 sm:w-20 sm:h-24 shrink-0 rounded-xl overflow-hidden bg-neutral-50 border border-neutral-200 p-1 flex items-center justify-center shadow-xs">
+              <img
+                src={activeColorObj.imageUrl}
+                alt={activeColorObj.name}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          )}
+
           {/* Model Selector */}
           <div className="w-full sm:w-auto flex-1">
             <label className="text-[11px] font-black uppercase tracking-wider text-neutral-500 flex items-center gap-1.5 mb-1.5">

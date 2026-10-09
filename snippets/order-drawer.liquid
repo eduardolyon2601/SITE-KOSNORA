@@ -1,3 +1,24 @@
+{%- assign target_product = product -%}
+{%- if target_product == nil and settings.featured_product != blank -%}
+  {%- assign target_product = all_products[settings.featured_product] -%}
+{%- endif -%}
+{%- if target_product == nil or target_product.id == blank -%}
+  {%- assign target_product = all_products['kosnora-ink-nfc-smart-phone-case'] -%}
+{%- endif -%}
+{%- if target_product == nil or target_product.id == blank -%}
+  {%- assign target_product = all_products['kosnora-smart-phone-case'] -%}
+{%- endif -%}
+{%- if target_product == nil or target_product.id == blank -%}
+  {%- assign target_product = all_products['kosnora'] -%}
+{%- endif -%}
+{%- if target_product == nil or target_product.id == blank -%}
+  {%- assign target_product = collections.all.products.first -%}
+{%- endif -%}
+{%- if target_product == nil or target_product.id == blank -%}
+  {%- assign target_product = collections.frontpage.products.first -%}
+{%- endif -%}
+{%- assign real_variant = target_product.selected_or_first_available_variant | default: target_product.variants.first -%}
+
 <div id="kosnora-order-drawer" class="kosnora-drawer-backdrop" aria-hidden="true">
   <div class="kosnora-drawer" role="dialog" aria-modal="true" aria-label="Order Configuration" style="background: #FFFFFF; color: #111111;">
     <!-- Header -->
@@ -159,41 +180,19 @@
       </div>
     </div>
 
-    <!-- Real Shopify Cart Add Form with Dynamic Quantity -->
+    <!-- Real Shopify Cart Add Form with Dynamic Quantity and Return to Checkout -->
     <form action="{{ routes.cart_add_url | default: '/cart/add' }}" method="post" id="kosnora-drawer-cart-form" enctype="multipart/form-data" style="display: none;">
-      <input type="hidden" name="id" id="drawer-variant-id" value="{{ product.selected_or_first_available_variant.id | default: 1 }}">
+      <input type="hidden" name="id" id="drawer-variant-id" value="{{ real_variant.id }}">
       <input type="hidden" name="quantity" id="drawer-quantity-input" value="1">
+      <input type="hidden" name="return_to" value="/checkout">
       <input type="hidden" name="properties[iPhone Model]" id="drawer-prop-model" value="iPhone 17 Pro Max">
       <input type="hidden" name="properties[Case Color]" id="drawer-prop-color" value="Obsidian Black">
+      <input type="hidden" name="properties[Offer Selection]" id="drawer-prop-offer" value="1 Case">
     </form>
-
-    <!-- Direct Checkout confirmation state -->
-    <div id="drawer-checkout-confirmation" style="display: none; padding: 2rem; text-align: center; background: #FFFFFF;">
-      <div style="width: 56px; height: 56px; border-radius: 50%; background: #ECFDF5; color: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-        {% render 'icon-check' %}
-      </div>
-      <h4 style="font-size: 1.25rem; font-weight: 800; color: #111111; margin-bottom: 0.5rem;">
-        Configuration Ready
-      </h4>
-      <p style="font-size: 0.875rem; color: #555555; line-height: 1.5; margin-bottom: 1.5rem;">
-        Your KOSNORA selection is primed for Shopify checkout.
-      </p>
-
-      <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 0.75rem; padding: 1rem; text-align: left; font-size: 12px; color: #B45309; margin-bottom: 1.5rem;">
-        <strong>[Insert Checkout URL / Payment Gateway link here]</strong><br>
-        Direct checkout links automatically sync with Shopify online orders.
-      </div>
-
-      <div style="display: flex; gap: 0.75rem; justify-content: center;">
-        <button type="button" data-close-drawer style="padding: 0.75rem 1.5rem; background: #111111; color: #FFFFFF; border-radius: 0.75rem; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer;">
-          Done
-        </button>
-      </div>
-    </div>
 
     <!-- Drawer Footer -->
     <div style="padding: 1.25rem 1.5rem; border-top: 1px solid #E5E5E5; background: #FFFFFF;">
-      <button type="button" id="drawer-proceed-checkout" class="kosnora-btn-primary" style="width: 100%; justify-content: center;">
+      <button type="button" id="drawer-proceed-checkout" class="kosnora-btn-primary" style="width: 100%; justify-content: center; cursor: pointer;">
         <span>PROCEED TO CHECKOUT (<span id="drawer-cta-total">$79.90</span>)</span>
         {% render 'icon-arrow-right' %}
       </button>

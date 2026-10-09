@@ -8,9 +8,10 @@ import { FaqSection } from './components/FaqSection';
 import { FinalCtaSection } from './components/FinalCtaSection';
 import { Footer } from './components/Footer';
 import { OrderDrawer } from './components/OrderDrawer';
-import { getPricingTiers } from './data/productData';
+import { getPricingTiers, COMPATIBLE_IPHONE_MODELS, PRODUCT_COLORS } from './data/productData';
 import { PricingTier } from './types';
 import { checkIsFirstPurchase } from './utils/customerEligibility';
+import { redirectToShopifyCheckout } from './utils/shopifyCart';
 
 export default function App() {
   const [isFirstPurchase, setIsFirstPurchase] = useState<boolean>(() => checkIsFirstPurchase());
@@ -27,7 +28,7 @@ export default function App() {
       const stillFirstPurchase = checkIsFirstPurchase();
       setIsFirstPurchase(stillFirstPurchase);
 
-      // Sychronize selected tier pricing if eligibility changed
+      // Synchronize selected tier pricing if eligibility changed
       const updatedTiers = getPricingTiers(stillFirstPurchase);
       setSelectedTier((prev) => {
         const matched = updatedTiers.find((t) => t.quantity === prev.quantity);
@@ -50,6 +51,24 @@ export default function App() {
     setIsDrawerOpen(true);
   };
 
+  const handleDirectBuy = async (tier: PricingTier, modelId?: string, colorId?: string) => {
+    if (tier) setSelectedTier(tier);
+    if (modelId) setSelectedModelId(modelId);
+    if (colorId) setSelectedColorId(colorId);
+
+    const model = COMPATIBLE_IPHONE_MODELS.find((m) => m.id === modelId) || COMPATIBLE_IPHONE_MODELS[0];
+    const color = PRODUCT_COLORS.find((c) => c.id === colorId) || PRODUCT_COLORS[0];
+
+    await redirectToShopifyCheckout({
+      quantity: tier.quantity,
+      model: model.name,
+      color: color.name,
+      unitPrice: tier.unitPrice,
+      totalPrice: tier.totalPrice,
+      isFirstPurchase,
+    });
+  };
+
   const handleCloseCheckout = () => {
     setIsDrawerOpen(false);
   };
@@ -66,6 +85,7 @@ export default function App() {
         {/* 1. HERO */}
         <HeroSection
           onCtaClick={() => handleOpenCheckout(selectedTier)}
+          onSelectTierAndBuy={(tier, colorId) => handleOpenCheckout(tier, undefined, colorId)}
           isFirstPurchase={isFirstPurchase}
         />
 
@@ -80,7 +100,7 @@ export default function App() {
           selectedTier={selectedTier}
           isFirstPurchase={isFirstPurchase}
           onSelectTier={(tier, mId, cId) => handleOpenCheckout(tier, mId, cId)}
-          onBuyNow={(tier, mId, cId) => handleOpenCheckout(tier, mId, cId)}
+          onBuyNow={(tier, mId, cId) => handleDirectBuy(tier, mId, cId)}
         />
 
         {/* 5. FAQ (Max 5 Objection-Busting Questions) */}

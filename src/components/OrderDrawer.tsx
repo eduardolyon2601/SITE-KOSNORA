@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, ShieldCheck, Lock, ArrowRight, Truck, CreditCard } from 'lucide-react';
+import { X, Check, ShieldCheck, ArrowRight, Truck } from 'lucide-react';
 import { COMPATIBLE_IPHONE_MODELS, PRODUCT_COLORS, getPricingTiers } from '../data/productData';
 import { PricingTier } from '../types';
 import { checkIsFirstPurchase, recordCompletedPurchase } from '../utils/customerEligibility';
+import { redirectToShopifyCheckout } from '../utils/shopifyCart';
 
 interface OrderDrawerProps {
   isOpen: boolean;
@@ -23,28 +24,8 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
   onTierChange,
   isFirstPurchase = true,
 }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    address: '',
-    city: '',
-    zip: '',
-    paymentMethod: 'card' as 'card' | 'applepay' | 'paypal',
-  });
-
-  const [hasPriorPurchase, setHasPriorPurchase] = useState<boolean>(!isFirstPurchase);
-
-  // Check email entered against previous orders log
-  useEffect(() => {
-    if (formData.email && formData.email.includes('@')) {
-      const isEligible = checkIsFirstPurchase(formData.email);
-      if (!isEligible) {
-        setHasPriorPurchase(true);
-      }
-    }
-  }, [formData.email]);
-
-  const effectiveIsFirstPurchase = isFirstPurchase && !hasPriorPurchase && checkIsFirstPurchase(formData.email);
+  const [hasPriorPurchase] = useState<boolean>(!isFirstPurchase);
+  const effectiveIsFirstPurchase = isFirstPurchase && !hasPriorPurchase && checkIsFirstPurchase();
   const currentTiers = getPricingTiers(effectiveIsFirstPurchase);
 
   const [selectedTier, setSelectedTier] = useState<PricingTier>(
@@ -52,12 +33,11 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
   );
   const [selectedModelId, setSelectedModelId] = useState<string>(initialModelId);
   const [selectedColorId, setSelectedColorId] = useState<string>(initialColorId);
-  const [checkoutStep, setCheckoutStep] = useState<'configure' | 'checkout' | 'success'>('configure');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Keep state synchronized with caller props whenever drawer opens or tier changes
   useEffect(() => {
     if (initialTier) {
-      // Find matching tier in current pricing tier list (promotional or regular)
       const matched = currentTiers.find((t) => t.quantity === initialTier.quantity) || initialTier;
       setSelectedTier(matched);
     }
@@ -91,9 +71,6 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
     }
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderNumber, setOrderNumber] = useState('');
-
   if (!isOpen) return null;
 
   const currentModel =
@@ -101,34 +78,34 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
   const currentColor =
     PRODUCT_COLORS.find((c) => c.id === selectedColorId) || PRODUCT_COLORS[0];
 
-  const handleProceedToCheckout = () => {
-    setCheckoutStep('checkout');
-  };
-
-  const handleCompleteOrder = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleProceedToCheckout = async () => {
+    if (isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const newOrderNumber = `KNR-${Math.floor(100000 + Math.random() * 900000)}`;
-      setOrderNumber(newOrderNumber);
 
-      // Permanently record purchase in browser & order log
+    try {
+      // Record purchase in eligibility tracking
       recordCompletedPurchase({
-        orderNumber: newOrderNumber,
-        email: formData.email,
+        orderNumber: 'CHECKOUT-INITIATED',
         quantity: selectedTier.quantity,
         total: selectedTier.totalPrice,
       });
-      setHasPriorPurchase(true);
 
-      setCheckoutStep('success');
-    }, 900);
-  };
-
-  const handleReset = () => {
-    setCheckoutStep('configure');
-    onClose();
+      // Redirect directly to real Shopify checkout with selected quantity
+      await redirectToShopifyCheckout({
+        quantity: selectedTier.quantity,
+        model: currentModel.name,
+        color: currentColor.name,
+        unitPrice: selectedTier.unitPrice,
+        totalPrice: selectedTier.totalPrice,
+        isFirstPurchase: effectiveIsFirstPurchase,
+      });
+    } catch (err) {
+      console.error('Checkout error:', err);
+      // Fallback redirect directly to checkout URL
+      window.location.href = '/checkout';
+    } finally {
+      setTimeout(() => setIsSubmitting(false), 2000);
+    }
   };
 
   return (
@@ -142,18 +119,14 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
         <div className="sticky top-0 z-10 bg-white/98 backdrop-blur-md px-6 py-4.5 border-b border-neutral-200 flex items-center justify-between">
           <div>
             <span className="text-[10px] font-black uppercase tracking-widest text-[#9333EA] block">
-              {checkoutStep === 'success'
-                ? 'ORDER CONFIRMED'
-                : checkoutStep === 'checkout'
-                ? 'SECURE CHECKOUT'
-                : 'SELECT YOUR KOSNORA'}
+              SELECT YOUR KOSNORA
             </span>
             <h3 className="text-lg font-black text-neutral-950 uppercase">
-              {checkoutStep === 'success' ? 'Thank You For Your Order' : 'KOSNORA Smart Case'}
+              KOSNORA Smart Case
             </h3>
           </div>
           <button
-            onClick={handleReset}
+            onClick={onClose}
             className="p-2 rounded-xl text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
             aria-label="Close checkout drawer"
           >
@@ -163,362 +136,220 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({
 
         {/* Drawer Content */}
         <div className="p-6 space-y-6 flex-1">
-          {/* STEP 3: ORDER SUCCESS */}
-          {checkoutStep === 'success' ? (
-            <div className="py-8 text-center space-y-5">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white flex items-center justify-center mx-auto shadow-lg animate-in zoom-in-75">
-                <Check className="w-8 h-8 stroke-[3]" />
-              </div>
-
-              <div>
-                <span className="text-xs font-black text-[#9333EA] uppercase tracking-wider block mb-1">
-                  ORDER #{orderNumber}
-                </span>
-                <h4 className="text-2xl font-black text-neutral-950 uppercase">
-                  Order Successfully Placed!
-                </h4>
-                <p className="text-xs sm:text-sm text-neutral-600 max-w-md mx-auto font-medium mt-1">
-                  We've received your order and are preparing your package for shipment. A confirmation email has been dispatched.
-                </p>
-              </div>
-
-              {/* Order Receipt Box */}
-              <div className="p-4.5 rounded-2xl bg-white border border-neutral-200 text-left text-xs space-y-2.5 max-w-md mx-auto shadow-xs">
-                <div className="flex justify-between text-neutral-600">
-                  <span>Package:</span>
-                  <span className="text-neutral-900 font-bold">{selectedTier.label}</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Phone Model:</span>
-                  <span className="text-neutral-900 font-bold">{currentModel.name}</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Finish:</span>
-                  <span className="text-neutral-900 font-bold">{currentColor.name}</span>
-                </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Shipping:</span>
-                  <span className="text-[#059669] font-bold">FREE Insured US Delivery</span>
-                </div>
-                <div className="flex justify-between text-neutral-600 pt-2.5 border-t border-neutral-200 font-bold">
-                  <span>Total Paid:</span>
-                  <span className="text-[#9333EA] font-black text-base">
-                    ${selectedTier.totalPrice.toFixed(2)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-[#FAF5FF] border border-[#E9D5FF] text-[11px] font-semibold text-[#7E22CE] max-w-md mx-auto flex items-center justify-center gap-2">
-                <Truck className="w-4 h-4 text-[#9333EA]" />
-                <span>Estimated Delivery: 3–5 Business Days (Tracked)</span>
-              </div>
-
-              <button
-                onClick={handleReset}
-                className="w-full max-w-md mx-auto py-3.5 bg-neutral-950 hover:bg-black text-white font-black text-xs tracking-widest uppercase rounded-xl transition-all cursor-pointer shadow-xs"
-              >
-                Return to Store
-              </button>
+          {/* Step 1: Select Bundle */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-black uppercase tracking-wider text-neutral-700">
+                1. Select Bundle:
+              </label>
+              <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                effectiveIsFirstPurchase
+                  ? 'text-[#9333EA] bg-[#FAF5FF] border-[#E9D5FF]'
+                  : 'text-neutral-600 bg-neutral-100 border-neutral-200'
+              }`}>
+                {effectiveIsFirstPurchase ? 'First Purchase Offer' : 'Standard Pricing'}
+              </span>
             </div>
-          ) : checkoutStep === 'checkout' ? (
-            /* STEP 2: COMPLETE CHECKOUT FORM */
-            <form onSubmit={handleCompleteOrder} className="space-y-5">
-              {/* Mini Order Summary */}
-              <div className="p-3.5 rounded-xl bg-[#FAF5FF] border border-[#E9D5FF] flex items-center justify-between text-xs">
-                <div>
-                  <span className="font-black text-neutral-900 block">
-                    {selectedTier.quantity}x KOSNORA ({currentModel.name})
-                  </span>
-                  <span className="text-neutral-500 font-semibold text-[11px]">
-                    Finish: {currentColor.name}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-base font-black text-[#9333EA]">
-                    ${selectedTier.totalPrice.toFixed(2)}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setCheckoutStep('configure')}
-                    className="block text-[10px] text-neutral-500 font-bold underline hover:text-[#9333EA] cursor-pointer"
+            <div className="space-y-2.5">
+              {currentTiers.map((tier) => {
+                const isSelected = selectedTier.id === tier.id;
+                return (
+                  <div
+                    key={tier.id}
+                    onClick={() => handleSelectTier(tier)}
+                    className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
+                      isSelected
+                        ? 'bg-[#FAF5FF] border-[#9333EA] shadow-xs'
+                        : 'bg-white border-neutral-200 hover:border-neutral-300'
+                    }`}
                   >
-                    Edit
-                  </button>
-                </div>
-              </div>
-
-              {/* Express Payment Simulation Options */}
-              <div>
-                <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-2">
-                  Payment Method:
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: 'card', label: 'Credit Card', icon: CreditCard },
-                    { id: 'applepay', label: 'Apple Pay', icon: Lock },
-                    { id: 'paypal', label: 'PayPal', icon: ShieldCheck },
-                  ].map((pm) => (
-                    <button
-                      key={pm.id}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, paymentMethod: pm.id as any })}
-                      className={`p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center gap-1 cursor-pointer transition-all ${
-                        formData.paymentMethod === pm.id
-                          ? 'border-[#9333EA] bg-[#FAF5FF] text-[#9333EA]'
-                          : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300'
-                      }`}
-                    >
-                      <pm.icon className="w-4 h-4" />
-                      <span className="text-[11px]">{pm.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Customer Contact & Shipping */}
-              <div className="space-y-3">
-                <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600">
-                  Shipping & Contact Details:
-                </label>
-
-                <div>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Full Name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs sm:text-sm font-semibold focus:border-[#9333EA] focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email Address (for order tracking)"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs sm:text-sm font-semibold focus:border-[#9333EA] focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Street Address"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs sm:text-sm font-semibold focus:border-[#9333EA] focus:outline-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    required
-                    placeholder="City"
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs sm:text-sm font-semibold focus:border-[#9333EA] focus:outline-none"
-                  />
-                  <input
-                    type="text"
-                    required
-                    placeholder="Postal Code / ZIP"
-                    value={formData.zip}
-                    onChange={(e) => setFormData({ ...formData, zip: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs sm:text-sm font-semibold focus:border-[#9333EA] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Trust Badges */}
-              <div className="pt-2 flex items-center justify-center gap-4 text-[11px] font-semibold text-neutral-500">
-                <span className="flex items-center gap-1">
-                  <Lock className="w-3.5 h-3.5 text-[#059669]" /> 256-bit SSL Encrypted
-                </span>
-                <span>·</span>
-                <span className="flex items-center gap-1">
-                  <Truck className="w-3.5 h-3.5 text-[#9333EA]" /> Free US Shipping
-                </span>
-              </div>
-
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <span>PROCESSING ORDER...</span>
-                  ) : (
-                    <>
-                      <span>COMPLETE ORDER · ${selectedTier.totalPrice.toFixed(2)}</span>
-                      <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          ) : (
-            /* STEP 1: CONFIGURE BUNDLE & MODEL */
-            <>
-              {/* Step 1: Select Bundle */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-black uppercase tracking-wider text-neutral-700">
-                    1. Select Bundle:
-                  </label>
-                  <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
-                    effectiveIsFirstPurchase
-                      ? 'text-[#9333EA] bg-[#FAF5FF] border-[#E9D5FF]'
-                      : 'text-neutral-600 bg-neutral-100 border-neutral-200'
-                  }`}>
-                    {effectiveIsFirstPurchase ? 'First Purchase Offer' : 'Standard Pricing'}
-                  </span>
-                </div>
-                <div className="space-y-2.5">
-                  {currentTiers.map((tier) => {
-                    const isSelected = selectedTier.id === tier.id;
-                    return (
-                      <div
-                        key={tier.id}
-                        onClick={() => handleSelectTier(tier)}
-                        className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
-                          isSelected
-                            ? 'bg-[#FAF5FF] border-[#9333EA] shadow-xs'
-                            : 'bg-white border-neutral-200 hover:border-neutral-300'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div
-                              className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center ${
-                                isSelected ? 'border-[#9333EA] bg-[#9333EA] text-white' : 'border-neutral-400'
-                              }`}
-                            >
-                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-black text-sm text-neutral-900 uppercase">
-                                  {tier.label}
-                                </span>
-                                {tier.bestValue && effectiveIsFirstPurchase && (
-                                  <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-[#9333EA] text-white">
-                                    BEST VALUE
-                                  </span>
-                                )}
-                                {tier.popular && !tier.bestValue && effectiveIsFirstPurchase && (
-                                  <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-[#9333EA] text-white">
-                                    POPULAR
-                                  </span>
-                                )}
-                              </div>
-                              <span className="text-xs text-neutral-500 font-medium">
-                                {tier.quantity > 1
-                                  ? `$${tier.unitPrice.toFixed(2)} each · $${tier.totalPrice.toFixed(2)} total`
-                                  : '$79.90 single'}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center ${
+                            isSelected ? 'border-[#9333EA] bg-[#9333EA] text-white' : 'border-neutral-400'
+                          }`}
+                        >
+                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-black text-sm text-neutral-900 uppercase">
+                              {tier.label}
+                            </span>
+                            {tier.bestValue && effectiveIsFirstPurchase && (
+                              <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-[#9333EA] text-white">
+                                BEST VALUE
                               </span>
-                            </div>
-                          </div>
-
-                          <div className="text-right">
-                            <div className="text-sm font-black text-neutral-900">
-                              ${tier.totalPrice.toFixed(2)}
-                            </div>
-                            {tier.savingsTotal > 0 && effectiveIsFirstPurchase && (
-                              <div className="text-[10px] text-[#9333EA] font-black uppercase">
-                                Save ${tier.savingsTotal.toFixed(2)}
-                              </div>
+                            )}
+                            {tier.popular && !tier.bestValue && effectiveIsFirstPurchase && (
+                              <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-[#9333EA] text-white">
+                                POPULAR
+                              </span>
                             )}
                           </div>
+                          <span className="text-xs text-neutral-500 font-medium">
+                            {tier.quantity > 1
+                              ? `$${tier.unitPrice.toFixed(2)} each · $${tier.totalPrice.toFixed(2)} total`
+                              : '$79.90 single'}
+                          </span>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
 
-              {/* Step 2: Choose iPhone Model */}
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-neutral-700 mb-1.5">
-                  2. Compatible iPhone Model:
-                </label>
-                <select
-                  value={selectedModelId}
-                  onChange={(e) => setSelectedModelId(e.target.value)}
-                  className="w-full py-3 px-3.5 rounded-xl border border-neutral-300 bg-white text-neutral-900 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#9333EA]"
-                >
-                  {COMPATIBLE_IPHONE_MODELS.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Step 3: Choose Case Color */}
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-neutral-700 mb-1.5">
-                  3. Finish: <span className="font-bold text-neutral-900">{currentColor.name}</span>
-                </label>
-                <div className="grid grid-cols-4 gap-2">
-                  {PRODUCT_COLORS.map((c) => {
-                    const isSelected = selectedColorId === c.id;
-                    return (
-                      <button
-                        key={c.id}
-                        type="button"
-                        onClick={() => setSelectedColorId(c.id)}
-                        className={`p-2.5 rounded-xl border-2 flex flex-col items-center gap-1 cursor-pointer transition-all ${
-                          isSelected
-                            ? 'border-[#9333EA] bg-[#FAF5FF] shadow-xs'
-                            : 'border-neutral-200 bg-white hover:border-neutral-300'
-                        }`}
-                      >
-                        <span
-                          className="w-5 h-5 rounded-full border border-neutral-300"
-                          style={{ backgroundColor: c.hex }}
-                        />
-                        <span className="text-[10px] font-bold text-neutral-800 truncate w-full text-center">
-                          {c.name.split(' ')[0]}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Drawer Sticky Footer Action (Only on configure step) */}
-        {checkoutStep === 'configure' && (
-          <div className="sticky bottom-0 bg-white border-t border-neutral-200 p-5 space-y-2">
-            <button
-              onClick={handleProceedToCheckout}
-              className="w-full py-4 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>CHECKOUT · ${selectedTier.totalPrice.toFixed(2)}</span>
-              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-            </button>
-
-            <div className="flex items-center justify-center gap-3 text-[11px] text-neutral-500 font-semibold pt-1">
-              <span className="flex items-center gap-1">
-                <Truck className="w-3.5 h-3.5 text-[#9333EA]" /> Free US Delivery
-              </span>
-              <span>·</span>
-              <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#9333EA]" /> 30-Day Guarantee
-              </span>
+                      <div className="text-right">
+                        <div className="text-sm font-black text-neutral-900">
+                          ${tier.totalPrice.toFixed(2)}
+                        </div>
+                        {tier.savingsTotal > 0 && effectiveIsFirstPurchase && (
+                          <div className="text-[10px] text-[#9333EA] font-black uppercase">
+                            Save ${tier.savingsTotal.toFixed(2)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        )}
+
+          {/* Step 2: Choose iPhone Model */}
+          <div>
+            <label className="block text-xs font-black uppercase tracking-wider text-neutral-700 mb-1.5">
+              2. Compatible iPhone Model:
+            </label>
+            <select
+              value={selectedModelId}
+              onChange={(e) => setSelectedModelId(e.target.value)}
+              className="w-full py-3 px-3.5 rounded-xl border border-neutral-300 bg-white text-neutral-900 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#9333EA] cursor-pointer"
+            >
+              {COMPATIBLE_IPHONE_MODELS.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Step 3: Choose Case Color */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-black uppercase tracking-wider text-neutral-700">
+                3. Finish: <span className="font-bold text-neutral-900">{currentColor.name}</span>
+              </label>
+            </div>
+
+            {/* Framed Selected Color Photo Preview (Sem cortes) */}
+            {currentColor.imageUrl && (
+              <div className="flex items-center gap-3 p-2.5 bg-neutral-50 rounded-xl border border-neutral-200 mb-3">
+                <div className="w-12 h-15 shrink-0 rounded-lg overflow-hidden bg-white border border-neutral-200 p-0.5 flex items-center justify-center">
+                  <img
+                    src={currentColor.imageUrl}
+                    alt={currentColor.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider block">
+                    Cor Selecionada
+                  </span>
+                  <span className="text-sm font-black text-neutral-950">
+                    {currentColor.name}
+                  </span>
+                  <span className="text-[11px] text-[#9333EA] font-semibold block">
+                    Foto enquadrada completa
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-5 gap-2">
+              {PRODUCT_COLORS.map((c) => {
+                const isSelected = selectedColorId === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setSelectedColorId(c.id)}
+                    className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1.5 cursor-pointer transition-all ${
+                      isSelected
+                        ? 'border-[#9333EA] bg-[#FAF5FF] shadow-xs'
+                        : 'border-neutral-200 bg-white hover:border-neutral-300'
+                    }`}
+                  >
+                    {c.imageUrl ? (
+                      <div className="w-6 h-8 rounded bg-white border border-black/10 overflow-hidden flex items-center justify-center">
+                        <img src={c.imageUrl} alt={c.name} className="w-full h-full object-contain" />
+                      </div>
+                    ) : (
+                      <span
+                        className="w-5 h-5 rounded-full border border-neutral-300"
+                        style={{ backgroundColor: c.hex }}
+                      />
+                    )}
+                    <span className="text-[10px] font-bold text-neutral-800 truncate w-full text-center">
+                      {c.name.split(' ')[0]}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Order Summary Box */}
+          <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 text-xs space-y-2">
+            <div className="flex justify-between text-neutral-600 font-medium">
+              <span>Selected Bundle:</span>
+              <span className="text-neutral-900 font-bold">{selectedTier.label} ({selectedTier.quantity} {selectedTier.quantity === 1 ? 'Case' : 'Cases'})</span>
+            </div>
+            <div className="flex justify-between text-neutral-600 font-medium">
+              <span>Compatibility:</span>
+              <span className="text-neutral-900 font-bold">{currentModel.name}</span>
+            </div>
+            <div className="flex justify-between text-neutral-600 font-medium">
+              <span>Selected Finish:</span>
+              <span className="text-neutral-900 font-bold">{currentColor.name}</span>
+            </div>
+            <div className="flex justify-between text-neutral-600 font-medium">
+              <span>Shipping:</span>
+              <span className="text-[#059669] font-bold">Free US Delivery</span>
+            </div>
+            <div className="border-t border-neutral-200 pt-2 flex justify-between font-bold text-sm text-neutral-950">
+              <span>Total:</span>
+              <span className="text-[#9333EA]">${selectedTier.totalPrice.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Drawer Sticky Footer Action */}
+        <div className="sticky bottom-0 bg-white border-t border-neutral-200 p-5 space-y-2">
+          <button
+            onClick={handleProceedToCheckout}
+            disabled={isSubmitting}
+            className="w-full py-4 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white font-black text-xs sm:text-sm tracking-widest uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+          >
+            {isSubmitting ? (
+              <span>REDIRECTING TO CHECKOUT...</span>
+            ) : (
+              <>
+                <span>PROCEED TO CHECKOUT · ${selectedTier.totalPrice.toFixed(2)}</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+              </>
+            )}
+          </button>
+
+          <div className="flex items-center justify-center gap-3 text-[11px] text-neutral-500 font-semibold pt-1">
+            <span className="flex items-center gap-1">
+              <Truck className="w-3.5 h-3.5 text-[#9333EA]" /> Free US Delivery
+            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#9333EA]" /> 30-Day Guarantee
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+

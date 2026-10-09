@@ -25,12 +25,6 @@ import {
   WHATS_INCLUDED
 } from '../data/productData';
 import { PricingTier } from '../types';
-import heroImg from '../assets/images/kosnora_hero_case_1791272211390.jpg';
-import coupleImg from '../assets/images/kosnora_couple_look_1791272221398.jpg';
-import petImg from '../assets/images/kosnora_pet_look_1791272230677.jpg';
-import travelImg from '../assets/images/kosnora_travel_art_1791272238854.jpg';
-import closeUpImg from '../assets/images/kosnora_close_up_1791329422710.jpg';
-import unboxingImg from '../assets/images/kosnora_unboxing_1791329433565.jpg';
 
 interface ProductHeroSectionProps {
   onAddToCart: (tier: PricingTier, modelId: string, colorId: string) => void;
@@ -43,12 +37,36 @@ export const ProductHeroSection: React.FC<ProductHeroSectionProps> = ({
 }) => {
   // Gallery State
   const galleryImages = [
-    { id: 'flagship', src: heroImg, title: 'Studio Showcase', tag: 'Flagship' },
-    { id: 'couple', src: coupleImg, title: 'Couple Memory', tag: 'Lifestyle' },
-    { id: 'pet', src: petImg, title: 'Pet Portrait', tag: 'Everyday' },
-    { id: 'travel', src: travelImg, title: 'Travel Artwork', tag: 'Editorial' },
-    { id: 'closeup', src: closeUpImg, title: 'Composite Armor Edge', tag: 'Details' },
-    { id: 'unboxing', src: unboxingImg, title: 'Luxury Unboxing Box', tag: 'Packaging' },
+    {
+      id: 'cinza',
+      src: 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg',
+      title: 'Cinza',
+      tag: 'Cinza',
+    },
+    {
+      id: 'preta',
+      src: 'https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg',
+      title: 'Preta',
+      tag: 'Preta',
+    },
+    {
+      id: 'rosa',
+      src: 'https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg',
+      title: 'Rosa',
+      tag: 'Rosa',
+    },
+    {
+      id: 'branca',
+      src: 'https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg',
+      title: 'Branca',
+      tag: 'Branca',
+    },
+    {
+      id: 'laranja',
+      src: 'https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg',
+      title: 'Laranja',
+      tag: 'Laranja',
+    },
   ];
 
   const [activeImageIdx, setActiveImageIdx] = useState(0);
@@ -84,8 +102,8 @@ export const ProductHeroSection: React.FC<ProductHeroSectionProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
           {/* ================= LEFT COLUMN: PRODUCT GALLERY ================= */}
           <div className="lg:col-span-7 flex flex-col gap-4 sticky top-24">
-            {/* Main Hero Product Display */}
-            <div className="relative aspect-[4/3] sm:aspect-[4/3] rounded-2xl overflow-hidden bg-neutral-950 border border-neutral-800 shadow-2xl group">
+            {/* Main Hero Product Display - Enquadrada sem cortes */}
+            <div className="relative aspect-[645/800] max-w-md mx-auto w-full rounded-2xl overflow-hidden bg-neutral-950 border border-neutral-800 shadow-2xl group flex items-center justify-center p-2">
               {/* Badges Overlay */}
               <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2">
                 <span className="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-[#A855F7]/50 text-[#C084FC] text-[10px] font-black uppercase tracking-widest shadow-[0_0_12px_rgba(168,85,247,0.3)] flex items-center gap-1.5">
@@ -101,7 +119,7 @@ export const ProductHeroSection: React.FC<ProductHeroSectionProps> = ({
               <img
                 src={galleryImages[activeImageIdx].src}
                 alt={galleryImages[activeImageIdx].title}
-                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                className="w-full h-full object-contain transition-all duration-500"
               />
 
               {/* Gradient Bottom Overlay */}

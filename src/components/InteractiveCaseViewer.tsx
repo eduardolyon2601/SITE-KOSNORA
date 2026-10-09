@@ -1,11 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Camera, RefreshCw, Upload, Heart, Dog, Mountain, Sparkles, Check, Zap, Shield, BatteryCharging } from 'lucide-react';
+import { Camera, RefreshCw, Upload, Heart, Sparkles, Check, Zap, Shield, BatteryCharging } from 'lucide-react';
 import { PRODUCT_COLORS } from '../data/productData';
 import { KosnoraLogo } from './KosnoraLogo';
-import heroImg from '../assets/images/kosnora_hero_case_1791272211390.jpg';
-import coupleImg from '../assets/images/kosnora_couple_look_1791272221398.jpg';
-import petImg from '../assets/images/kosnora_pet_look_1791272230677.jpg';
-import travelImg from '../assets/images/kosnora_travel_art_1791272238854.jpg';
 
 interface InteractiveCaseViewerProps {
   onSelectPlan?: () => void;
@@ -15,36 +11,44 @@ interface InteractiveCaseViewerProps {
 
 const PRESET_LOOKS = [
   {
-    id: 'couple',
-    label: 'COUPLE SHOT',
-    tag: 'Sentimental',
-    icon: Heart,
-    imageSrc: coupleImg,
-    description: 'Special date or anniversary snapshot',
-  },
-  {
-    id: 'pet',
-    label: 'PET TRIBUTE',
-    tag: 'Furry Friend',
-    icon: Dog,
-    imageSrc: petImg,
-    description: 'Keep your best buddy always in sight',
-  },
-  {
-    id: 'travel',
-    label: 'HORIZON TRIP',
-    tag: 'Adventures',
-    icon: Mountain,
-    imageSrc: travelImg,
-    description: 'Unforgettable horizon and memories',
-  },
-  {
-    id: 'art',
-    label: 'BRUTALIST ART',
-    tag: 'Aesthetic',
+    id: 'cinza',
+    label: 'CINZA',
+    tag: 'Classic',
     icon: Sparkles,
-    imageSrc: heroImg,
-    description: 'Architectural monochrome silhouette',
+    imageSrc: 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg',
+    description: 'Titanium Gray finish with NFC e-ink display',
+  },
+  {
+    id: 'preta',
+    label: 'PRETA',
+    tag: 'Stealth',
+    icon: Sparkles,
+    imageSrc: 'https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg',
+    description: 'Obsidian Black finish with NFC e-ink display',
+  },
+  {
+    id: 'rosa',
+    label: 'ROSA',
+    tag: 'Vibrant',
+    icon: Heart,
+    imageSrc: 'https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg',
+    description: 'Soft Pink finish with NFC e-ink display',
+  },
+  {
+    id: 'branca',
+    label: 'BRANCA',
+    tag: 'Minimal',
+    icon: Sparkles,
+    imageSrc: 'https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg',
+    description: 'Cloud White finish with NFC e-ink display',
+  },
+  {
+    id: 'laranja',
+    label: 'LARANJA',
+    tag: 'Bold',
+    icon: Zap,
+    imageSrc: 'https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg',
+    description: 'Sunset Orange finish with NFC e-ink display',
   },
 ];
 
@@ -53,11 +57,11 @@ export const InteractiveCaseViewer: React.FC<InteractiveCaseViewerProps> = ({
   selectedColorId: externalColorId,
   onColorChange,
 }) => {
-  const [internalColorId, setInternalColorId] = useState('obsidian-black');
+  const [internalColorId, setInternalColorId] = useState('cinza');
   const activeColorId = externalColorId || internalColorId;
   const activeColor = PRODUCT_COLORS.find((c) => c.id === activeColorId) || PRODUCT_COLORS[0];
 
-  const [activeLookId, setActiveLookId] = useState('couple');
+  const [activeLookId, setActiveLookId] = useState('cinza');
   const [customImage, setCustomImage] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -95,7 +99,7 @@ export const InteractiveCaseViewer: React.FC<InteractiveCaseViewerProps> = ({
 
   const currentDisplayImage = customImage
     ? customImage
-    : PRESET_LOOKS.find((l) => l.id === activeLookId)?.imageSrc || coupleImg;
+    : PRESET_LOOKS.find((l) => l.id === activeLookId)?.imageSrc || PRESET_LOOKS[0].imageSrc;
 
   return (
     <div className="w-full max-w-5xl mx-auto rounded-3xl bg-[#08090D] border-2 border-neutral-800/90 p-6 sm:p-8 lg:p-10 shadow-2xl relative overflow-hidden">
@@ -161,7 +165,7 @@ export const InteractiveCaseViewer: React.FC<InteractiveCaseViewerProps> = ({
                   <img
                     src={currentDisplayImage}
                     alt="KOSNORA Smart Screen Display"
-                    className={`w-full h-full object-cover transition-all duration-300 ${
+                    className={`w-full h-full object-contain bg-neutral-950 transition-all duration-300 ${
                       isUpdating ? 'opacity-25 scale-95 blur-xs filter grayscale' : 'opacity-95 scale-100'
                     }`}
                   />

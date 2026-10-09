@@ -3,6 +3,7 @@ export type CaseColor = {
   name: string;
   hex: string;
   borderClass: string;
+  imageUrl?: string;
 };
 
 export type IPhoneModel = {

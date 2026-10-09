@@ -4,10 +4,41 @@ export const BRAND_NAME = "KOSNORA";
 export const PRODUCT_NAME = "KOSNORA Ink NFC Smart Phone Case";
 
 export const PRODUCT_COLORS: CaseColor[] = [
-  { id: 'obsidian-black', name: 'Obsidian Black', hex: '#161618', borderClass: 'border-neutral-700' },
-  { id: 'titanium-gray', name: 'Titanium Gray', hex: '#4A4C50', borderClass: 'border-neutral-500' },
-  { id: 'cloud-white', name: 'Cloud White', hex: '#EAEAEA', borderClass: 'border-neutral-300' },
-  { id: 'midnight-navy', name: 'Midnight Navy', hex: '#1C2433', borderClass: 'border-blue-900' },
+  {
+    id: 'cinza',
+    name: 'Cinza',
+    hex: '#71717A',
+    borderClass: 'border-neutral-500',
+    imageUrl: 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg',
+  },
+  {
+    id: 'preta',
+    name: 'Preta',
+    hex: '#18181B',
+    borderClass: 'border-neutral-900',
+    imageUrl: 'https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg',
+  },
+  {
+    id: 'rosa',
+    name: 'Rosa',
+    hex: '#F472B6',
+    borderClass: 'border-pink-400',
+    imageUrl: 'https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg',
+  },
+  {
+    id: 'branca',
+    name: 'Branca',
+    hex: '#FFFFFF',
+    borderClass: 'border-neutral-300',
+    imageUrl: 'https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg',
+  },
+  {
+    id: 'laranja',
+    name: 'Laranja',
+    hex: '#EA580C',
+    borderClass: 'border-orange-500',
+    imageUrl: 'https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg',
+  },
 ];
 
 export const COMPATIBLE_IPHONE_MODELS: IPhoneModel[] = [
@@ -40,7 +71,7 @@ export const COMPATIBLE_IPHONE_MODELS: IPhoneModel[] = [
   { id: 'ip-12', name: 'iPhone 12', series: 'iPhone 12' },
 ];
 
-// First-Purchase Only Promotional Pricing
+// Pricing Tiers (1 por $79,90, 2 por 139,90 e 3 por 194,90)
 export const PROMOTIONAL_PRICING_TIERS: PricingTier[] = [
   {
     id: 'single',
@@ -55,10 +86,10 @@ export const PROMOTIONAL_PRICING_TIERS: PricingTier[] = [
     id: 'double',
     quantity: 2,
     label: '2 CASES',
-    unitPrice: 69.90,
-    totalPrice: 139.80,
-    savingsTotal: 20.00,
-    savingsPerUnit: 10.00,
+    unitPrice: 69.95,
+    totalPrice: 139.90,
+    savingsTotal: 19.90,
+    savingsPerUnit: 9.95,
     popular: true,
     tagline: '2 KOSNORA Smart Phone Cases',
   },
@@ -66,16 +97,16 @@ export const PROMOTIONAL_PRICING_TIERS: PricingTier[] = [
     id: 'triple',
     quantity: 3,
     label: '3 CASES',
-    unitPrice: 59.90,
-    totalPrice: 179.70,
-    savingsTotal: 60.00,
-    savingsPerUnit: 20.00,
+    unitPrice: 64.97,
+    totalPrice: 194.90,
+    savingsTotal: 44.80,
+    savingsPerUnit: 14.93,
     bestValue: true,
     tagline: '3 KOSNORA Smart Phone Cases',
   },
 ];
 
-// Regular / Original Pricing (Applied after First Purchase)
+// Regular / Original Pricing
 export const REGULAR_PRICING_TIERS: PricingTier[] = [
   {
     id: 'single',
@@ -90,10 +121,10 @@ export const REGULAR_PRICING_TIERS: PricingTier[] = [
     id: 'double',
     quantity: 2,
     label: '2 CASES',
-    unitPrice: 79.90,
-    totalPrice: 159.80,
-    savingsTotal: 0,
-    savingsPerUnit: 0,
+    unitPrice: 69.95,
+    totalPrice: 139.90,
+    savingsTotal: 19.90,
+    savingsPerUnit: 9.95,
     popular: true,
     tagline: '2 KOSNORA Smart Phone Cases',
   },
@@ -101,10 +132,10 @@ export const REGULAR_PRICING_TIERS: PricingTier[] = [
     id: 'triple',
     quantity: 3,
     label: '3 CASES',
-    unitPrice: 79.90,
-    totalPrice: 239.70,
-    savingsTotal: 0,
-    savingsPerUnit: 0,
+    unitPrice: 64.97,
+    totalPrice: 194.90,
+    savingsTotal: 44.80,
+    savingsPerUnit: 14.93,
     bestValue: true,
     tagline: '3 KOSNORA Smart Phone Cases',
   },

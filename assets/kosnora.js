@@ -362,8 +362,52 @@ function initDrawer() {
     });
   });
 
+  let isSubmittingCheckout = false;
+
+  async function resolveShopifyVariantId() {
+    let vId = document.getElementById('drawer-variant-id')?.value;
+    if (vId && vId !== '1' && vId !== 'default' && vId.trim() !== '') {
+      return vId.trim();
+    }
+    if (window.KOSNORA_STORE && window.KOSNORA_STORE.variantId && String(window.KOSNORA_STORE.variantId).trim() !== '') {
+      return String(window.KOSNORA_STORE.variantId).trim();
+    }
+    // Dynamic query fallback to /products.json on Shopify store
+    try {
+      const rootUrl = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
+      const res = await fetch(rootUrl + 'products.json?limit=10');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.products && data.products.length > 0) {
+          const product = data.products.find(p => p.title.toLowerCase().includes('kosnora')) || data.products[0];
+          const variant = (product.variants && product.variants.find(v => v.available)) || (product.variants && product.variants[0]);
+          if (variant && variant.id) {
+            const foundId = String(variant.id);
+            const input = document.getElementById('drawer-variant-id');
+            if (input) input.value = foundId;
+            if (window.KOSNORA_STORE) window.KOSNORA_STORE.variantId = foundId;
+            return foundId;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Could not auto-resolve Shopify variant ID:', e);
+    }
+    return vId || null;
+  }
+
   if (proceedBtn) {
-    proceedBtn.addEventListener('click', () => {
+    proceedBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (isSubmittingCheckout) return;
+      isSubmittingCheckout = true;
+
+      // Visual feedback: prevent double submission
+      const originalBtnHtml = proceedBtn.innerHTML;
+      proceedBtn.disabled = true;
+      proceedBtn.style.opacity = '0.7';
+      proceedBtn.innerHTML = '<span>REDIRECTING TO CHECKOUT...</span>';
+
       const selectedModelVal = (summaryModel && summaryModel.textContent) || (modelSelect && modelSelect.value) || 'iPhone 17 Pro Max';
       const selectedColorVal = (summaryColor && summaryColor.textContent) || 'Obsidian Black';
 
@@ -371,12 +415,31 @@ function initDrawer() {
       if (propColorInput) propColorInput.value = selectedColorVal;
       if (qtyInput) qtyInput.value = currentQty;
 
-      // Direct checkout integration: on real Shopify store, add to cart with selected quantity
-      if (window.Shopify && window.Shopify.routes) {
-        const variantId = document.getElementById('drawer-variant-id')?.value;
-        const root = window.Shopify.routes.root || '/';
+      const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
+      const checkoutUrl = root + 'checkout';
 
-        fetch(root + 'cart/add.js', {
+      try {
+        const variantId = await resolveShopifyVariantId();
+        if (variantId) {
+          const varInput = document.getElementById('drawer-variant-id');
+          if (varInput) varInput.value = variantId;
+        }
+
+        // 1. Clear cart first so the cart contains ONLY the chosen offer
+        try {
+          await fetch(root + 'cart/clear.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          });
+        } catch (clearErr) {
+          console.warn('Cart clear non-fatal error:', clearErr);
+        }
+
+        // 2. Add selected offer with exact quantity and item properties to Shopify cart
+        const cartAddRes = await fetch(root + 'cart/add.js', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -389,54 +452,51 @@ function initDrawer() {
               properties: {
                 'iPhone Model': selectedModelVal,
                 'Case Color': selectedColorVal,
+                'Offer Selection': `${currentQty} Case${currentQty > 1 ? 's' : ''}`,
                 'Promotion Eligibility': checkCustomerFirstPurchase() ? 'First Purchase Offer Applied' : 'Standard Purchase',
-                'Pricing Structure': '$' + currentUnitPrice.toFixed(2) + ' each · $' + currentTotal.toFixed(2) + ' total'
+                'Pricing Structure': `$${currentUnitPrice.toFixed(2)} each · $${currentTotal.toFixed(2)} total`
               }
             }]
           })
-        })
-        .then(() => {
+        });
+
+        if (cartAddRes.ok) {
           try {
             localStorage.setItem('kosnora_has_purchased', 'true');
-          } catch(e) {}
-          window.location.href = root + 'checkout';
-        })
-        .catch(() => {
+          } catch (e) {}
+
+          // 3. Immediately redirect directly to the real Shopify checkout
+          window.location.href = checkoutUrl;
+          return;
+        } else {
+          const errData = await cartAddRes.json().catch(() => ({}));
+          console.warn('Shopify cart/add.js returned status:', cartAddRes.status, errData);
+
+          // Fallback A: Checkout permalink if variant ID exists
+          if (variantId && variantId !== '1') {
+            window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
+            return;
+          }
+
+          // Fallback B: Standard POST form with return_to=/checkout
           const form = document.getElementById('kosnora-drawer-cart-form');
           if (form) {
             form.submit();
-          } else {
-            window.location.href = root + 'checkout';
+            return;
           }
-        });
-        return;
-      }
-
-      const checkoutArea = document.getElementById('drawer-checkout-confirmation');
-      const configArea = document.getElementById('drawer-config-area');
-      if (checkoutArea && configArea) {
-        configArea.style.display = 'none';
-        checkoutArea.style.display = 'block';
-
-        const doneBtn = checkoutArea.querySelector('[data-close-drawer]');
-        if (doneBtn) {
-          doneBtn.addEventListener('click', () => {
-            try {
-              localStorage.setItem('kosnora_has_purchased', 'true');
-              const raw = localStorage.getItem('kosnora_customer_orders');
-              const orders = raw ? JSON.parse(raw) : [];
-              orders.push({
-                orderNumber: 'KNR-' + Math.floor(100000 + Math.random() * 900000),
-                quantity: currentQty,
-                total: currentTotal,
-                timestamp: Date.now()
-              });
-              localStorage.setItem('kosnora_customer_orders', JSON.stringify(orders));
-              window.dispatchEvent(new CustomEvent('kosnora:purchase-completed'));
-            } catch (e) {}
-          }, { once: true });
+        }
+      } catch (err) {
+        console.error('Checkout processing error:', err);
+        // Fallback form submit
+        const form = document.getElementById('kosnora-drawer-cart-form');
+        if (form) {
+          form.submit();
+          return;
         }
       }
+
+      // Final fallback: redirect directly to checkout URL
+      window.location.href = checkoutUrl;
     });
   }
 

@@ -8,6 +8,17 @@
     "theme_support_url": "https://kosnora.com"
   },
   {
+    "name": "Product Configuration",
+    "settings": [
+      {
+        "type": "product",
+        "id": "featured_product",
+        "label": "Featured KOSNORA Product",
+        "info": "Select the KOSNORA phone case product to sell and link to checkout."
+      }
+    ]
+  },
+  {
     "name": "Colors",
     "settings": [
       {

@@ -32,8 +32,46 @@
 
     {{ content_for_header }}
 
-    <!-- Shopify Customer Eligibility Context for First-Purchase Only Promotion -->
+    {%- assign target_product = product -%}
+    {%- if target_product == nil and settings.featured_product != blank -%}
+      {%- assign target_product = all_products[settings.featured_product] -%}
+    {%- endif -%}
+    {%- if target_product == nil or target_product.id == blank -%}
+      {%- assign target_product = all_products['kosnora-ink-nfc-smart-phone-case'] -%}
+    {%- endif -%}
+    {%- if target_product == nil or target_product.id == blank -%}
+      {%- assign target_product = all_products['kosnora-smart-phone-case'] -%}
+    {%- endif -%}
+    {%- if target_product == nil or target_product.id == blank -%}
+      {%- assign target_product = all_products['kosnora'] -%}
+    {%- endif -%}
+    {%- if target_product == nil or target_product.id == blank -%}
+      {%- assign target_product = collections.all.products.first -%}
+    {%- endif -%}
+    {%- if target_product == nil or target_product.id == blank -%}
+      {%- assign target_product = collections.frontpage.products.first -%}
+    {%- endif -%}
+    {%- assign real_variant = target_product.selected_or_first_available_variant | default: target_product.variants.first -%}
+
+    <!-- Shopify Store & Checkout Routes Context -->
     <script>
+      window.Shopify = window.Shopify || {};
+      window.Shopify.routes = window.Shopify.routes || {
+        root: {{ routes.root_url | default: '/' | json }}
+      };
+
+      window.KOSNORA_STORE = {
+        root: {{ routes.root_url | default: '/' | json }},
+        cartAddUrl: {{ routes.cart_add_url | default: '/cart/add.js' | json }},
+        cartClearUrl: {{ routes.cart_clear_url | default: '/cart/clear.js' | json }},
+        cartUrl: {{ routes.cart_url | default: '/cart' | json }},
+        checkoutUrl: '/checkout',
+        variantId: {{ real_variant.id | default: '' | json }},
+        productId: {{ target_product.id | default: '' | json }},
+        productHandle: {{ target_product.handle | default: '' | json }},
+        productTitle: {{ target_product.title | default: 'KOSNORA Smart Phone Case' | json }}
+      };
+
       window.KOSNORA_CUSTOMER = {
         loggedIn: {% if customer %}true{% else %}false{% endif %},
         ordersCount: {{ customer.orders_count | default: 0 }},
