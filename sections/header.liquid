@@ -1,5 +1,5 @@
-<header class="kosnora-header" style="position: sticky; top: 0; z-index: 50; width: 100%; background: #FFFFFF; border-bottom: 1px solid #E5E5E5; height: 4.25rem; display: flex; align-items: center;">
-  <div class="kosnora-container" style="width: 100%;">
+<header class="kosnora-header" style="position: sticky; top: 0; z-index: 50; width: 100%; background: #FFFFFF; border-bottom: 1px solid #E5E5E5;">
+  <div class="kosnora-container" style="width: 100%; height: 4.25rem; display: flex; align-items: center;">
     <div class="kosnora-header-grid" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%;">
 
       <!-- LEFT COLUMN: Three Horizontal Underlines (Pure Underlines, No Border/Box) -->
@@ -25,17 +25,13 @@
         >
           <div style="padding: 6px 12px 10px; border-bottom: 1px solid #F3F4F6; margin-bottom: 6px;">
             <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #9333EA;">
-              NAVEGAÇÃO
+              NAVIGATION
             </span>
           </div>
 
           <nav style="display: flex; flex-direction: column; gap: 4px;">
             <a href="#pricing" class="kosnora-dropdown-link" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1F2937; text-decoration: none; transition: all 0.15s ease;">
               <span>SHOP</span>
-              <span style="color: #9CA3AF; font-size: 14px;">→</span>
-            </a>
-            <a href="#how-it-works" class="kosnora-dropdown-link" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1F2937; text-decoration: none; transition: all 0.15s ease;">
-              <span>HOW IT WORKS</span>
               <span style="color: #9CA3AF; font-size: 14px;">→</span>
             </a>
             <a href="#why-kosnora" class="kosnora-dropdown-link" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #1F2937; text-decoration: none; transition: all 0.15s ease;">
@@ -97,6 +93,28 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Carrossel infinito EM BAIXO DA HEADER (linha pequena em tom roxo, sempre em movimento com frases de CTA) -->
+  <div onclick="window.location.href='#pricing'" style="width: 100%; background: linear-gradient(135deg, #7E22CE 0%, #9333EA 50%, #6B21A8 100%); color: #FFFFFF; overflow: hidden; padding: 6px 0; font-size: 10px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-top: 1px solid rgba(229, 231, 235, 0.5); border-bottom: 1px solid rgba(88, 28, 135, 0.4); user-select: none;">
+    <div style="display: flex; width: max-content; animation: kosnoraMarquee 42s linear infinite;">
+      <div style="display: flex; align-items: center; flex-shrink: 0;">
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🔥 GET YOUR KOSNORA <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🚚 FREE SHIPPING <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">⚡ 1 FOR $79.90 · 2 FOR 139.90 · 3 FOR 194.90 <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">✨ BUY 2 OR MORE & SAVE <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🛡️ 30-DAY MONEY-BACK GUARANTEE <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🔒 100% SECURE CHECKOUT <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+      </div>
+      <div style="display: flex; align-items: center; flex-shrink: 0;" aria-hidden="true">
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🔥 GET YOUR KOSNORA <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🚚 FREE SHIPPING <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">⚡ 1 FOR $79.90 · 2 FOR 139.90 · 3 FOR 194.90 <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">✨ BUY 2 OR MORE & SAVE <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🛡️ 30-DAY MONEY-BACK GUARANTEE <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0 1.5rem;">🔒 100% SECURE CHECKOUT <span style="color: #D8B4FE; margin-left: 1rem;">•</span></span>
+      </div>
     </div>
   </div>
 </header>

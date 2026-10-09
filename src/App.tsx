@@ -20,7 +20,7 @@ export default function App() {
     await redirectToShopifyCheckout({
       quantity: tier.quantity,
       model: 'KOSNORA Case',
-      color: selectedImage?.name || 'Cinza',
+      color: selectedImage?.name || 'Gray',
       unitPrice: tier.unitPrice,
       totalPrice: tier.totalPrice,
     });

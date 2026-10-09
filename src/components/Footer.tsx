@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
                 Make your phone uniquely yours.
               </p>
               <p className="text-xs text-neutral-500 max-w-sm leading-relaxed">
-                Capinhas de celular premium projetadas com design elegante, durabilidade e proteção avançada.
+                Premium phone cases engineered with sleek minimalist design, long-lasting durability, and advanced impact protection.
               </p>
             </div>
 

@@ -476,3 +476,9 @@ body {
   transform: scale(1);
 }
 
+@keyframes kosnoraMarquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+

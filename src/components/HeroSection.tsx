@@ -43,7 +43,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* ============================================================ */}
-        {/* MOBILE VIEW (< lg): Unchanged flow                           */}
+        {/* MOBILE VIEW (< lg): Unchanged layout flow                    */}
         {/* Photo on top, thumbnails below, GET YOUR KOSNORA button,      */}
         {/* horizontal carousel of values below that                      */}
         {/* ============================================================ */}
@@ -115,18 +115,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
 
               <div className="flex items-center justify-center gap-2 text-xs font-bold text-neutral-500 uppercase tracking-wider">
-                <span>Escolha a sua oferta abaixo para comprar</span>
+                <span>Choose your bundle below to purchase</span>
               </div>
             </div>
 
-            {/* Horizontal Carousel of Purchasing Options (1 por $79,90, 2 por 139,90 e 3 por 194,90) */}
+            {/* Horizontal Carousel of Purchasing Options (1 for $79.90, 2 for 139.90, and 3 for 194.90) */}
             <div className="w-full max-w-4xl relative mt-1">
               {/* Carousel navigation buttons for tablet */}
               <div className="hidden sm:flex items-center justify-between absolute -top-10 right-0 gap-1.5 z-10">
                 <button
                   type="button"
                   onClick={() => scrollCarousel('left')}
-                  aria-label="Anterior"
+                  aria-label="Previous"
                   className="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -134,7 +134,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <button
                   type="button"
                   onClick={() => scrollCarousel('right')}
-                  aria-label="Próximo"
+                  aria-label="Next"
                   className="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -165,12 +165,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       {/* Top Badge for special bundles */}
                       {isDouble && (
                         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-                          Mais Popular · 2 Capinhas
+                          Most Popular · 2 Cases
                         </div>
                       )}
                       {isTriple && (
                         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-                          Melhor Valor · 3 Capinhas
+                          Best Value · 3 Cases
                         </div>
                       )}
 
@@ -178,14 +178,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         {/* Header quantity and tag */}
                         <div className="flex items-center justify-between mb-2 mt-1">
                           <span className="text-sm font-black text-neutral-950 uppercase tracking-tight">
-                            {tier.quantity === 1 ? '1 Capinha' : `${tier.quantity} Capinhas`}
+                            {tier.quantity === 1 ? '1 Case' : `${tier.quantity} Cases`}
                           </span>
                           <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
                             isSelected
                               ? 'bg-[#FAF5FF] text-[#9333EA]'
                               : 'bg-neutral-100 text-neutral-600'
                           }`}>
-                            {tier.quantity === 1 ? 'Individual' : `${tier.quantity}x Unidades`}
+                            {tier.quantity === 1 ? 'Single' : `${tier.quantity}x Pack`}
                           </span>
                         </div>
 
@@ -193,20 +193,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <div className="text-left mb-2">
                           <div className="flex items-baseline gap-1">
                             <span className="text-2xl sm:text-3xl font-black text-neutral-950">
-                              ${tier.totalPrice.toFixed(2).replace('.', ',')}
+                              ${tier.totalPrice.toFixed(2)}
                             </span>
                             {tier.quantity > 1 && (
                               <span className="text-[11px] font-bold text-neutral-500">
-                                (${tier.unitPrice.toFixed(2).replace('.', ',')}/un)
+                                (${tier.unitPrice.toFixed(2)}/ea)
                               </span>
                             )}
                           </div>
                           <span className="text-[11px] font-semibold text-neutral-500 block">
                             {tier.quantity === 1
-                              ? '1 por $79,90'
+                              ? '1 for $79.90'
                               : tier.quantity === 2
-                              ? '2 por 139,90'
-                              : '3 por 194,90'}
+                              ? '2 for $139.90'
+                              : '3 for $194.90'}
                           </span>
                         </div>
 
@@ -214,15 +214,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <ul className="space-y-1.5 text-[11px] font-medium text-neutral-700 text-left mb-4">
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x Capinha KOSNORA</span>
+                            <span>{tier.quantity}x KOSNORA Case</span>
                           </li>
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Proteção com Bordas Elevadas</span>
+                            <span>Raised Protective Bezels</span>
                           </li>
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Garantia de 30 Dias</span>
+                            <span>30-Day Money-Back Guarantee</span>
                           </li>
                         </ul>
                       </div>
@@ -232,7 +232,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <div className="text-left">
                           <span className="text-[10px] uppercase font-bold text-neutral-400 block">Total</span>
                           <span className="text-xs font-black text-neutral-900">
-                            ${tier.totalPrice.toFixed(2).replace('.', ',')}
+                            ${tier.totalPrice.toFixed(2)}
                           </span>
                         </div>
 
@@ -249,7 +249,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           }`}
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
-                          <span>Comprar</span>
+                          <span>Buy Now</span>
                         </button>
                       </div>
                     </div>
@@ -259,7 +259,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
               {/* Scroll Indicator hint for mobile */}
               <div className="sm:hidden flex items-center justify-center gap-1.5 text-[11px] font-semibold text-neutral-400 mt-1">
-                <span>← Deslize para ver todas as opções →</span>
+                <span>← Swipe horizontally to see all options →</span>
               </div>
             </div>
 
@@ -267,12 +267,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex items-center justify-center gap-4 text-xs font-semibold text-neutral-500 pt-3">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-[#9333EA]" />
-                <span>Garantia de 30 Dias</span>
+                <span>30-Day Guarantee</span>
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
                 <Truck className="w-4 h-4 text-[#9333EA]" />
-                <span>Envio com Rastreamento</span>
+                <span>Tracked Shipping</span>
               </span>
             </div>
           </div>
@@ -285,9 +285,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="hidden lg:block max-w-6xl mx-auto">
           <div className="grid grid-cols-12 gap-10 xl:gap-14 items-start">
             
-            {/* LEFT COLUMN: Produto e fotos na esquerda da página */}
+            {/* LEFT COLUMN: Product & photos on the left of the page */}
             <div className="col-span-5 flex flex-col items-center">
-              {/* Product Hero Image Gallery - Enquadrada sem cortar (object-contain) */}
+              {/* Product Hero Image Gallery - Framed without cropping (object-contain) */}
               <div className="relative w-full aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-3 flex items-center justify-center group">
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-neutral-100/60 flex items-center justify-center">
                   <img
@@ -305,7 +305,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="w-full mt-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-neutral-500 uppercase">
-                    Selecione o Modelo / Cor:
+                    Select Color / Finish:
                   </span>
                   <span className="text-xs font-black text-[#9333EA] uppercase">
                     {currentImage.name}
@@ -340,17 +340,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="w-full mt-5 pt-4 border-t border-neutral-200/80 flex items-center justify-around text-xs font-semibold text-neutral-500">
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#9333EA]" />
-                  <span>Garantia de 30 Dias</span>
+                  <span>30-Day Guarantee</span>
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5">
                   <Truck className="w-4 h-4 text-[#9333EA]" />
-                  <span>Envio com Rastreamento</span>
+                  <span>Tracked Shipping</span>
                 </span>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Os valores na direita ao lado do produto */}
+            {/* RIGHT COLUMN: Bundles and values on the right next to the product */}
             <div className="col-span-7 flex flex-col pt-1">
               {/* Star Rating Badge */}
               <div className="inline-flex items-center gap-2 mb-3 px-3.5 py-1 rounded-full bg-[#FAF5FF] border border-[#E9D5FF] text-xs font-bold text-neutral-800 self-start">
@@ -369,7 +369,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 KOSNORA Case
               </h1>
               <p className="text-sm font-semibold text-neutral-600 mb-5 leading-relaxed">
-                Design refinado, proteção reforçada contra impactos e acabamento sofisticado. Escolha sua cor e aproveite nossos descontos progressivos por tempo limitado.
+                Refined minimalist design, reinforced impact protection, and a smooth tactile finish. Pick your favorite color and enjoy our progressive bundle discounts.
               </p>
 
               {/* Direct CTA Button (GET YOUR KOSNORA) */}
@@ -392,14 +392,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Title for purchasing options */}
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-black uppercase tracking-wider text-neutral-900">
-                  Valores & Opções de Compra:
+                  Bundles & Pricing:
                 </span>
                 <span className="text-xs font-semibold text-neutral-500">
-                  Clique na opção desejada para comprar
+                  Click on an option below to buy
                 </span>
               </div>
 
-              {/* 3 Values Options (Side-by-side on desktop: 1 por $79,90, 2 por 139,90 e 3 por 194,90) */}
+              {/* 3 Values Options (Side-by-side on desktop: 1 for $79.90, 2 for 139.90, and 3 for 194.90) */}
               <div className="grid grid-cols-3 gap-3 mb-5">
                 {tiers.map((tier) => {
                   const isSelected = selectedTierId === tier.id;
@@ -419,12 +419,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       {/* Top Badges */}
                       {isDouble && (
                         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-                          Mais Popular
+                          Most Popular
                         </div>
                       )}
                       {isTriple && (
                         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-                          Melhor Valor
+                          Best Value
                         </div>
                       )}
 
@@ -432,7 +432,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         {/* Header */}
                         <div className="flex items-center justify-between mb-1.5 mt-0.5">
                           <span className="text-xs font-black text-neutral-950 uppercase tracking-tight">
-                            {tier.quantity === 1 ? '1 Capinha' : `${tier.quantity} Capinhas`}
+                            {tier.quantity === 1 ? '1 Case' : `${tier.quantity} Cases`}
                           </span>
                           <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full ${
                             isSelected
@@ -447,19 +447,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <div className="text-left mb-2">
                           <div className="flex items-baseline gap-1">
                             <span className="text-2xl font-black text-neutral-950">
-                              ${tier.totalPrice.toFixed(2).replace('.', ',')}
+                              ${tier.totalPrice.toFixed(2)}
                             </span>
                           </div>
                           <span className="text-[11px] font-bold text-neutral-600 block mt-0.5">
                             {tier.quantity === 1
-                              ? '1 por $79,90'
+                              ? '1 for $79.90'
                               : tier.quantity === 2
-                              ? '2 por 139,90'
-                              : '3 por 194,90'}
+                              ? '2 for $139.90'
+                              : '3 for $194.90'}
                           </span>
                           {tier.quantity > 1 && (
                             <span className="text-[10px] font-semibold text-[#9333EA] block">
-                              (${tier.unitPrice.toFixed(2).replace('.', ',')}/un)
+                              (${tier.unitPrice.toFixed(2)}/ea)
                             </span>
                           )}
                         </div>
@@ -468,15 +468,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <ul className="space-y-1 text-[11px] font-medium text-neutral-700 text-left mb-3">
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x Capinha KOSNORA</span>
+                            <span>{tier.quantity}x KOSNORA Case</span>
                           </li>
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Bordas Elevadas Protetoras</span>
+                            <span>Raised Protective Bezels</span>
                           </li>
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Garantia de 30 Dias</span>
+                            <span>30-Day Guarantee</span>
                           </li>
                         </ul>
                       </div>
@@ -495,7 +495,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         }`}
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>Comprar</span>
+                        <span>Buy Now</span>
                       </button>
                     </div>
                   );
@@ -506,17 +506,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="p-3.5 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex items-center justify-around text-xs font-semibold text-neutral-600">
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#9333EA]" />
-                  <span>Garantia de 30 dias</span>
+                  <span>30-Day Guarantee</span>
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5">
                   <Truck className="w-4 h-4 text-[#9333EA]" />
-                  <span>Envio com Rastreamento</span>
+                  <span>Tracked Shipping</span>
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5 text-emerald-600">
                   <Check className="w-4 h-4 text-emerald-600 stroke-[2.5]" />
-                  <span>Checkout 100% Seguro</span>
+                  <span>100% Secure Checkout</span>
                 </span>
               </div>
             </div>

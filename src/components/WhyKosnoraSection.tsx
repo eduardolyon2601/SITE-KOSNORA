@@ -4,23 +4,23 @@ import { Shield, Sparkles, Smartphone, CheckCircle } from 'lucide-react';
 export const WhyKosnoraSection: React.FC = () => {
   const benefits = [
     {
-      title: 'PROTEÇÃO MÁXIMA',
-      desc: 'Bordas elevadas anti-impacto que protegem a tela e o conjunto de câmeras contra quedas.',
+      title: 'MAXIMUM PROTECTION',
+      desc: 'Reinforced shock-absorbing bezels safeguard both your camera array and front display from drops.',
       icon: Shield,
     },
     {
-      title: 'DESIGN MINIMALISTA',
-      desc: 'Acabamento acetinado sofisticado, ergonômico e agradável ao toque.',
+      title: 'MINIMALIST DESIGN',
+      desc: 'Refined matte surface finish that feels silky, ergonomic, and secure in your palm.',
       icon: Sparkles,
     },
     {
-      title: 'ENCAIXE MILIMÉTRICO',
-      desc: 'Recortes precisos para botões e alto-falantes garantindo resposta tátil perfeita.',
+      title: 'PRECISION FIT',
+      desc: 'Engineered cutouts and tactile button covers for effortless ports access and crisp responsive clicks.',
       icon: Smartphone,
     },
     {
-      title: 'DURABILIDADE SUPERIOR',
-      desc: 'Materiais de alta resistência contra desbotamento, riscos e marcas de uso diário.',
+      title: 'SUPERIOR DURABILITY',
+      desc: 'High-grade composite materials engineered to resist scratching, fading, and everyday wear.',
       icon: CheckCircle,
     },
   ];
@@ -30,7 +30,7 @@ export const WhyKosnoraSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-xl mx-auto mb-10">
           <span className="text-xs font-black tracking-widest text-[#9333EA] uppercase block mb-1">
-            DIFERENCIAIS EXCLUSIVOS
+            KEY BENEFITS
           </span>
           <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-neutral-950">
             WHY KOSNORA

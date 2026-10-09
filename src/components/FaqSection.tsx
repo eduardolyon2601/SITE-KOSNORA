@@ -10,10 +10,10 @@ export const FaqSection: React.FC = () => {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-xl mx-auto mb-10">
           <span className="text-xs font-black tracking-widest text-[#9333EA] uppercase block mb-1">
-            DÚVIDAS FREQUENTES
+            FREQUENTLY ASKED QUESTIONS
           </span>
           <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-neutral-950">
-            PERGUNTAS & RESPOSTAS
+            QUESTIONS & ANSWERS
           </h2>
         </div>
 
