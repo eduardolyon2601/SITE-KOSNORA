@@ -1,130 +1,333 @@
-<section class="section-light kosnora-py" style="position: relative; overflow: hidden; background: #FFFFFF; color: #111827; border-bottom: 1px solid #E5E7EB;">
-  <!-- Ambient light -->
-  <div style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 350px; background: rgba(168, 85, 247, 0.06); border-radius: 50%; filter: blur(100px); pointer-events: none;"></div>
-
-  <div class="kosnora-container" style="position: relative; z-index: 2;">
-    <!-- Top Text Center Area -->
-    <div style="max-width: 800px; margin: 0 auto; text-align: center; margin-bottom: 2rem;">
-      <div class="kosnora-kicker-badge" style="background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE; padding: 6px 16px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase;">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #9333EA; display: inline-block;"></span>
-        <span>{{ section.settings.kicker | default: 'BATTERY-FREE SMART DISPLAY' }}</span>
-      </div>
-    </div>
-
-    <!-- Live Interactive Case Simulator -->
-    <div class="simulator-box" style="max-width: 1040px; margin: 0 auto;">
-      <div class="kosnora-grid-2">
-        <!-- Phone Case Mockup Display -->
+<section id="pricing" class="section-light kosnora-py" style="position: relative; overflow: hidden; background: #FFFFFF; color: #111827; border-bottom: 1px solid #E5E7EB; padding-top: 2rem; padding-bottom: 3.5rem;">
+  <div class="kosnora-container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem; position: relative; z-index: 2;">
+    
+    <!-- DESKTOP VIEW (Side-by-side: Product & Photos on Left, Values on Right) -->
+    <div class="kosnora-desktop-hero" style="display: none;">
+      <div style="display: grid; grid-template-columns: 5fr 7fr; gap: 3rem; align-items: start;">
+        
+        <!-- Left: Product Photos Gallery -->
         <div style="display: flex; flex-direction: column; align-items: center;">
-          <div id="kosnora-mockup" class="phone-mockup">
-            <div class="phone-inner">
-              <!-- Camera Island -->
-              <div class="camera-island">
-                <div class="lens-circle"><div class="lens-core"></div></div>
-                <div class="lens-circle"><div class="lens-core"></div></div>
-                <div class="lens-circle"><div class="lens-core"></div></div>
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #FEF3C7;"></span>
-                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #374151;"></span>
-                </div>
-              </div>
-
-              <!-- E-ink screen display -->
-              <div class="e-ink-screen">
-                <img id="kosnora-screen-img" src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Smart Display Screen - Cinza">
-                <span class="screen-badge">NFC DISPLAY</span>
-              </div>
-
-              <!-- Brand deboss -->
-              <div class="phone-brand-deboss">
-                KOSNORA
+          <div style="width: 100%; aspect-ratio: 645/800; border-radius: 1.5rem; overflow: hidden; background: #FFF; border: 1px solid #E5E7EB; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); padding: 0.75rem; display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="width: 100%; height: 100%; border-radius: 1rem; overflow: hidden; background: #F9FAFB; display: flex; align-items: center; justify-content: center; position: relative;">
+              <img id="kosnora-desktop-img" src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Case" style="width: 100%; height: 100%; object-fit: contain; display: block;">
+              <div id="desktop-color-badge" style="position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em;">
+                Cinza
               </div>
             </div>
           </div>
 
-          <div style="margin-top: 1rem; font-size: 11px; font-weight: 600; color: #9CA3AF; display: flex; align-items: center; gap: 6px;">
-            <span style="width: 6px; height: 6px; border-radius: 50%; background: #34D399; display: inline-block;"></span>
-            <span>Interactive Simulator · Instant Screen Refresh</span>
+          <!-- 5 Photo Thumbnails -->
+          <div style="width: 100%; margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase;">Selecione o Modelo:</span>
+              <span id="active-desktop-label" style="font-size: 11px; font-weight: 900; color: #9333EA; text-transform: uppercase;">Cinza</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;">
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Cinza" class="active-thumb" style="padding: 0.35rem; border-radius: 0.75rem; border: 2px solid #9333EA; background: #FAF5FF; cursor: pointer; text-align: center;">
+                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
+                  <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="Cinza" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #9333EA;">Cinza</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" data-name="Preta" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
+                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
+                  <img src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" alt="Preta" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">Preta</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" data-name="Rosa" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
+                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
+                  <img src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" alt="Rosa" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">Rosa</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" data-name="Branca" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
+                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
+                  <img src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" alt="Branca" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">Branca</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" data-name="Laranja" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
+                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
+                  <img src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" alt="Laranja" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">Laranja</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Main CTA Button (Below the Photo) -->
-          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem; margin-top: 1.5rem; width: 100%;">
-            <button type="button" data-open-drawer class="kosnora-btn-primary" style="background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35); padding: 1.15rem 2.75rem; font-size: 0.875rem; border-radius: 12px; border: none; color: #FFF; font-weight: 900; text-transform: uppercase; cursor: pointer; width: 100%; max-width: 340px;">
-              <span>{{ section.settings.cta_text | default: 'GET YOUR KOSNORA' }}</span>
-              {% render 'icon-arrow-right' %}
-            </button>
-            <span style="font-size: 0.8125rem; color: #6B7280; font-weight: 600;">
-              {{ section.settings.microcopy | default: 'Starting at $59.90 each' }}
-            </span>
+          <div style="width: 100%; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #E5E7EB; display: flex; justify-content: space-around; font-size: 11px; font-weight: 600; color: #6B7280;">
+            <span>🛡️ Garantia de 30 Dias</span>
+            <span>•</span>
+            <span>🚚 Envio com Rastreamento</span>
           </div>
         </div>
 
-        <!-- Controls Column -->
-        <div style="display: flex; flex-direction: column; justify-content: center;">
-          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #9333EA; margin-bottom: 0.5rem;">
-            Live Customization Preview
+        <!-- Right: Headline, CTA, and 3 Values Options -->
+        <div style="display: flex; flex-direction: column;">
+          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE; font-size: 11px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; align-self: flex-start; margin-bottom: 0.75rem;">
+            <span>★★★★★ 140+ HAPPY CUSTOMERS</span>
           </div>
-          <h3 class="kosnora-title" style="font-size: 1.75rem; color: #111111; margin-bottom: 0.75rem;">
-            One Case. Any Picture. Any Time.
-          </h3>
-          <p style="font-size: 0.875rem; color: #555555; margin-bottom: 1.5rem; line-height: 1.6;">
-            Test how different moments look on the back of your phone. Switch between styles in seconds, or upload your own favorite photo right now.
+
+          <h1 style="font-size: 2.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; color: #111827; margin: 0 0 0.5rem 0; line-height: 1.1;">
+            KOSNORA Case
+          </h1>
+          <p style="font-size: 0.875rem; font-weight: 600; color: #4B5563; margin: 0 0 1.25rem 0; line-height: 1.6;">
+            Design refinado, proteção reforçada contra impactos e acabamento sofisticado. Escolha sua cor e aproveite nossos descontos progressivos por tempo limitado.
           </p>
 
-          <!-- 1. Color Selector -->
-          <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #E5E5E5;">
-            <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.75rem;">
-              1. Choose Case Finish: <span id="active-color-label" style="color: #111111; text-transform: none; font-weight: 700;">Cinza</span>
-            </label>
-            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-              <button type="button" data-simulator-color data-hex="#71717A" data-name="Cinza" class="active-color" style="width: 36px; height: 36px; border-radius: 50%; background: #71717A; border: 2px solid #555; cursor: pointer;"></button>
-              <button type="button" data-simulator-color data-hex="#18181B" data-name="Preta" style="width: 36px; height: 36px; border-radius: 50%; background: #18181B; border: 2px solid #333; cursor: pointer;"></button>
-              <button type="button" data-simulator-color data-hex="#F472B6" data-name="Rosa" style="width: 36px; height: 36px; border-radius: 50%; background: #F472B6; border: 2px solid #EC4899; cursor: pointer;"></button>
-              <button type="button" data-simulator-color data-hex="#FFFFFF" data-name="Branca" style="width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; border: 2px solid #CCC; cursor: pointer;"></button>
-              <button type="button" data-simulator-color data-hex="#EA580C" data-name="Laranja" style="width: 36px; height: 36px; border-radius: 50%; background: #EA580C; border: 2px solid #C2410C; cursor: pointer;"></button>
-            </div>
+          <!-- Direct CTA Button -->
+          <button type="button" data-open-drawer class="kosnora-btn-primary" style="background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35); padding: 1.15rem 2.5rem; font-size: 0.875rem; border-radius: 12px; border: none; color: #FFF; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.25rem; width: 100%;">
+            <span>GET YOUR KOSNORA</span>
+            {% render 'icon-arrow-right' %}
+          </button>
+
+          <!-- Title for purchasing options -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111827;">Valores & Opções de Compra:</span>
+            <span style="font-size: 11px; font-weight: 600; color: #6B7280;">Clique para escolher</span>
           </div>
 
-          <!-- 2. Display Look Selector -->
-          <div style="margin-bottom: 1.5rem;">
-            <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.75rem;">
-              2. Switch The Case Color:
-            </label>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 0.75rem;">
-              <button type="button" data-simulator-look data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" class="active-look" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                Cinza
-              </button>
-              <button type="button" data-simulator-look data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                Preta
-              </button>
-              <button type="button" data-simulator-look data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                Rosa
-              </button>
-              <button type="button" data-simulator-look data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                Branca
-              </button>
-              <button type="button" data-simulator-look data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; text-align: left; cursor: pointer; font-size: 0.75rem; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                Laranja
+          <!-- 3 Values Options Grid (1 por $79,90, 2 por 139,90 e 3 por 194,90) -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
+            <!-- 1 por $79,90 -->
+            <div data-tier-select="1" style="border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">1 Capinha</span>
+                  <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">1x</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.5rem; font-weight: 900; color: #111;">$79,90</span>
+                  <span style="display: block; font-size: 10px; font-weight: 700; color: #6B7280;">1 por $79,90</span>
+                </div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 0.75rem 0; font-size: 10px; color: #4B5563; display: flex; flex-direction: column; gap: 0.25rem;">
+                  <li>✓ 1x Capinha KOSNORA</li>
+                  <li>✓ Bordas Protetoras</li>
+                </ul>
+              </div>
+              <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
+                Comprar
               </button>
             </div>
 
-            <!-- Upload Custom File -->
-            <input type="file" id="kosnora-upload-input" accept="image/*" style="display: none;">
-            <button type="button" id="kosnora-upload-btn" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: 1px dashed #9333EA; background: #FFFFFF; color: #555555; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-              Upload your own photo to test it on the case
-            </button>
+            <!-- 2 por 139,90 -->
+            <div data-tier-select="2" style="border: 2px solid #9333EA; border-radius: 1rem; padding: 1rem; background: #FFF; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);">
+              <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #9333EA; color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
+                Mais Popular
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; margin-top: 4px;">
+                  <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">2 Capinhas</span>
+                  <span style="font-size: 9px; font-weight: 800; background: #FAF5FF; color: #9333EA; padding: 2px 6px; border-radius: 9999px;">2x</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.5rem; font-weight: 900; color: #111;">$139,90</span>
+                  <span style="display: block; font-size: 10px; font-weight: 700; color: #6B7280;">2 por 139,90</span>
+                  <span style="display: block; font-size: 9px; font-weight: 700; color: #9333EA;">($69,95/un)</span>
+                </div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 0.75rem 0; font-size: 10px; color: #4B5563; display: flex; flex-direction: column; gap: 0.25rem;">
+                  <li>✓ 2x Capinhas KOSNORA</li>
+                  <li>✓ Bordas Protetoras</li>
+                </ul>
+              </div>
+              <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
+                Comprar
+              </button>
+            </div>
+
+            <!-- 3 por 194,90 -->
+            <div data-tier-select="3" style="border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+              <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #9333EA, #6B21A8); color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
+                Melhor Valor
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; margin-top: 4px;">
+                  <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">3 Capinhas</span>
+                  <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">3x</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.5rem; font-weight: 900; color: #111;">$194,90</span>
+                  <span style="display: block; font-size: 10px; font-weight: 700; color: #6B7280;">3 por 194,90</span>
+                  <span style="display: block; font-size: 9px; font-weight: 700; color: #9333EA;">($64,97/un)</span>
+                </div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 0.75rem 0; font-size: 10px; color: #4B5563; display: flex; flex-direction: column; gap: 0.25rem;">
+                  <li>✓ 3x Capinhas KOSNORA</li>
+                  <li>✓ Garantia de 30 Dias</li>
+                </ul>
+              </div>
+              <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
+                Comprar
+              </button>
+            </div>
           </div>
 
-          <!-- Bottom Action -->
-          <button type="button" data-open-drawer class="kosnora-btn-primary" style="width: 100%; justify-content: center;">
-            <span>GET YOUR KOSNORA CASE</span>
-            <span style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85);">— From $59.90</span>
+          <!-- Trust Badges -->
+          <div style="padding: 0.75rem 1rem; border-radius: 1rem; background: #F9FAFB; border: 1px solid #E5E7EB; display: flex; justify-content: space-around; font-size: 11px; font-weight: 600; color: #4B5563;">
+            <span>🛡️ Garantia de 30 Dias</span>
+            <span>•</span>
+            <span>🚚 Envio com Rastreamento</span>
+            <span>•</span>
+            <span style="color: #059669;">✓ Checkout Seguro</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MOBILE VIEW (Photo on top, thumbnails below, GET YOUR KOSNORA button, carousel of values below) -->
+    <div class="kosnora-mobile-hero" style="display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 440px; margin: 0 auto;">
+      <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE; font-size: 11px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem;">
+        <span>★★★★★ 140+ HAPPY CUSTOMERS</span>
+      </div>
+
+      <!-- Main Photo -->
+      <div style="width: 100%; max-width: 340px; aspect-ratio: 645/800; border-radius: 1.5rem; overflow: hidden; background: #FFF; border: 1px solid #E5E7EB; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); padding: 0.5rem; display: flex; align-items: center; justify-content: center; position: relative;">
+        <div style="width: 100%; height: 100%; border-radius: 1rem; overflow: hidden; background: #F9FAFB; display: flex; align-items: center; justify-content: center; position: relative;">
+          <img id="kosnora-mobile-img" src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Case" style="width: 100%; height: 100%; object-fit: contain; display: block;">
+          <div id="mobile-color-badge" style="position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase;">
+            Cinza
+          </div>
+        </div>
+      </div>
+
+      <!-- Thumbnails -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Cinza" class="active-thumb" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 2px solid #9333EA; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+            <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span>Cinza</span>
+        </button>
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" data-name="Preta" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+            <img src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span>Preta</span>
+        </button>
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" data-name="Rosa" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+            <img src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span>Rosa</span>
+        </button>
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" data-name="Branca" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+            <img src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span>Branca</span>
+        </button>
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" data-name="Laranja" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
+          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+            <img src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span>Laranja</span>
+        </button>
+      </div>
+
+      <!-- Main CTA Button (Below Photo) -->
+      <div style="width: 100%; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        <button type="button" data-open-drawer class="kosnora-btn-primary" style="background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35); padding: 1.15rem 2.5rem; font-size: 0.875rem; border-radius: 12px; border: none; color: #FFF; font-weight: 900; text-transform: uppercase; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <span>GET YOUR KOSNORA</span>
+          {% render 'icon-arrow-right' %}
+        </button>
+        <span style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase;">
+          Escolha a sua oferta abaixo para comprar
+        </span>
+      </div>
+
+      <!-- Horizontal Carousel of Values -->
+      <div style="width: 100%; overflow-x: auto; margin-top: 1rem; padding-bottom: 0.75rem; display: flex; gap: 0.75rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+        <!-- 1 por $79,90 -->
+        <div style="min-width: 230px; flex: 1; border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; scroll-snap-align: center; text-align: left; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+              <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">1 Capinha</span>
+              <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">Individual</span>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: 900; color: #111;">$79,90</div>
+            <span style="font-size: 10px; font-weight: 600; color: #6B7280; display: block; margin-bottom: 0.5rem;">1 por $79,90</span>
+            <ul style="list-style: none; padding: 0; margin: 0 0 0.5rem 0; font-size: 10px; color: #4B5563;">
+              <li>✓ 1x Capinha KOSNORA</li>
+              <li>✓ Bordas Protetoras</li>
+            </ul>
+          </div>
+          <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
+            Comprar
+          </button>
+        </div>
+
+        <!-- 2 por 139,90 -->
+        <div style="min-width: 230px; flex: 1; border: 2px solid #9333EA; border-radius: 1rem; padding: 1rem; background: #FFF; scroll-snap-align: center; text-align: left; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);">
+          <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #9333EA; color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
+            Mais Popular
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; margin-top: 4px;">
+              <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">2 Capinhas</span>
+              <span style="font-size: 9px; font-weight: 800; background: #FAF5FF; color: #9333EA; padding: 2px 6px; border-radius: 9999px;">2x Unidades</span>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: 900; color: #111;">$139,90</div>
+            <span style="font-size: 10px; font-weight: 600; color: #6B7280; display: block;">2 por 139,90</span>
+            <span style="font-size: 9px; font-weight: 700; color: #9333EA; display: block; margin-bottom: 0.5rem;">($69,95/un)</span>
+            <ul style="list-style: none; padding: 0; margin: 0 0 0.5rem 0; font-size: 10px; color: #4B5563;">
+              <li>✓ 2x Capinhas KOSNORA</li>
+              <li>✓ Bordas Protetoras</li>
+            </ul>
+          </div>
+          <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
+            Comprar
+          </button>
+        </div>
+
+        <!-- 3 por 194,90 -->
+        <div style="min-width: 230px; flex: 1; border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; scroll-snap-align: center; text-align: left; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+          <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #9333EA, #6B21A8); color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
+            Melhor Valor
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; margin-top: 4px;">
+              <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">3 Capinhas</span>
+              <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">3x Unidades</span>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: 900; color: #111;">$194,90</div>
+            <span style="font-size: 10px; font-weight: 600; color: #6B7280; display: block;">3 por 194,90</span>
+            <span style="font-size: 9px; font-weight: 700; color: #9333EA; display: block; margin-bottom: 0.5rem;">($64,97/un)</span>
+            <ul style="list-style: none; padding: 0; margin: 0 0 0.5rem 0; font-size: 10px; color: #4B5563;">
+              <li>✓ 3x Capinhas KOSNORA</li>
+              <li>✓ Garantia de 30 Dias</li>
+            </ul>
+          </div>
+          <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
+            Comprar
           </button>
         </div>
       </div>
+
+      <div style="margin-top: 0.5rem; font-size: 10px; color: #9CA3AF;">
+        ← Deslize para ver todas as opções →
+      </div>
+
+      <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem; font-size: 11px; font-weight: 600; color: #6B7280;">
+        <span>🛡️ Garantia de 30 Dias</span>
+        <span>•</span>
+        <span>🚚 Envio com Rastreamento</span>
+      </div>
     </div>
+
   </div>
 </section>
+
+<style>
+@media (min-width: 1024px) {
+  .kosnora-desktop-hero { display: block !important; }
+  .kosnora-mobile-hero { display: none !important; }
+}
+@media (max-width: 1023px) {
+  .kosnora-desktop-hero { display: none !important; }
+  .kosnora-mobile-hero { display: flex !important; }
+}
+</style>
 
 {% schema %}
 {
@@ -132,45 +335,21 @@
   "settings": [
     {
       "type": "text",
-      "id": "kicker",
-      "label": "Kicker Badge",
-      "default": "KOSNORA Ink NFC Smart Phone Case"
-    },
-    {
-      "type": "text",
-      "id": "headline_1",
-      "label": "Headline Line 1",
-      "default": "YOUR PHONE."
-    },
-    {
-      "type": "text",
-      "id": "headline_2",
-      "label": "Headline Line 2",
-      "default": "YOUR PICTURE."
-    },
-    {
-      "type": "text",
-      "id": "headline_3",
-      "label": "Headline Line 3",
-      "default": "YOUR MOOD."
+      "id": "headline",
+      "label": "Headline",
+      "default": "KOSNORA Case"
     },
     {
       "type": "textarea",
       "id": "subheadline",
       "label": "Subheadline",
-      "default": "Change the picture on the back of your phone whenever you want — in just 5 minutes."
+      "default": "Design refinado, proteção reforçada contra impactos e acabamento sofisticado."
     },
     {
       "type": "text",
       "id": "cta_text",
       "label": "CTA Text",
-      "default": "GET YOUR KOSNORA CASE"
-    },
-    {
-      "type": "text",
-      "id": "microcopy",
-      "label": "Microcopy",
-      "default": "Available for selected iPhone models"
+      "default": "GET YOUR KOSNORA"
     }
   ],
   "presets": [

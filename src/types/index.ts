@@ -1,15 +1,7 @@
-export type CaseColor = {
+export type ProductImage = {
   id: string;
   name: string;
-  hex: string;
-  borderClass: string;
-  imageUrl?: string;
-};
-
-export type IPhoneModel = {
-  id: string;
-  name: string;
-  series: string;
+  url: string;
 };
 
 export type PricingTier = {

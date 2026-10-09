@@ -4,76 +4,66 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initSimulator();
+  initHeroGallery();
   initFaqAccordion();
   initDrawer();
   initPolicyModals();
   initSmoothScroll();
 });
 
-// 1. Phone Case Interactive Simulator
-function initSimulator() {
-  const mockup = document.getElementById('kosnora-mockup');
-  const screenImg = document.getElementById('kosnora-screen-img');
-  const colorBtns = document.querySelectorAll('[data-simulator-color]');
-  const lookBtns = document.querySelectorAll('[data-simulator-look]');
-  const uploadInput = document.getElementById('kosnora-upload-input');
-  const uploadBtn = document.getElementById('kosnora-upload-btn');
+// 1. Phone Case Product Photo Gallery
+function initHeroGallery() {
+  // Desktop
+  const desktopImg = document.getElementById('kosnora-desktop-img');
+  const desktopBadge = document.getElementById('desktop-color-badge');
+  const desktopLabel = document.getElementById('active-desktop-label');
+  const desktopThumbs = document.querySelectorAll('[data-gallery-desktop]');
 
-  if (!mockup || !screenImg) return;
+  if (desktopThumbs.length && desktopImg) {
+    desktopThumbs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.getAttribute('data-src');
+        const name = btn.getAttribute('data-name');
+        if (src) desktopImg.src = src;
+        if (desktopBadge && name) desktopBadge.textContent = name;
+        if (desktopLabel && name) desktopLabel.textContent = name;
 
-  // Handle color finish selection
-  colorBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const hex = btn.getAttribute('data-hex');
-      const name = btn.getAttribute('data-name');
-      mockup.style.backgroundColor = hex;
-
-      colorBtns.forEach(b => b.classList.remove('active-color'));
-      btn.classList.add('active-color');
-
-      const label = document.getElementById('active-color-label');
-      if (label && name) label.textContent = name;
+        desktopThumbs.forEach(b => {
+          b.style.borderColor = '#E5E7EB';
+          b.style.background = '#FFF';
+          const span = b.querySelector('span');
+          if (span) span.style.color = '#374151';
+        });
+        btn.style.borderColor = '#9333EA';
+        btn.style.background = '#FAF5FF';
+        const activeSpan = btn.querySelector('span');
+        if (activeSpan) activeSpan.style.color = '#9333EA';
+      });
     });
-  });
+  }
 
-  // Handle preset looks
-  lookBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const src = btn.getAttribute('data-src');
-      if (!src) return;
+  // Mobile
+  const mobileImg = document.getElementById('kosnora-mobile-img');
+  const mobileBadge = document.getElementById('mobile-color-badge');
+  const mobileThumbs = document.querySelectorAll('[data-gallery-mobile]');
 
-      screenImg.style.opacity = '0.3';
-      screenImg.style.transform = 'scale(0.96)';
+  if (mobileThumbs.length && mobileImg) {
+    mobileThumbs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.getAttribute('data-src');
+        const name = btn.getAttribute('data-name');
+        if (src) mobileImg.src = src;
+        if (mobileBadge && name) mobileBadge.textContent = name;
 
-      setTimeout(() => {
-        screenImg.src = src;
-        screenImg.style.opacity = '1';
-        screenImg.style.transform = 'scale(1)';
-      }, 180);
-
-      lookBtns.forEach(b => b.classList.remove('active-look'));
-      btn.classList.add('active-look');
-    });
-  });
-
-  // Handle custom image upload preview
-  if (uploadBtn && uploadInput) {
-    uploadBtn.addEventListener('click', () => uploadInput.click());
-    uploadInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          screenImg.style.opacity = '0.3';
-          setTimeout(() => {
-            screenImg.src = event.target.result;
-            screenImg.style.opacity = '1';
-            uploadBtn.textContent = 'Custom Photo Applied! Click to switch';
-          }, 180);
-        };
-        reader.readAsDataURL(file);
-      }
+        mobileThumbs.forEach(b => {
+          b.style.borderColor = '#E5E7EB';
+          b.style.background = '#FFF';
+          b.style.color = '#374151';
+        });
+        btn.style.borderColor = '#9333EA';
+        btn.style.background = '#9333EA';
+        btn.style.color = '#FFF';
+      });
     });
   }
 }

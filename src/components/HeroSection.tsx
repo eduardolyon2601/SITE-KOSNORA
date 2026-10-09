@@ -1,54 +1,19 @@
 import React, { useState, useRef } from 'react';
-import { ArrowRight, Star, ShieldCheck, Zap, Check, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { ArrowRight, Star, ShieldCheck, Check, ChevronLeft, ChevronRight, ShoppingBag, Truck } from 'lucide-react';
 import { PricingTier } from '../types';
-import { getPricingTiers } from '../data/productData';
+import { getPricingTiers, PRODUCT_IMAGES } from '../data/productData';
 
 interface HeroSectionProps {
-  onCtaClick: (colorId?: string) => void;
-  onSelectTierAndBuy?: (tier: PricingTier, colorId?: string) => void;
-  isFirstPurchase?: boolean;
+  onCtaClick: (imageId?: string) => void;
+  onSelectTierAndBuy?: (tier: PricingTier, imageId?: string) => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onCtaClick,
   onSelectTierAndBuy,
-  isFirstPurchase = true,
 }) => {
-  const previewOptions = [
-    {
-      id: 'cinza',
-      label: 'Cinza',
-      hex: '#71717A',
-      src: 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg',
-    },
-    {
-      id: 'preta',
-      label: 'Preta',
-      hex: '#18181B',
-      src: 'https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg',
-    },
-    {
-      id: 'rosa',
-      label: 'Rosa',
-      hex: '#F472B6',
-      src: 'https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg',
-    },
-    {
-      id: 'branca',
-      label: 'Branca',
-      hex: '#FFFFFF',
-      src: 'https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg',
-    },
-    {
-      id: 'laranja',
-      label: 'Laranja',
-      hex: '#EA580C',
-      src: 'https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg',
-    },
-  ];
-
-  const [activePreview, setActivePreview] = useState(0);
-  const tiers = getPricingTiers(isFirstPurchase);
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const tiers = getPricingTiers();
   const [selectedTierId, setSelectedTierId] = useState<string>('single');
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -65,19 +30,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const handleTierClick = (tier: PricingTier) => {
     setSelectedTierId(tier.id);
     if (onSelectTierAndBuy) {
-      onSelectTierAndBuy(tier, previewOptions[activePreview]?.id);
+      onSelectTierAndBuy(tier, PRODUCT_IMAGES[activeImageIdx]?.id);
     } else {
-      onCtaClick(previewOptions[activePreview]?.id);
+      onCtaClick(PRODUCT_IMAGES[activeImageIdx]?.id);
     }
   };
+
+  const currentImage = PRODUCT_IMAGES[activeImageIdx];
 
   return (
     <section id="pricing" className="bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* MOBILE VIEW (Unchanged - < lg): Photo on top, GET YOUR KOSNORA below photo, carousel of values below that */}
+        
+        {/* ============================================================ */}
+        {/* MOBILE VIEW (< lg): Unchanged flow                           */}
+        {/* Photo on top, thumbnails below, GET YOUR KOSNORA button,      */}
+        {/* horizontal carousel of values below that                      */}
+        {/* ============================================================ */}
         <div className="lg:hidden flex flex-col items-center max-w-2xl mx-auto text-center">
           {/* Social Proof Star Rating Tag */}
-          <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1 rounded-full bg-[#FAF5FF] border border-[#E9D5FF] text-xs font-bold text-neutral-800">
+          <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1 rounded-full bg-[#FAF5FF] border border-[#E9D5FF] text-xs font-bold text-neutral-800">
             <div className="flex items-center text-[#9333EA]">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA]" />
@@ -88,42 +60,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </span>
           </div>
 
-          {/* First Photo of the Header (Product Hero Image Gallery - Enquadrada sem cortar) */}
-          <div className="relative w-full max-w-[340px] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 group flex items-center justify-center">
+          {/* First Photo of the Header (Framed without cutting - object-contain) */}
+          <div className="relative w-full max-w-[340px] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 flex items-center justify-center">
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-neutral-100/60 flex items-center justify-center">
               <img
-                src={previewOptions[activePreview].src}
-                alt={`KOSNORA - ${previewOptions[activePreview].label}`}
+                src={currentImage.url}
+                alt={`KOSNORA - ${currentImage.name}`}
                 className="w-full h-full object-contain block select-none transition-all duration-300"
               />
-              <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider flex items-center gap-2 shadow-sm">
-                <span
-                  className="w-2.5 h-2.5 rounded-full border border-white/60 shrink-0"
-                  style={{ backgroundColor: previewOptions[activePreview].hex }}
-                />
-                <span>Cor: {previewOptions[activePreview].label}</span>
+              <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
+                <span>{currentImage.name}</span>
               </div>
             </div>
           </div>
 
-          {/* Thumbnails Swatches with mini framed photo previews */}
+          {/* Miniature Photo Previews */}
           <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-            <span className="text-[11px] font-bold text-neutral-500 uppercase mr-1">Cor:</span>
-            {previewOptions.map((opt, idx) => (
+            {PRODUCT_IMAGES.map((img, idx) => (
               <button
-                key={opt.id}
+                key={img.id}
                 type="button"
-                onClick={() => setActivePreview(idx)}
+                onClick={() => setActiveImageIdx(idx)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  activePreview === idx
+                  activeImageIdx === idx
                     ? 'bg-[#9333EA] text-white shadow-md scale-105 ring-2 ring-[#9333EA]/30'
                     : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-50'
                 }`}
               >
                 <div className="w-5 h-6 rounded overflow-hidden bg-neutral-100 border border-black/10 shrink-0 flex items-center justify-center">
-                  <img src={opt.src} alt={opt.label} className="w-full h-full object-contain" />
+                  <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
                 </div>
-                <span>{opt.label}</span>
+                <span>{img.name}</span>
               </button>
             ))}
           </div>
@@ -133,7 +100,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="w-full sm:w-auto flex flex-col items-center justify-center gap-3 mb-6">
               <button
                 type="button"
-                onClick={() => onCtaClick(previewOptions[activePreview]?.id)}
+                onClick={() => {
+                  const selectedTier = tiers.find((t) => t.id === selectedTierId) || tiers[0];
+                  if (onSelectTierAndBuy) {
+                    onSelectTierAndBuy(selectedTier, currentImage.id);
+                  } else {
+                    onCtaClick(currentImage.id);
+                  }
+                }}
                 className="w-full sm:w-auto px-10 py-4.5 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white font-black text-sm tracking-widest rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-102 active:scale-95 flex items-center justify-center gap-2.5 uppercase cursor-pointer"
               >
                 <span>GET YOUR KOSNORA</span>
@@ -240,11 +214,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <ul className="space-y-1.5 text-[11px] font-medium text-neutral-700 text-left mb-4">
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x KOSNORA Smart Case</span>
+                            <span>{tier.quantity}x Capinha KOSNORA</span>
                           </li>
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Tela Smart Ink sem bateria</span>
+                            <span>Proteção com Bordas Elevadas</span>
+                          </li>
+                          <li className="flex items-center gap-1.5">
+                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                            <span>Garantia de 30 Dias</span>
                           </li>
                         </ul>
                       </div>
@@ -285,40 +263,40 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
-            {/* Quick Guarantees (perksupply style) */}
+            {/* Quick Guarantees */}
             <div className="flex items-center justify-center gap-4 text-xs font-semibold text-neutral-500 pt-3">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-[#9333EA]" />
-                <span>30-Day Fit Guarantee</span>
+                <span>Garantia de 30 Dias</span>
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-[#9333EA]" />
-                <span>Zero Battery Draw</span>
+                <Truck className="w-4 h-4 text-[#9333EA]" />
+                <span>Envio com Rastreamento</span>
               </span>
             </div>
           </div>
         </div>
 
-        {/* DESKTOP VIEW (Only for computer - lg:block): Product & photos on the LEFT, values on the RIGHT */}
+        {/* ============================================================ */}
+        {/* DESKTOP VIEW (Only for computer - lg:block):                 */}
+        {/* Product & photos on the LEFT, values on the RIGHT            */}
+        {/* ============================================================ */}
         <div className="hidden lg:block max-w-6xl mx-auto">
           <div className="grid grid-cols-12 gap-10 xl:gap-14 items-start">
+            
             {/* LEFT COLUMN: Produto e fotos na esquerda da página */}
             <div className="col-span-5 flex flex-col items-center">
               {/* Product Hero Image Gallery - Enquadrada sem cortar (object-contain) */}
               <div className="relative w-full aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-3 flex items-center justify-center group">
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-neutral-100/60 flex items-center justify-center">
                   <img
-                    src={previewOptions[activePreview].src}
-                    alt={`KOSNORA - ${previewOptions[activePreview].label}`}
+                    src={currentImage.url}
+                    alt={`KOSNORA - ${currentImage.name}`}
                     className="w-full h-full object-contain block select-none transition-all duration-300"
                   />
-                  <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider flex items-center gap-2 shadow-sm">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full border border-white/60 shrink-0"
-                      style={{ backgroundColor: previewOptions[activePreview].hex }}
-                    />
-                    <span>Cor: {previewOptions[activePreview].label}</span>
+                  <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
+                    <span>{currentImage.name}</span>
                   </div>
                 </div>
               </div>
@@ -327,31 +305,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="w-full mt-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-neutral-500 uppercase">
-                    Selecione a Cor:
+                    Selecione o Modelo / Cor:
                   </span>
                   <span className="text-xs font-black text-[#9333EA] uppercase">
-                    {previewOptions[activePreview].label}
+                    {currentImage.name}
                   </span>
                 </div>
                 <div className="grid grid-cols-5 gap-2">
-                  {previewOptions.map((opt, idx) => (
+                  {PRODUCT_IMAGES.map((img, idx) => (
                     <button
-                      key={opt.id}
+                      key={img.id}
                       type="button"
-                      onClick={() => setActivePreview(idx)}
+                      onClick={() => setActiveImageIdx(idx)}
                       className={`p-1.5 rounded-xl transition-all cursor-pointer flex flex-col items-center gap-1.5 text-center ${
-                        activePreview === idx
+                        activeImageIdx === idx
                           ? 'bg-[#FAF5FF] border-2 border-[#9333EA] shadow-sm ring-2 ring-[#9333EA]/20'
                           : 'bg-white border border-neutral-200 hover:border-neutral-300'
                       }`}
                     >
                       <div className="w-full aspect-[3/4] rounded-lg overflow-hidden bg-neutral-100 flex items-center justify-center">
-                        <img src={opt.src} alt={opt.label} className="w-full h-full object-contain" />
+                        <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
                       </div>
                       <span className={`text-[10px] font-bold uppercase truncate max-w-full ${
-                        activePreview === idx ? 'text-[#9333EA]' : 'text-neutral-700'
+                        activeImageIdx === idx ? 'text-[#9333EA]' : 'text-neutral-700'
                       }`}>
-                        {opt.label}
+                        {img.name}
                       </span>
                     </button>
                   ))}
@@ -362,12 +340,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="w-full mt-5 pt-4 border-t border-neutral-200/80 flex items-center justify-around text-xs font-semibold text-neutral-500">
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#9333EA]" />
-                  <span>30-Day Guarantee</span>
+                  <span>Garantia de 30 Dias</span>
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5">
-                  <Zap className="w-4 h-4 text-[#9333EA]" />
-                  <span>Zero Battery Draw</span>
+                  <Truck className="w-4 h-4 text-[#9333EA]" />
+                  <span>Envio com Rastreamento</span>
                 </span>
               </div>
             </div>
@@ -388,10 +366,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
               {/* Product Headline */}
               <h1 className="text-3xl xl:text-4xl font-black uppercase tracking-tight text-neutral-950 mb-2">
-                KOSNORA Smart Case
+                KOSNORA Case
               </h1>
               <p className="text-sm font-semibold text-neutral-600 mb-5 leading-relaxed">
-                A capinha inovadora com tela inteligente Smart E-Ink. Mude a foto da sua capinha a qualquer momento direto pelo celular, sem pilhas e sem gastar bateria.
+                Design refinado, proteção reforçada contra impactos e acabamento sofisticado. Escolha sua cor e aproveite nossos descontos progressivos por tempo limitado.
               </p>
 
               {/* Direct CTA Button (GET YOUR KOSNORA) */}
@@ -400,9 +378,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onClick={() => {
                   const selectedTier = tiers.find((t) => t.id === selectedTierId) || tiers[0];
                   if (onSelectTierAndBuy) {
-                    onSelectTierAndBuy(selectedTier, previewOptions[activePreview]?.id);
+                    onSelectTierAndBuy(selectedTier, currentImage.id);
                   } else {
-                    onCtaClick(previewOptions[activePreview]?.id);
+                    onCtaClick(currentImage.id);
                   }
                 }}
                 className="w-full py-4.5 px-8 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white font-black text-sm tracking-widest rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-2.5 uppercase cursor-pointer mb-5"
@@ -417,7 +395,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   Valores & Opções de Compra:
                 </span>
                 <span className="text-xs font-semibold text-neutral-500">
-                  Clique para escolher e comprar
+                  Clique na opção desejada para comprar
                 </span>
               </div>
 
@@ -490,11 +468,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <ul className="space-y-1 text-[11px] font-medium text-neutral-700 text-left mb-3">
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x KOSNORA Case</span>
+                            <span>{tier.quantity}x Capinha KOSNORA</span>
                           </li>
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Tela Smart Ink</span>
+                            <span>Bordas Elevadas Protetoras</span>
+                          </li>
+                          <li className="flex items-center gap-1">
+                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                            <span>Garantia de 30 Dias</span>
                           </li>
                         </ul>
                       </div>
@@ -528,13 +510,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5">
-                  <Zap className="w-4 h-4 text-[#9333EA]" />
-                  <span>Sem gasto de bateria</span>
+                  <Truck className="w-4 h-4 text-[#9333EA]" />
+                  <span>Envio com Rastreamento</span>
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5 text-emerald-600">
                   <Check className="w-4 h-4 text-emerald-600 stroke-[2.5]" />
-                  <span>Checkout Seguro</span>
+                  <span>Checkout 100% Seguro</span>
                 </span>
               </div>
             </div>

@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
                 Make your phone uniquely yours.
               </p>
               <p className="text-xs text-neutral-500 max-w-sm leading-relaxed">
-                Battery-free smart NFC phone cases engineered for endless personalized self-expression.
+                Capinhas de celular premium projetadas com design elegante, durabilidade e proteção avançada.
               </p>
             </div>
 
@@ -64,8 +64,8 @@ export const Footer: React.FC = () => {
                 <a href="#pricing" className="hover:text-[#9333EA] transition-colors">
                   Shop
                 </a>
-                <a href="#how-it-works" className="hover:text-[#9333EA] transition-colors">
-                  How It Works
+                <a href="#benefits" className="hover:text-[#9333EA] transition-colors">
+                  Why Kosnora
                 </a>
                 <a href="#faq" className="hover:text-[#9333EA] transition-colors">
                   FAQ
