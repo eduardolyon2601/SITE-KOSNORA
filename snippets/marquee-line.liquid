@@ -1,72 +1,110 @@
 {% comment %}
-  KOSNORA - Infinite Marquee Line (100% Shopify Compatible & Performance Optimized)
-  - Placed right on top of header
-  - Slow, fluid GPU-accelerated motion (translate3d, 42s)
-  - Purple gradient tone (#7E22CE -> #9333EA -> #6B21A8)
-  - English CTA messages with Free Shipping included
-  - Zero layout shift, zero conflict with Shopify apps or themes
-  - Accessible (role="region", aria-hidden on duplicated track)
-  - Auto-pauses on hover
+  KOSNORA - Infinite Promotional Marquee (100% Shopify Compatible & Performance Optimized)
+  - Style inspired by high-end luxury streetwear / tech accessories announcement marquee
+  - Continuous right-to-left seamless infinite movement with GPU translate3d acceleration
+  - Electric Purple background (#7928CA / #6D28D9) with crisp white text
+  - Montserrat typography, uppercase, refined tracking
+  - Message: "FIRST PURCHASE OFFER • SAVE MORE WHEN YOU BUNDLE • KOSNORA" + Free Shipping
+  - Zero layout shifts (CLS 0.0), no horizontal scrollbars, no JS timers
+  - Accessible: role="region", aria-label, aria-hidden for duplicated tracks, prefers-reduced-motion
+  - Hover pause on interaction
 {% endcomment %}
 
 <style>
   .kosnora-marquee-bar {
     width: 100%;
-    background: linear-gradient(135deg, #7E22CE 0%, #9333EA 50%, #6B21A8 100%);
+    background: #7928CA;
+    background: linear-gradient(90deg, #6D28D9 0%, #7928CA 50%, #6D28D9 100%);
     color: #FFFFFF;
     overflow: hidden;
-    padding: 6px 0;
-    font-size: 10.5px;
-    font-weight: 900;
-    letter-spacing: 0.1em;
+    padding: 8px 0;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     cursor: pointer;
-    border-bottom: 1px solid rgba(88, 28, 135, 0.4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     user-select: none;
     -webkit-user-select: none;
     contain: layout paint;
     position: relative;
     z-index: 51;
-    line-height: 1.2;
+    line-height: 1;
     transition: filter 0.2s ease;
   }
+
   .kosnora-marquee-bar:hover {
-    filter: brightness(1.06);
+    filter: brightness(1.08);
   }
+
   .kosnora-marquee-track {
     display: flex;
     width: max-content;
     will-change: transform;
     transform: translate3d(0, 0, 0);
-    animation: kosnoraMarquee 42s linear infinite;
+    animation: kosnoraMarquee 35s linear infinite;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     perspective: 1000px;
   }
+
   .kosnora-marquee-bar:hover .kosnora-marquee-track {
     animation-play-state: paused;
   }
+
   .kosnora-marquee-group {
     display: flex;
     align-items: center;
     flex-shrink: 0;
     white-space: nowrap;
   }
+
   .kosnora-marquee-item {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    margin: 0 1.5rem;
+    gap: 0;
+    padding: 0 1.25rem;
+    font-family: inherit;
+    color: #FFFFFF;
   }
+
   .kosnora-marquee-bullet {
-    color: #D8B4FE;
-    margin-left: 1rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin-left: 1.25rem;
+    font-size: 8px;
+    vertical-align: middle;
   }
+
   @keyframes kosnoraMarquee {
     0% {
       transform: translate3d(0, 0, 0);
     }
     100% {
       transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kosnora-marquee-track {
+      animation: none;
+      transform: none;
+      justify-content: center;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .kosnora-marquee-bar {
+      padding: 7px 0;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+    .kosnora-marquee-item {
+      padding: 0 0.85rem;
+    }
+    .kosnora-marquee-bullet {
+      margin-left: 0.85rem;
     }
   }
 </style>
@@ -81,21 +119,26 @@
   <div class="kosnora-marquee-track">
     <!-- Loop 1 -->
     <div class="kosnora-marquee-group">
-      <span class="kosnora-marquee-item">🔥 GET YOUR KOSNORA <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">🚚 FREE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">⚡ 1 FOR $79.90 · 2 FOR 139.90 · 3 FOR 194.90 <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">✨ BUY 2 OR MORE & SAVE <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">🛡️ 30-DAY MONEY-BACK GUARANTEE <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">🔒 100% SECURE CHECKOUT <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FIRST PURCHASE OFFER <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">SAVE MORE WHEN YOU BUNDLE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FREE WORLDWIDE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">KOSNORA SMART CASE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FIRST PURCHASE OFFER <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">SAVE MORE WHEN YOU BUNDLE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FREE WORLDWIDE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">KOSNORA SMART CASE <span class="kosnora-marquee-bullet">•</span></span>
     </div>
-    <!-- Loop 2 (seamless duplication for infinite continuous motion) -->
+
+    <!-- Loop 2 (identical duplicate for seamless 100% infinite continuous loop without jumping or blank gaps) -->
     <div class="kosnora-marquee-group" aria-hidden="true">
-      <span class="kosnora-marquee-item">🔥 GET YOUR KOSNORA <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">🚚 FREE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">⚡ 1 FOR $79.90 · 2 FOR 139.90 · 3 FOR 194.90 <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">✨ BUY 2 OR MORE & SAVE <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">🛡️ 30-DAY MONEY-BACK GUARANTEE <span class="kosnora-marquee-bullet">•</span></span>
-      <span class="kosnora-marquee-item">🔒 100% SECURE CHECKOUT <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FIRST PURCHASE OFFER <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">SAVE MORE WHEN YOU BUNDLE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FREE WORLDWIDE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">KOSNORA SMART CASE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FIRST PURCHASE OFFER <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">SAVE MORE WHEN YOU BUNDLE <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">FREE WORLDWIDE SHIPPING <span class="kosnora-marquee-bullet">•</span></span>
+      <span class="kosnora-marquee-item">KOSNORA SMART CASE <span class="kosnora-marquee-bullet">•</span></span>
     </div>
   </div>
 </div>

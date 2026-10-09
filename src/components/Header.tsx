@@ -17,13 +17,15 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
     { label: 'FAQ', href: '#faq' },
   ];
 
-  const ctaPhrases = [
-    { text: 'GET YOUR KOSNORA', icon: '🔥' },
-    { text: 'FREE SHIPPING', icon: '🚚' },
-    { text: '1 FOR $79.90 · 2 FOR 139.90 · 3 FOR 194.90', icon: '⚡' },
-    { text: 'BUY 2 OR MORE & SAVE', icon: '✨' },
-    { text: '30-DAY MONEY-BACK GUARANTEE', icon: '🛡️' },
-    { text: '100% SECURE CHECKOUT', icon: '🔒' },
+  const promoItems = [
+    'FIRST PURCHASE OFFER',
+    'SAVE MORE WHEN YOU BUNDLE',
+    'FREE WORLDWIDE SHIPPING',
+    'KOSNORA SMART CASE',
+    'FIRST PURCHASE OFFER',
+    'SAVE MORE WHEN YOU BUNDLE',
+    'FREE WORLDWIDE SHIPPING',
+    'KOSNORA SMART CASE',
   ];
 
   // Close dropdown menu if user clicks outside
@@ -52,31 +54,31 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md shadow-xs transition-colors">
-      {/* 1. Infinite CTA Carousel ON TOP OF THE HEADER (linha pequena em tom roxo, sempre em movimento) */}
+      {/* 1. KOSNORA Infinite Promotional Marquee (Electric Purple, Continuous Seamless Movement) */}
       <div
         onClick={onShopClick}
-        className="w-full bg-gradient-to-r from-[#7E22CE] via-[#9333EA] to-[#6B21A8] text-white overflow-hidden py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-black tracking-widest uppercase border-b border-purple-900/40 select-none cursor-pointer hover:brightness-105 transition-all shadow-xs"
+        className="w-full bg-[#7928CA] bg-gradient-to-r from-[#6D28D9] via-[#7928CA] to-[#6D28D9] text-white overflow-hidden py-2 sm:py-2.5 text-[10px] sm:text-[11px] font-bold tracking-[0.12em] uppercase border-b border-black/10 select-none cursor-pointer hover:brightness-105 transition-all shadow-xs"
+        role="region"
+        aria-label="Promotions Announcement"
         title="Click to view offers"
       >
-        <div className="flex w-max animate-marquee">
+        <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
           {/* Loop 1 */}
           <div className="flex items-center shrink-0">
-            {ctaPhrases.map((item, idx) => (
-              <span key={`loop1-${idx}`} className="inline-flex items-center gap-1.5 mx-4 sm:mx-6">
-                <span>{item.icon}</span>
-                <span>{item.text}</span>
-                <span className="text-purple-300 ml-3 sm:ml-4">•</span>
+            {promoItems.map((text, idx) => (
+              <span key={`loop1-${idx}`} className="inline-flex items-center font-['Montserrat',sans-serif] px-3 sm:px-5">
+                <span>{text}</span>
+                <span className="text-white/60 ml-3 sm:ml-5 text-[8px]">•</span>
               </span>
             ))}
           </div>
 
-          {/* Loop 2 (duplication for seamless continuous infinite marquee) */}
+          {/* Loop 2 (seamless duplication for infinite continuous motion without blank gaps or jumps) */}
           <div className="flex items-center shrink-0" aria-hidden="true">
-            {ctaPhrases.map((item, idx) => (
-              <span key={`loop2-${idx}`} className="inline-flex items-center gap-1.5 mx-4 sm:mx-6">
-                <span>{item.icon}</span>
-                <span>{item.text}</span>
-                <span className="text-purple-300 ml-3 sm:ml-4">•</span>
+            {promoItems.map((text, idx) => (
+              <span key={`loop2-${idx}`} className="inline-flex items-center font-['Montserrat',sans-serif] px-3 sm:px-5">
+                <span>{text}</span>
+                <span className="text-white/60 ml-3 sm:ml-5 text-[8px]">•</span>
               </span>
             ))}
           </div>

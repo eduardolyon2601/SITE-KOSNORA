@@ -477,31 +477,38 @@ body {
 /* ==========================================================================
    KOSNORA OPTIMIZED INFINITE MARQUEE LINE (100% SHOPIFY COMPATIBLE)
    - Zero layout shift (CLS: 0.0)
-   - Hardware accelerated 60fps GPU transforms
+   - Hardware accelerated 60fps GPU transforms (translate3d)
    - Isolated BEM namespace (no clash with Shopify themes or apps)
-   - Hover pause for accessibility & readability
+   - Electric Purple brand background (#7928CA / #6D28D9)
+   - 100% Montserrat typography
+   - Seamless infinite loop, no blank gaps, no jumps
+   - Hover pause & prefers-reduced-motion for accessibility & readability
    ========================================================================== */
 .kosnora-marquee-bar {
   width: 100%;
-  background: linear-gradient(135deg, #7E22CE 0%, #9333EA 50%, #6B21A8 100%);
+  background: #7928CA;
+  background: linear-gradient(90deg, #6D28D9 0%, #7928CA 50%, #6D28D9 100%);
   color: #FFFFFF;
   overflow: hidden;
-  padding: 6px 0;
-  font-size: 10.5px;
-  font-weight: 900;
-  letter-spacing: 0.1em;
+  padding: 8px 0;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  border-bottom: 1px solid rgba(88, 28, 135, 0.4);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   user-select: none;
+  -webkit-user-select: none;
   contain: layout paint;
   position: relative;
   z-index: 51;
+  line-height: 1;
   transition: filter 0.2s ease;
 }
 
 .kosnora-marquee-bar:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
 }
 
 .kosnora-marquee-track {
@@ -509,8 +516,9 @@ body {
   width: max-content;
   will-change: transform;
   transform: translate3d(0, 0, 0);
-  animation: kosnoraMarquee 42s linear infinite;
+  animation: kosnoraMarquee 35s linear infinite;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   perspective: 1000px;
 }
 
@@ -528,13 +536,17 @@ body {
 .kosnora-marquee-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin: 0 1.5rem;
+  gap: 0;
+  padding: 0 1.25rem;
+  font-family: inherit;
+  color: #FFFFFF;
 }
 
 .kosnora-marquee-bullet {
-  color: #D8B4FE;
-  margin-left: 1rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-left: 1.25rem;
+  font-size: 8px;
+  vertical-align: middle;
 }
 
 @keyframes kosnoraMarquee {
@@ -543,6 +555,29 @@ body {
   }
   100% {
     transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kosnora-marquee-track {
+    animation: none;
+    transform: none;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .kosnora-marquee-bar {
+    padding: 7px 0;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .kosnora-marquee-item {
+    padding: 0 0.85rem;
+  }
+  .kosnora-marquee-bullet {
+    margin-left: 0.85rem;
   }
 }
 
