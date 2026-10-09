@@ -1,0 +1,88 @@
+<section id="faq" class="section-light" style="background: #FFFFFF; padding: 4rem 0; border-bottom: 1px solid #E5E5E5; color: #111111;">
+  <div class="kosnora-container" style="max-width: 800px; margin: 0 auto; padding: 0 1rem;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+      <span style="font-size: 11px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #9333EA; display: block; margin-bottom: 0.5rem;">
+        FREQUENTLY ASKED QUESTIONS
+      </span>
+      <h2 style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 900; text-transform: uppercase; margin: 0; color: #111111;">
+        {{ section.settings.headline | default: 'QUESTIONS & ANSWERS' }}
+      </h2>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <!-- Q1 -->
+      <details class="faq-accordion-item" style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 800; font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between; align-items: center; color: #111111;">
+          <span>How do I choose my bundle and complete my purchase?</span>
+          <span style="color: #9333EA; font-weight: 900;">+</span>
+        </summary>
+        <p style="margin-top: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 500; line-height: 1.6; border-top: 1px solid #E5E5E5; padding-top: 0.75rem;">
+          Select your preferred color from the gallery and choose between 1 case ($79.90), 2 cases ($139.90), or 3 cases ($194.90). Then simply click GET YOUR KOSNORA to proceed directly to secure checkout.
+        </p>
+      </details>
+
+      <!-- Q2 -->
+      <details class="faq-accordion-item" style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 800; font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between; align-items: center; color: #111111;">
+          <span>Does the case protect both the camera and the screen?</span>
+          <span style="color: #9333EA; font-weight: 900;">+</span>
+        </summary>
+        <p style="margin-top: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 500; line-height: 1.6; border-top: 1px solid #E5E5E5; padding-top: 0.75rem;">
+          Yes! The KOSNORA case is engineered with shock-absorbent composite bumpers and raised protective bezels surrounding both your camera array and front display to guard against everyday scratches and drops.
+        </p>
+      </details>
+
+      <!-- Q3 -->
+      <details class="faq-accordion-item" style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 800; font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between; align-items: center; color: #111111;">
+          <span>How long does shipping take?</span>
+          <span style="color: #9333EA; font-weight: 900;">+</span>
+        </summary>
+        <p style="margin-top: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 500; line-height: 1.6; border-top: 1px solid #E5E5E5; padding-top: 0.75rem;">
+          Orders are processed and dispatched rapidly within 24 to 48 business hours. You will receive an end-to-end tracking code to follow your package directly to your doorstep.
+        </p>
+      </details>
+
+      <!-- Q4 -->
+      <details class="faq-accordion-item" style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 800; font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between; align-items: center; color: #111111;">
+          <span>What is your guarantee and return policy?</span>
+          <span style="color: #9333EA; font-weight: 900;">+</span>
+        </summary>
+        <p style="margin-top: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 500; line-height: 1.6; border-top: 1px solid #E5E5E5; padding-top: 0.75rem;">
+          We provide an unconditional 30-Day Money-Back Guarantee. If for any reason you are not completely satisfied, our support team will issue a prompt replacement or full refund.
+        </p>
+      </details>
+
+      <!-- Q5 -->
+      <details class="faq-accordion-item" style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer;">
+        <summary style="font-weight: 800; font-size: 0.95rem; list-style: none; display: flex; justify-content: space-between; align-items: center; color: #111111;">
+          <span>How do I contact customer support?</span>
+          <span style="color: #9333EA; font-weight: 900;">+</span>
+        </summary>
+        <p style="margin-top: 0.75rem; font-size: 0.8125rem; color: #555555; font-weight: 500; line-height: 1.6; border-top: 1px solid #E5E5E5; padding-top: 0.75rem;">
+          Our dedicated customer service team is available Monday through Friday via email at support@kosnora.com to answer any questions or assist with your order.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "QUESTIONS & ANSWERS"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ"
+    }
+  ]
+}
+{% endschema %}

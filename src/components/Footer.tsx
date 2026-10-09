@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
                 <KosnoraLogo size="sm" />
               </a>
               <p className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
-                Make your phone uniquely yours.
+                Engineered for Everyday Protection
               </p>
               <p className="text-xs text-neutral-500 max-w-sm leading-relaxed">
                 Premium phone cases engineered with sleek minimalist design, long-lasting durability, and advanced impact protection.

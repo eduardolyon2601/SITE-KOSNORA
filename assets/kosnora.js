@@ -129,15 +129,15 @@ function initDrawer() {
   }
 
   const PROMO_OFFERS = {
-    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Smart Case' },
-    2: { qty: 2, unitPrice: 69.90, total: 139.80, savings: 20.00, label: '2x KOSNORA Smart Case' },
-    3: { qty: 3, unitPrice: 59.90, total: 179.70, savings: 60.00, label: '3x KOSNORA Smart Case' }
+    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Case' },
+    2: { qty: 2, unitPrice: 69.95, total: 139.90, savings: 19.90, label: '2x KOSNORA Cases' },
+    3: { qty: 3, unitPrice: 64.97, total: 194.90, savings: 44.80, label: '3x KOSNORA Cases' }
   };
 
   const REGULAR_OFFERS = {
-    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Smart Case' },
-    2: { qty: 2, unitPrice: 79.90, total: 159.80, savings: 0, label: '2x KOSNORA Smart Case' },
-    3: { qty: 3, unitPrice: 79.90, total: 239.70, savings: 0, label: '3x KOSNORA Smart Case' }
+    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Case' },
+    2: { qty: 2, unitPrice: 69.95, total: 139.90, savings: 19.90, label: '2x KOSNORA Cases' },
+    3: { qty: 3, unitPrice: 64.97, total: 194.90, savings: 44.80, label: '3x KOSNORA Cases' }
   };
 
   function getActiveOffers() {
@@ -217,7 +217,7 @@ function initDrawer() {
   }
 
   function updateSummary() {
-    if (summaryQty) summaryQty.textContent = `${currentQty}x KOSNORA Smart Case`;
+    if (summaryQty) summaryQty.textContent = `${currentQty}x KOSNORA Case`;
     if (summaryTotal) summaryTotal.textContent = `$${currentTotal.toFixed(2)}`;
     if (ctaTotal) ctaTotal.textContent = `$${currentTotal.toFixed(2)}`;
     if (qtyInput) qtyInput.value = currentQty;

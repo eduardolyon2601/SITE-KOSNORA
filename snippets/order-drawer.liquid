@@ -3,10 +3,7 @@
   {%- assign target_product = all_products[settings.featured_product] -%}
 {%- endif -%}
 {%- if target_product == nil or target_product.id == blank -%}
-  {%- assign target_product = all_products['kosnora-ink-nfc-smart-phone-case'] -%}
-{%- endif -%}
-{%- if target_product == nil or target_product.id == blank -%}
-  {%- assign target_product = all_products['kosnora-smart-phone-case'] -%}
+  {%- assign target_product = all_products['kosnora-case'] -%}
 {%- endif -%}
 {%- if target_product == nil or target_product.id == blank -%}
   {%- assign target_product = all_products['kosnora'] -%}
@@ -28,7 +25,7 @@
           Order Configuration
         </div>
         <h3 style="font-size: 1.125rem; font-weight: 800; color: #111111; margin-top: 2px;">
-          KOSNORA Ink NFC Smart Case
+          KOSNORA Case
         </h3>
       </div>
       <button type="button" data-close-drawer style="background: none; border: none; color: #555555; cursor: pointer; padding: 6px; border-radius: 8px;">
@@ -37,7 +34,7 @@
     </div>
 
     <!-- Configuration Body -->
-    <div id="drawer-config-area" style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1.5rem; background: #FFFFFF;">
+    <div id="drawer-config-area" style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1.5rem; background: #FFFFFF; overflow-y: auto;">
       <!-- 1. Bundle selection -->
       <div>
         <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.75rem;">
@@ -45,10 +42,10 @@
         </label>
         <div style="display: flex; flex-direction: column; gap: 0.75rem;">
           <!-- 1 Case -->
-          <div data-bundle-quantity="1" class="kosnora-bundle-card active-bundle" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+          <div data-bundle-quantity="1" class="kosnora-bundle-card active-bundle" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 2px solid #9333EA; background: #FAF5FF;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
+              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #9333EA;">
+                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #FFF;"></span>
               </div>
               <div>
                 <div style="font-size: 0.875rem; font-weight: 800; color: #111111;">1 CASE</div>
@@ -59,42 +56,42 @@
           </div>
 
           <!-- 2 Cases -->
-          <div data-bundle-quantity="2" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+          <div data-bundle-quantity="2" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #E5E5E5; background: #FFF;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #D1D5DB;">
                 <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
               </div>
               <div>
-                <div style="font-size: 0.875rem; font-weight: 800; color: #111111; display: flex; align-items: center; gap: 6px;">
-                  <span>2 CASES</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 0.875rem; font-weight: 800; color: #111111;">2 CASES</span>
                   <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #9333EA; color: #FFFFFF;">POPULAR</span>
                 </div>
-                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$69.90 each · $139.80 total</div>
+                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$69.95 each · $139.90 total</div>
               </div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 1rem; font-weight: 800; color: #111111;">$139.80</div>
-              <div style="font-size: 11px; color: #059669; font-weight: 700;">Save $20.00</div>
+              <div style="font-size: 1rem; font-weight: 800; color: #111111;">$139.90</div>
+              <div style="font-size: 11px; color: #059669; font-weight: 700;">Save $19.90</div>
             </div>
           </div>
 
           <!-- 3 Cases -->
-          <div data-bundle-quantity="3" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+          <div data-bundle-quantity="3" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #E5E5E5; background: #FFF;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #D1D5DB;">
                 <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
               </div>
               <div>
-                <div style="font-size: 0.875rem; font-weight: 800; color: #111111; display: flex; align-items: center; gap: 6px;">
-                  <span>3 CASES</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 0.875rem; font-weight: 800; color: #111111;">3 CASES</span>
                   <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #059669; color: #FFFFFF;">BEST VALUE</span>
                 </div>
-                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$59.90 each · $179.70 total</div>
+                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$64.97 each · $194.90 total</div>
               </div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 1rem; font-weight: 800; color: #111111;">$179.70</div>
-              <div style="font-size: 11px; color: #059669; font-weight: 700;">Save $60.00</div>
+              <div style="font-size: 1rem; font-weight: 800; color: #111111;">$194.90</div>
+              <div style="font-size: 11px; color: #059669; font-weight: 700;">Save $44.80</div>
             </div>
           </div>
         </div>
@@ -127,27 +124,31 @@
         </select>
       </div>
 
-      <!-- 3. Color selection -->
+      <!-- 3. Color selection (Gray, Black, Pink, White, Orange) -->
       <div>
         <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.5rem;">
           3. Case Color:
         </label>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-          <button type="button" data-drawer-color data-name="Obsidian Black" class="active-color" style="padding: 0.75rem; border-radius: 0.75rem; border: 2px solid #9333EA; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-            <span style="width: 14px; height: 14px; border-radius: 50%; background: #161618; border: 1px solid #CCC;"></span>
-            <span>Obsidian Black</span>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+          <button type="button" data-drawer-color data-name="Gray" class="active-color" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 2px solid #9333EA; background: #FAF5FF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #6B7280; border: 1px solid #D1D5DB;"></span>
+            <span>Gray</span>
           </button>
-          <button type="button" data-drawer-color data-name="Titanium Gray" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-            <span style="width: 14px; height: 14px; border-radius: 50%; background: #4A4C50; border: 1px solid #CCC;"></span>
-            <span>Titanium Gray</span>
+          <button type="button" data-drawer-color data-name="Black" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #111827; border: 1px solid #374151;"></span>
+            <span>Black</span>
           </button>
-          <button type="button" data-drawer-color data-name="Cloud White" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-            <span style="width: 14px; height: 14px; border-radius: 50%; background: #EAEAEA; border: 1px solid #CCC;"></span>
-            <span>Cloud White</span>
+          <button type="button" data-drawer-color data-name="Pink" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #F472B6; border: 1px solid #FBCFE8;"></span>
+            <span>Pink</span>
           </button>
-          <button type="button" data-drawer-color data-name="Midnight Navy" style="padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-            <span style="width: 14px; height: 14px; border-radius: 50%; background: #1C2433; border: 1px solid #CCC;"></span>
-            <span>Midnight Navy</span>
+          <button type="button" data-drawer-color data-name="White" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF; border: 1px solid #D1D5DB;"></span>
+            <span>White</span>
+          </button>
+          <button type="button" data-drawer-color data-name="Orange" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: #F97316; border: 1px solid #FED7AA;"></span>
+            <span>Orange</span>
           </button>
         </div>
       </div>
@@ -159,7 +160,7 @@
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
           <span>Item:</span>
-          <span id="drawer-summary-qty" style="color: #111111; font-weight: 600;">1x KOSNORA Smart Case</span>
+          <span id="drawer-summary-qty" style="color: #111111; font-weight: 600;">1x KOSNORA Case</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
           <span>Model:</span>
@@ -167,7 +168,7 @@
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
           <span>Color:</span>
-          <span id="drawer-summary-color" style="color: #111111; font-weight: 600;">Obsidian Black</span>
+          <span id="drawer-summary-color" style="color: #111111; font-weight: 600;">Gray</span>
         </div>
         <div style="display: none; justify-content: space-between; font-size: 13px; color: #059669; margin-bottom: 6px;">
           <span>Bundle Savings:</span>
@@ -186,7 +187,7 @@
       <input type="hidden" name="quantity" id="drawer-quantity-input" value="1">
       <input type="hidden" name="return_to" value="/checkout">
       <input type="hidden" name="properties[iPhone Model]" id="drawer-prop-model" value="iPhone 17 Pro Max">
-      <input type="hidden" name="properties[Case Color]" id="drawer-prop-color" value="Obsidian Black">
+      <input type="hidden" name="properties[Case Color]" id="drawer-prop-color" value="Gray">
       <input type="hidden" name="properties[Offer Selection]" id="drawer-prop-offer" value="1 Case">
     </form>
 
