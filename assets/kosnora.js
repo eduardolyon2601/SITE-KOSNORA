@@ -160,11 +160,15 @@ function initFaqAccordion() {
   });
 }
 
-// 3. Checkout & Order Drawer (Minimalist, Conversion-Optimized)
+// 3. Checkout & Order Drawer (Multi-Unit Configurator & Real Shopify Cart Integration)
 function initDrawer() {
   const drawerBackdrop = document.getElementById('kosnora-order-drawer');
   const closeBtns = document.querySelectorAll('[data-close-drawer]');
   const openBtns = document.querySelectorAll('[data-open-drawer]');
+
+  // Units list container & add unit button
+  const unitsContainer = document.getElementById('drawer-units-container');
+  const addUnitBtn = document.getElementById('drawer-add-unit-action');
 
   // Stepper elements
   const qtyMinusBtn = document.getElementById('drawer-qty-minus');
@@ -198,6 +202,221 @@ function initDrawer() {
   const propOfferInput = document.getElementById('drawer-prop-offer');
 
   const variantAlertEl = document.getElementById('drawer-variant-alert');
+
+  // Multi-unit state in the drawer
+  let drawerUnits = [
+    { model: currentModel, color: currentColor }
+  ];
+
+  const COLOR_IMAGE_MAP = {
+    'Gray': 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg',
+    'Black': 'https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg',
+    'Pink': 'https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg',
+    'White': 'https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg',
+    'Orange': 'https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg'
+  };
+
+  const AVAILABLE_COLORS = ['Gray', 'Black', 'Pink', 'White', 'Orange'];
+
+  const AVAILABLE_MODELS = [
+    'iPhone 17 Pro Max',
+    'iPhone 17 Pro',
+    'iPhone 17',
+    'iPhone 16 Pro Max',
+    'iPhone 16 Pro',
+    'iPhone 16 Plus',
+    'iPhone 16',
+    'iPhone 15 Pro Max',
+    'iPhone 15 Pro',
+    'iPhone 15 Plus',
+    'iPhone 15',
+    'iPhone 14 Pro Max',
+    'iPhone 14 Pro',
+    'iPhone 14 Plus',
+    'iPhone 14',
+    'iPhone 12 Pro Max',
+    'iPhone 12 Pro',
+    'iPhone 12'
+  ];
+
+  function renderDrawerUnits() {
+    if (!unitsContainer) return;
+    currentQty = drawerUnits.length;
+    unitsContainer.innerHTML = '';
+
+    drawerUnits.forEach((unit, idx) => {
+      const isAvailable = isCombinationInStoreInventory(unit.model, unit.color);
+      const imgSrc = COLOR_IMAGE_MAP[unit.color] || COLOR_IMAGE_MAP['Gray'];
+
+      const card = document.createElement('div');
+      card.className = 'kosnora-drawer-unit-card';
+      card.style.cssText = `
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        border: 1px solid ${isAvailable ? '#E5E7EB' : '#FCA5A5'};
+        background: ${isAvailable ? '#F9FAFB' : '#FEF2F2'};
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+      `;
+
+      // Header row: Unit label and Remove button
+      const headerRow = document.createElement('div');
+      headerRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center;';
+      headerRow.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 11px; font-weight: 900; text-transform: uppercase; color: #9333EA; background: #FAF5FF; padding: 2px 7px; border-radius: 6px; border: 1px solid #E9D5FF;">
+            Capa ${idx + 1}
+          </span>
+          <span style="font-size: 11px; font-weight: 700; color: ${isAvailable ? '#059669' : '#DC2626'};">
+            ${isAvailable ? '✓ Em estoque' : '✕ Esgotado'}
+          </span>
+        </div>
+        ${drawerUnits.length > 1 ? `
+          <button type="button" class="drawer-remove-unit-btn" data-unit-idx="${idx}" style="background: none; border: none; color: #EF4444; font-size: 11px; font-weight: 800; cursor: pointer; padding: 2px 6px; border-radius: 4px;">
+            Remover ✕
+          </button>
+        ` : ''}
+      `;
+      card.appendChild(headerRow);
+
+      // Body row: Image + Selectors
+      const bodyRow = document.createElement('div');
+      bodyRow.style.cssText = 'display: flex; gap: 0.85rem; align-items: center;';
+
+      const thumbImg = document.createElement('img');
+      thumbImg.src = imgSrc;
+      thumbImg.alt = unit.color;
+      thumbImg.style.cssText = 'width: 50px; height: 62px; object-fit: contain; border-radius: 8px; background: #FFF; border: 1px solid #E5E7EB; padding: 2px; flex-shrink: 0;';
+      bodyRow.appendChild(thumbImg);
+
+      const controlsCol = document.createElement('div');
+      controlsCol.style.cssText = 'flex: 1; display: flex; flex-direction: column; gap: 0.4rem; min-width: 0;';
+
+      // Model selector
+      const modelSelect = document.createElement('select');
+      modelSelect.style.cssText = 'width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid #D1D5DB; font-size: 11px; font-weight: 700; color: #111827; background: #FFF; outline: none; cursor: pointer;';
+      AVAILABLE_MODELS.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        if (m === unit.model) opt.selected = true;
+        modelSelect.appendChild(opt);
+      });
+      modelSelect.addEventListener('change', () => {
+        unit.model = modelSelect.value;
+        renderDrawerUnits();
+        updateCartUI();
+        syncShopifyCartLive();
+      });
+      controlsCol.appendChild(modelSelect);
+
+      // Color swatches row
+      const colorsRow = document.createElement('div');
+      colorsRow.style.cssText = 'display: flex; gap: 4px; flex-wrap: wrap; align-items: center;';
+      AVAILABLE_COLORS.forEach(c => {
+        const cBtn = document.createElement('button');
+        cBtn.type = 'button';
+        const isSelected = c === unit.color;
+        const cInStock = isCombinationInStoreInventory(unit.model, c);
+        cBtn.style.cssText = `
+          padding: 2px 7px;
+          border-radius: 9999px;
+          font-size: 10px;
+          font-weight: 800;
+          cursor: pointer;
+          border: 1.5px solid ${isSelected ? '#9333EA' : '#E5E7EB'};
+          background: ${isSelected ? '#9333EA' : '#FFFFFF'};
+          color: ${isSelected ? '#FFFFFF' : (cInStock ? '#374151' : '#9CA3AF')};
+          opacity: ${cInStock ? '1' : '0.6'};
+          text-decoration: ${cInStock ? 'none' : 'line-through'};
+          transition: all 0.15s ease;
+        `;
+        cBtn.textContent = c;
+        cBtn.title = cInStock ? c : `${c} (Esgotado)`;
+        cBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          unit.color = c;
+          renderDrawerUnits();
+          updateCartUI();
+          syncShopifyCartLive();
+        });
+        colorsRow.appendChild(cBtn);
+      });
+      controlsCol.appendChild(colorsRow);
+
+      bodyRow.appendChild(controlsCol);
+      card.appendChild(bodyRow);
+      unitsContainer.appendChild(card);
+    });
+
+    // Remove unit buttons listeners
+    unitsContainer.querySelectorAll('.drawer-remove-unit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const removeIdx = parseInt(btn.getAttribute('data-unit-idx'), 10);
+        if (drawerUnits.length > 1) {
+          drawerUnits.splice(removeIdx, 1);
+          renderDrawerUnits();
+          updateCartUI();
+          syncShopifyCartLive();
+        }
+      });
+    });
+
+    // Update add unit button state
+    if (addUnitBtn) {
+      if (drawerUnits.length >= 3) {
+        addUnitBtn.style.display = 'none';
+      } else {
+        addUnitBtn.style.display = 'flex';
+        const nextPrice = drawerUnits.length === 1 ? 'por apenas R$ 60,00' : 'por apenas R$ 55,00';
+        addUnitBtn.querySelector('span:last-child').textContent = `Adicionar Outra Capa (${nextPrice})`;
+      }
+    }
+
+    validateAllUnitsStock();
+  }
+
+  function validateAllUnitsStock() {
+    const invalidUnits = [];
+    drawerUnits.forEach((u, i) => {
+      if (!isCombinationInStoreInventory(u.model, u.color)) {
+        invalidUnits.push(`Capa ${i + 1} (${u.model} - ${u.color})`);
+      }
+    });
+
+    if (invalidUnits.length > 0) {
+      showDrawerAlert(`Atenção: ${invalidUnits.join(', ')} está esgotada no momento. Por favor altere o modelo ou a cor para prosseguir.`, 'error');
+      if (proceedBtn) {
+        proceedBtn.disabled = true;
+        proceedBtn.style.opacity = '0.6';
+        proceedBtn.style.cursor = 'not-allowed';
+      }
+      return false;
+    } else {
+      hideDrawerAlert();
+      if (proceedBtn) {
+        proceedBtn.disabled = false;
+        proceedBtn.style.opacity = '1';
+        proceedBtn.style.cursor = 'pointer';
+      }
+      return true;
+    }
+  }
+
+  if (addUnitBtn) {
+    addUnitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (drawerUnits.length < 3) {
+        const nextColor = drawerUnits.some(u => u.color === 'Black') ? 'Gray' : 'Black';
+        drawerUnits.push({ model: currentModel, color: nextColor });
+        renderDrawerUnits();
+        updateCartUI();
+        syncShopifyCartLive();
+      }
+    });
+  }
 
   let currentQty = 1;
   let currentColor = 'Gray';
@@ -739,35 +958,43 @@ function initDrawer() {
   function syncShopifyCartLive() {
     clearTimeout(syncTimeout);
     syncTimeout = setTimeout(async () => {
-      const variantId = varInput?.value;
-      if (!variantId || variantId === '1' || isNaN(Number(variantId))) return;
+      if (!validateAllUnitsStock()) return;
 
       const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
-      const pricing = calculatePricing(currentQty);
+      const pricing = calculatePricing(drawerUnits.length);
+      const items = [];
 
-      try {
-        await fetch(root + 'cart/clear.js', { method: 'POST' }).catch(() => {});
-        await fetch(root + 'cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            items: [{
-              id: Number(variantId),
-              quantity: currentQty,
-              properties: {
-                'iPhone Model': currentModel,
-                'Case Color': currentColor,
-                'Offer Selection': pricing.tag || `${currentQty} Case${currentQty > 1 ? 's' : ''}`,
-                'Price Structure': `${formatMoney(pricing.unitPrice)} cada · ${formatMoney(pricing.total)} total`
-              }
-            }]
-          })
-        });
-      } catch (e) {
-        console.warn('[KOSNORA] Background cart sync:', e);
+      for (let i = 0; i < drawerUnits.length; i++) {
+        const u = drawerUnits[i];
+        const v = findVariantForOptions(u.model, u.color);
+        if (v && v.id && v.id !== '1' && !isNaN(Number(v.id))) {
+          items.push({
+            id: Number(v.id),
+            quantity: 1,
+            properties: {
+              'Capa': `${i + 1} de ${drawerUnits.length}`,
+              'iPhone Model': u.model,
+              'Case Color': u.color,
+              'Oferta Promocional': pricing.tag || `${drawerUnits.length} Capas`
+            }
+          });
+        }
+      }
+
+      if (items.length > 0) {
+        try {
+          await fetch(root + 'cart/clear.js', { method: 'POST' }).catch(() => {});
+          await fetch(root + 'cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ items })
+          });
+        } catch (e) {
+          console.warn('[KOSNORA] Background cart sync:', e);
+        }
       }
     }, 400);
   }
@@ -901,27 +1128,33 @@ function initDrawer() {
         return;
       }
 
-      // Set quantity from tier if specified (e.g. data-qty="2")
+      // Initialize units according to selected bundle quantity
+      let targetCount = 1;
       if (btn.hasAttribute('data-qty')) {
         const reqQty = parseInt(btn.getAttribute('data-qty'), 10);
-        if (reqQty >= 1) currentQty = reqQty;
+        if (reqQty >= 1) targetCount = reqQty;
       }
 
-      // Match product thumbnail with chosen color
-      const colorSrc = (activeDesktopThumb && activeDesktopThumb.getAttribute('data-src')) ||
-                       (activeMobileThumb && activeMobileThumb.getAttribute('data-src'));
-      if (colorSrc && productImg) {
-        productImg.src = colorSrc;
+      if (targetCount === 2) {
+        const secondColor = currentColor === 'Black' ? 'Gray' : 'Black';
+        drawerUnits = [
+          { model: currentModel, color: currentColor },
+          { model: currentModel, color: secondColor }
+        ];
+      } else if (targetCount >= 3) {
+        drawerUnits = [
+          { model: currentModel, color: currentColor },
+          { model: currentModel, color: 'Black' },
+          { model: currentModel, color: 'White' }
+        ];
+      } else {
+        drawerUnits = [
+          { model: currentModel, color: currentColor }
+        ];
       }
 
-      // Update read-only pill labels (Preserving customer choices!)
-      if (summaryColor) summaryColor.textContent = currentColor;
-      if (summaryModel) summaryModel.textContent = currentModel;
-      if (propColorInput) propColorInput.value = currentColor;
-      if (propModelInput) propModelInput.value = currentModel;
-
+      renderDrawerUnits();
       updateCartUI();
-      syncVariantSelection();
       syncShopifyCartLive();
 
       if (drawerBackdrop) drawerBackdrop.classList.add('open');
@@ -945,18 +1178,20 @@ function initDrawer() {
     desktopModelSelect.addEventListener('change', () => {
       currentModel = desktopModelSelect.value;
       if (mobileModelSelect) mobileModelSelect.value = currentModel;
-      if (summaryModel) summaryModel.textContent = currentModel;
+      if (drawerUnits.length > 0) drawerUnits[0].model = currentModel;
+      renderDrawerUnits();
       updateLandingPageStockUI();
-      syncVariantSelection();
+      syncShopifyCartLive();
     });
   }
   if (mobileModelSelect) {
     mobileModelSelect.addEventListener('change', () => {
       currentModel = mobileModelSelect.value;
       if (desktopModelSelect) desktopModelSelect.value = currentModel;
-      if (summaryModel) summaryModel.textContent = currentModel;
+      if (drawerUnits.length > 0) drawerUnits[0].model = currentModel;
+      renderDrawerUnits();
       updateLandingPageStockUI();
-      syncVariantSelection();
+      syncShopifyCartLive();
     });
   }
 
@@ -964,16 +1199,17 @@ function initDrawer() {
   window.addEventListener('kosnora:colorchange', (e) => {
     if (e.detail && e.detail.name && e.detail.name !== 'Video') {
       currentColor = e.detail.name;
-      if (summaryColor) summaryColor.textContent = currentColor;
+      if (drawerUnits.length > 0) drawerUnits[0].color = currentColor;
+      renderDrawerUnits();
       updateLandingPageStockUI();
-      syncVariantSelection();
+      syncShopifyCartLive();
     }
   });
 
   // Pre-load active product and sync initial landing page UI
   loadActiveProduct().then(() => {
     updateLandingPageStockUI();
-    syncVariantSelection();
+    renderDrawerUnits();
   });
 
   // Proceed to Checkout Button Listener
@@ -982,18 +1218,38 @@ function initDrawer() {
       e.preventDefault();
       if (isSubmittingCheckout) return;
 
-      await loadActiveProduct();
-      const variant = syncVariantSelection();
-      const variantId = varInput?.value;
-
-      if (!variantId || variantId === '1' || variantId === 'default' || isNaN(Number(variantId))) {
-        showDrawerAlert('Não foi possível identificar a variante do produto. Por favor, verifique se o produto está selecionado na loja da Shopify.', 'error');
+      if (!validateAllUnitsStock()) {
         return;
       }
 
-      if (variant && variant.available === false) {
-        showDrawerAlert('Esta variante está esgotada no momento. Por favor, selecione outra opção.', 'error');
-        return;
+      await loadActiveProduct();
+
+      // Resolve true variant IDs for each unit
+      const checkoutItems = [];
+      for (let i = 0; i < drawerUnits.length; i++) {
+        const u = drawerUnits[i];
+        const v = findVariantForOptions(u.model, u.color);
+
+        if (!v || !v.id || v.id === '1' || isNaN(Number(v.id))) {
+          showDrawerAlert(`Não foi possível localizar o ID real da variante para a Capa ${i + 1} (${u.model} - ${u.color}). Verifique os produtos na Shopify.`, 'error');
+          return;
+        }
+
+        if (v.available === false) {
+          showDrawerAlert(`A Capa ${i + 1} (${u.model} - ${u.color}) está esgotada no momento.`, 'error');
+          return;
+        }
+
+        checkoutItems.push({
+          id: Number(v.id),
+          quantity: 1,
+          properties: {
+            'Capa': `${i + 1} de ${drawerUnits.length}`,
+            'iPhone Model': u.model,
+            'Case Color': u.color,
+            'Oferta Promocional': `${drawerUnits.length} Capas`
+          }
+        });
       }
 
       isSubmittingCheckout = true;
@@ -1001,13 +1257,13 @@ function initDrawer() {
       proceedBtn.style.opacity = '0.8';
       proceedBtn.innerHTML = '<span>PROCESSANDO PEDIDO...</span>';
 
-      const pricing = calculatePricing(currentQty);
+      const pricing = calculatePricing(drawerUnits.length);
       const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
       let checkoutUrl = root + 'checkout';
 
-      if (currentQty === 2) {
+      if (drawerUnits.length === 2) {
         checkoutUrl += '?discount=BUNDLE2';
-      } else if (currentQty >= 3) {
+      } else if (drawerUnits.length >= 3) {
         checkoutUrl += '?discount=BUNDLE3';
       }
 
@@ -1019,18 +1275,7 @@ function initDrawer() {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify({
-            items: [{
-              id: Number(variantId),
-              quantity: currentQty,
-              properties: {
-                'iPhone Model': currentModel,
-                'Case Color': currentColor,
-                'Offer Selection': pricing.tag || `${currentQty} Case${currentQty > 1 ? 's' : ''}`,
-                'Price Structure': `${formatMoney(pricing.unitPrice)} cada · ${formatMoney(pricing.total)} total`
-              }
-            }]
-          })
+          body: JSON.stringify({ items: checkoutItems })
         });
 
         if (cartAddRes.ok) {
@@ -1042,15 +1287,16 @@ function initDrawer() {
           window.location.href = checkoutUrl;
           return;
         } else {
-          // Fallback permalink
+          // Permalink fallback
           proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
-          window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
+          const permalinkParts = checkoutItems.map(item => `${item.id}:${item.quantity}`).join(',');
+          window.location.href = `${root}cart/${permalinkParts}?return_to=/checkout`;
           return;
         }
       } catch (err) {
         console.error('[KOSNORA] Checkout exception:', err);
-        // Fallback permalink
-        window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
+        const permalinkParts = checkoutItems.map(item => `${item.id}:${item.quantity}`).join(',');
+        window.location.href = `${root}cart/${permalinkParts}?return_to=/checkout`;
       }
     });
   }

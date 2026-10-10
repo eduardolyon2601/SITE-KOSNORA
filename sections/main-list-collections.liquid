@@ -1,0 +1,29 @@
+<section class="section-light kosnora-py" style="background: #FFFFFF; color: #111111; padding: 4rem 1rem;">
+  <div class="kosnora-container" style="max-width: 1200px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h1 class="kosnora-headline" style="font-size: 2.5rem; font-weight: 900; color: #111111; text-transform: uppercase;">
+        Todas as Coleções
+      </h1>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
+      {% for collection in collections %}
+        <a href="{{ collection.url }}" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 1.25rem; overflow: hidden; padding: 1.5rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s ease;">
+          <h2 style="font-size: 1.25rem; font-weight: 900; color: #111827; margin: 0 0 0.5rem 0; text-transform: uppercase;">
+            {{ collection.title }}
+          </h2>
+          <span style="font-size: 13px; font-weight: 700; color: #9333EA;">
+            {{ collection.all_products_count }} produtos
+          </span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections List",
+  "settings": []
+}
+{% endschema %}

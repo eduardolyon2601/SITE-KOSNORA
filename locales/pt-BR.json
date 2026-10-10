@@ -1,0 +1,24 @@
+{
+  "general": {
+    "skip_to_content": "Pular para o conteúdo",
+    "close": "Fechar",
+    "menu": "Menu"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Comprar Agora",
+      "sold_out": "Esgotado",
+      "unavailable": "Indisponível",
+      "price": {
+        "regular_price": "Preço original",
+        "sale_price": "Preço promocional"
+      }
+    }
+  },
+  "cart": {
+    "title": "Seu Carrinho",
+    "empty": "Seu carrinho está vazio no momento",
+    "checkout": "Finalizar Compra",
+    "subtotal": "Subtotal"
+  }
+}

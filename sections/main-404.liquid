@@ -1,0 +1,18 @@
+<section class="section-light kosnora-py" style="background: #FFFFFF; color: #111111; padding: 5rem 1rem; text-align: center;">
+  <div class="kosnora-container" style="max-width: 600px; margin: 0 auto;">
+    <span style="font-size: 12px; font-weight: 900; color: #9333EA; text-transform: uppercase; letter-spacing: 0.15em;">Erro 404</span>
+    <h1 class="kosnora-headline" style="font-size: 2.75rem; color: #111111; margin: 0.75rem 0 1rem; font-weight: 900;">Página Não Encontrada</h1>
+    <p style="color: #6B7280; font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;">A página que você procura não existe ou foi movida.</p>
+    <a href="{{ routes.root_url | default: '/' }}" class="kosnora-btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 1rem 2rem; border-radius: 12px; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFF; text-decoration: none; font-weight: 800;">
+      <span>VOLTAR PARA A PÁGINA INICIAL</span>
+      {% render 'icon-arrow-right' %}
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "settings": []
+}
+{% endschema %}

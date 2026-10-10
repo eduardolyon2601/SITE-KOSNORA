@@ -1,21 +1,24 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "main-product",
-      "disabled": true,
+    "bundle": {
+      "type": "kosnora-multi-variant-bundle",
+      "settings": {
+        "headline": "KOSNORA Smart Case",
+        "subheadline": "Design minimalista refinado, proteção de impacto reforçada e display inteligente NFC sem bateria. Combine modelos e cores livremente no mesmo pedido."
+      }
+    },
+    "why_kosnora": {
+      "type": "why-kosnora",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "bundle",
+    "why_kosnora",
+    "faq"
   ]
 }

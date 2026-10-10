@@ -89,9 +89,11 @@
 
     <!-- KOSNORA Native Styles -->
     {{ 'kosnora.css' | asset_url | stylesheet_tag }}
+    {{ 'kosnora-multi-variant-bundle.css' | asset_url | stylesheet_tag }}
 
     <!-- KOSNORA Native Scripts -->
     <script src="{{ 'kosnora.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'kosnora-multi-variant-bundle.js' | asset_url }}" defer="defer"></script>
   </head>
 
   <body class="template-{{ template.name | default: 'index' }}">

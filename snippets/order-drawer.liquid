@@ -55,74 +55,23 @@
       </button>
     </div>
 
-    <!-- Minimalist Cart Body: Clean, Conversion-Optimized (Zero duplicate selectors!) -->
-    <div id="drawer-config-area" style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1.25rem; background: #FFFFFF; overflow-y: auto;">
+    <!-- Minimalist Cart Body: Clean, Conversion-Optimized Multi-Unit Configurator -->
+    <div id="drawer-config-area" style="padding: 1.25rem 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1rem; background: #FFFFFF; overflow-y: auto;">
       
-      <!-- Essential Product Card -->
-      <div style="padding: 1rem; border-radius: 1rem; border: 1px solid #E5E7EB; background: #F9FAFB; display: flex; gap: 1rem; align-items: flex-start;">
-        <!-- Product Thumbnail (Dynamic matching variant/color) -->
-        <div style="width: 80px; height: 96px; border-radius: 0.75rem; overflow: hidden; background: #FFFFFF; border: 1px solid #E5E7EB; flex-shrink: 0; padding: 4px; display: flex; align-items: center; justify-content: center;">
-          <img
-            id="drawer-product-img"
-            src="{{ initial_image }}"
-            alt="{{ target_product.title | default: 'KOSNORA Case' }}"
-            style="width: 100%; height: 100%; object-fit: contain;"
-          >
-        </div>
-
-        <!-- Product Details -->
-        <div style="flex: 1; min-width: 0;">
-          <h3 id="drawer-product-title" style="font-size: 0.9rem; font-weight: 900; text-transform: uppercase; color: #111827; margin: 0; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ target_product.title | default: 'KOSNORA Case' }}
-          </h3>
-
-          <!-- Preserved Variant Selection (Read-only badge - NEVER forces re-selecting!) -->
-          <div id="drawer-options-pill" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 5px; padding: 3px 8px; border-radius: 6px; background: #FFFFFF; border: 1px solid #E5E7EB; font-size: 11px; font-weight: 700; color: #374151;">
-            <span style="width: 7px; height: 7px; border-radius: 50%; background: #9333EA;"></span>
-            <span id="drawer-summary-color">Gray</span>
-            <span style="color: #D1D5DB;">•</span>
-            <span id="drawer-summary-model">iPhone 16 Pro Max</span>
-          </div>
-
-          <!-- Unit price row -->
-          <div id="drawer-unit-price-display" style="margin-top: 6px; font-size: 12px; font-weight: 700; color: #4B5563;">
-            <span id="drawer-unit-price-val">R$ 79,90</span>
-            <span id="drawer-unit-price-suffix" style="display: none; font-size: 10px; color: #9CA3AF; font-weight: 600;">/ cada</span>
-          </div>
-
-          <!-- Quantity Stepper [ - ] qty [ + ] -->
-          <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
-            <div style="display: inline-flex; align-items: center; border-radius: 10px; background: #FFFFFF; border: 1px solid #D1D5DB; padding: 2px;">
-              <button
-                type="button"
-                id="drawer-qty-minus"
-                style="width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent; color: #374151; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease;"
-                aria-label="Diminuir quantidade"
-              >
-                −
-              </button>
-              
-              <span id="drawer-qty-display" style="width: 36px; text-align: center; font-size: 13px; font-weight: 900; color: #111827;">
-                1
-              </span>
-
-              <button
-                type="button"
-                id="drawer-qty-plus"
-                style="width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent; color: #374151; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease;"
-                aria-label="Aumentar quantidade"
-              >
-                +
-              </button>
-            </div>
-
-            <!-- Volume Tag badge -->
-            <span id="drawer-bundle-tag" style="display: none; font-size: 10px; font-weight: 900; text-transform: uppercase; color: #9333EA; background: #FAF5FF; padding: 3px 8px; border-radius: 9999px; border: 1px solid #E9D5FF;">
-              2x Pack
-            </span>
-          </div>
-        </div>
+      <!-- Units Listing (Supports 1, 2, or 3 independent phone cases) -->
+      <div id="drawer-units-container" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <!-- Dynamically rendered or updated per unit -->
       </div>
+
+      <!-- Add Another Unit Button -->
+      <button
+        type="button"
+        id="drawer-add-unit-action"
+        style="padding: 10px 14px; border-radius: 10px; border: 1.5px dashed #9333EA; background: #FAF5FF; color: #9333EA; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s ease;"
+      >
+        <span style="font-size: 14px;">+</span>
+        <span>Adicionar Outra Capa (Com Desconto)</span>
+      </button>
 
       <!-- Financial Breakdown / Automatic Pricing Recalculation -->
       <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.65rem;">
