@@ -147,8 +147,13 @@ export async function loadShopifyProduct(): Promise<any | null> {
 
 /**
  * Finds the variant corresponding to the selected Model and Color options.
+ * Matches strictly against Shopify variant options and titles.
+ * If activeProduct is loaded but has no matching variant, returns null (never swaps secretly).
  */
-export async function resolveShopifyVariantId(model?: string, color?: string): Promise<string | null> {
+export async function resolveShopifyVariant(
+  model?: string,
+  color?: string
+): Promise<{ id: string; title?: string; available?: boolean; matchedVariant?: any } | null> {
   if (typeof window === 'undefined') return null;
 
   const product = await loadShopifyProduct();
@@ -156,12 +161,13 @@ export async function resolveShopifyVariantId(model?: string, color?: string): P
     const variants = product.variants;
 
     if (model && color) {
-      // 1. Both Model and Color
+      // 1. Both Model and Color match in options
       let matched = variants.find((v: any) => {
         const opts = [v.option1, v.option2, v.option3].filter(Boolean);
         return opts.some((o: string) => isColorMatch(o, color)) && opts.some((o: string) => isModelMatch(o, model));
       });
 
+      // 2. Both Model and Color match in variant title (e.g. "iPhone 16 Pro Max / Orange")
       if (!matched) {
         matched = variants.find((v: any) => {
           const t = (v.title || '').toLowerCase();
@@ -169,49 +175,60 @@ export async function resolveShopifyVariantId(model?: string, color?: string): P
         });
       }
 
-      // 2. Match Color alone
+      // 3. Match Color alone if product only differentiates by Color
       if (!matched) {
-        matched = variants.find((v: any) => {
-          const opts = [v.option1, v.option2, v.option3].filter(Boolean);
-          return opts.some((o: string) => isColorMatch(o, color));
+        const hasModelOption = product.options?.some((opt: any) => {
+          const name = typeof opt === 'string' ? opt : opt.name;
+          return /model|modelo|device|aparelho/i.test(name || '');
         });
+
+        // Only fallback to matching Color if the store does not have distinct Model options
+        if (!hasModelOption) {
+          matched = variants.find((v: any) => {
+            const opts = [v.option1, v.option2, v.option3].filter(Boolean);
+            return opts.some((o: string) => isColorMatch(o, color));
+          });
+        }
       }
 
-      // 3. Match Model alone
-      if (!matched) {
-        matched = variants.find((v: any) => {
-          const opts = [v.option1, v.option2, v.option3].filter(Boolean);
-          return opts.some((o: string) => isModelMatch(o, model));
-        });
-      }
-
-      // 4. Default variant if single
-      if (!matched && variants.length === 1) {
+      // If single default variant exists in store (e.g. "Default Title")
+      if (!matched && variants.length === 1 && (variants[0].title === 'Default Title' || variants[0].option1 === 'Default Title')) {
         matched = variants[0];
       }
 
-      // 5. First available variant
-      if (!matched) {
-        matched = variants.find((v: any) => v.available !== false) || variants[0];
+      if (matched && matched.id) {
+        return {
+          id: String(matched.id),
+          title: matched.title,
+          available: matched.available !== false,
+          matchedVariant: matched,
+        };
       }
 
-      if (matched?.id) {
-        return String(matched.id);
-      }
+      // Active product exists but no variant matches the selected combination!
+      return null;
     }
   }
 
-  // Fallback from DOM or store context
+  // Fallback only if no product catalog could be loaded at all
   const domInput = document.getElementById('drawer-variant-id') as HTMLInputElement | null;
   if (domInput?.value && domInput.value !== '1' && domInput.value.trim() !== '') {
-    return domInput.value.trim();
+    return { id: domInput.value.trim(), available: true };
   }
 
   if (window.KOSNORA_STORE?.variantId && String(window.KOSNORA_STORE.variantId) !== '1' && String(window.KOSNORA_STORE.variantId).trim() !== '') {
-    return String(window.KOSNORA_STORE.variantId).trim();
+    return { id: String(window.KOSNORA_STORE.variantId).trim(), available: true };
   }
 
   return null;
+}
+
+/**
+ * Finds the variant ID corresponding to the selected Model and Color options.
+ */
+export async function resolveShopifyVariantId(model?: string, color?: string): Promise<string | null> {
+  const result = await resolveShopifyVariant(model, color);
+  return result ? result.id : null;
 }
 
 /**

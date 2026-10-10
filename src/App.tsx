@@ -41,6 +41,8 @@ export default function App() {
         <HeroSection
           selectedModel={selectedModel}
           onModelChange={setSelectedModel}
+          selectedColor={selectedColor}
+          onColorChange={setSelectedColor}
           onCtaClick={(imageId) => handleOpenCart(selectedTier, imageId)}
           onSelectTierAndBuy={(tier, imageId) => handleOpenCart(tier, imageId)}
         />

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { X, Minus, Plus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Minus, Plus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock, AlertCircle } from 'lucide-react';
 import { calculateCartPricing, formatCurrency, PRODUCT_IMAGES, PRODUCT_NAME } from '../data/productData';
-import { redirectToShopifyCheckout } from '../utils/shopifyCart';
+import { redirectToShopifyCheckout, resolveShopifyVariant } from '../utils/shopifyCart';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -21,6 +21,42 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   selectedModel,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [variantError, setVariantError] = useState<string | null>(null);
+  const [isCheckingVariant, setIsCheckingVariant] = useState(false);
+  const [resolvedVariant, setResolvedVariant] = useState<{ id: string; available?: boolean } | null>(null);
+
+  // Validate and resolve variant whenever drawer opens or options change
+  useEffect(() => {
+    if (!isOpen) {
+      setVariantError(null);
+      return;
+    }
+
+    let isMounted = true;
+    setIsCheckingVariant(true);
+    setVariantError(null);
+
+    resolveShopifyVariant(selectedModel, selectedColor)
+      .then((res) => {
+        if (!isMounted) return;
+        setResolvedVariant(res);
+        if (res && res.available === false) {
+          setVariantError(`A opção "${selectedModel} - ${selectedColor}" está esgotada no momento.`);
+        } else {
+          setVariantError(null);
+        }
+      })
+      .catch((err) => {
+        console.warn('[KOSNORA] Variant check error:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsCheckingVariant(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isOpen, selectedModel, selectedColor]);
 
   if (!isOpen) return null;
 
@@ -43,7 +79,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   const handleProceedToCheckout = async () => {
     if (isSubmitting) return;
+
+    // Check if variant is available
+    if (resolvedVariant && resolvedVariant.available === false) {
+      setVariantError(`A opção "${selectedModel} - ${selectedColor}" está esgotada no momento. Escolha outra opção para continuar.`);
+      return;
+    }
+
     setIsSubmitting(true);
+    setVariantError(null);
 
     try {
       await redirectToShopifyCheckout({
@@ -52,9 +96,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         color: selectedColor,
         unitPrice: pricing.unitPrice,
         totalPrice: pricing.total,
+        variantId: resolvedVariant?.id,
       });
     } catch (err) {
       console.error('[KOSNORA] Checkout error:', err);
+      setVariantError('Ocorreu um erro ao processar o checkout. Por favor, tente novamente.');
       setIsSubmitting(false);
     }
   };
@@ -238,14 +284,23 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
           {/* Drawer Footer: Official Shopify Checkout CTA */}
           <div className="p-6 border-t border-neutral-200 bg-white space-y-2 sticky bottom-0">
+            {variantError && (
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>{variantError}</span>
+              </div>
+            )}
+
             <button
               type="button"
               onClick={handleProceedToCheckout}
-              disabled={isSubmitting}
-              className="w-full py-4 px-6 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 active:scale-98 text-white font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+              disabled={isSubmitting || (resolvedVariant && resolvedVariant.available === false)}
+              className="w-full py-4 px-6 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 active:scale-98 text-white font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <span>REDIRECIONANDO PARA O CHECKOUT...</span>
+              ) : resolvedVariant && resolvedVariant.available === false ? (
+                <span>OPÇÃO ESGOTADA</span>
               ) : (
                 <>
                   <Lock className="w-4 h-4" />

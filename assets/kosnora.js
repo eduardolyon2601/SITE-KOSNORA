@@ -65,11 +65,13 @@ function initHeroGallery() {
         }
 
         desktopThumbs.forEach(b => {
+          b.classList.remove('active-thumb');
           b.style.borderColor = '#E5E7EB';
           b.style.background = '#FFF';
           const spans = b.querySelectorAll('span');
           spans.forEach(s => { s.style.color = '#374151'; });
         });
+        btn.classList.add('active-thumb');
         btn.style.borderColor = '#9333EA';
         btn.style.background = '#FAF5FF';
         const activeSpans = btn.querySelectorAll('span');
@@ -113,10 +115,12 @@ function initHeroGallery() {
         }
 
         mobileThumbs.forEach(b => {
+          b.classList.remove('active-thumb');
           b.style.borderColor = '#E5E7EB';
           b.style.background = '#FFF';
           b.style.color = '#374151';
         });
+        btn.classList.add('active-thumb');
         btn.style.borderColor = '#9333EA';
         btn.style.background = '#9333EA';
         btn.style.color = '#FFF';
@@ -482,12 +486,13 @@ function initDrawer() {
 
     const variants = activeProduct.variants;
 
-    // 1. Match both Model and Color
+    // 1. Match both Model and Color in options
     let matched = variants.find(v => {
       const opts = [v.option1, v.option2, v.option3].filter(Boolean);
       return opts.some(o => isColorMatch(o, colorName)) && opts.some(o => isModelMatch(o, modelName));
     });
 
+    // 2. Match both Model and Color in title
     if (!matched) {
       matched = variants.find(v => {
         const title = (v.title || '').toLowerCase();
@@ -495,33 +500,27 @@ function initDrawer() {
       });
     }
 
-    // 2. Match Color alone
+    // 3. Match Color alone only if store has no Model options
     if (!matched) {
-      matched = variants.find(v => {
-        const opts = [v.option1, v.option2, v.option3].filter(Boolean);
-        return opts.some(o => isColorMatch(o, colorName));
+      const hasModelOption = activeProduct.options && activeProduct.options.some(opt => {
+        const name = typeof opt === 'string' ? opt : (opt.name || '');
+        return /model|modelo|device|aparelho/i.test(name);
       });
+
+      if (!hasModelOption) {
+        matched = variants.find(v => {
+          const opts = [v.option1, v.option2, v.option3].filter(Boolean);
+          return opts.some(o => isColorMatch(o, colorName));
+        });
+      }
     }
 
-    // 3. Match Model alone
-    if (!matched) {
-      matched = variants.find(v => {
-        const opts = [v.option1, v.option2, v.option3].filter(Boolean);
-        return opts.some(o => isModelMatch(o, modelName));
-      });
-    }
-
-    // 4. Default variant if single
-    if (!matched && variants.length === 1) {
+    // 4. Default variant if store has only 1 single default title
+    if (!matched && variants.length === 1 && (variants[0].title === 'Default Title' || variants[0].option1 === 'Default Title')) {
       matched = variants[0];
     }
 
-    // 5. First available variant
-    if (!matched) {
-      matched = variants.find(v => v.available !== false) || variants[0];
-    }
-
-    return matched;
+    return matched || null;
   }
 
   function syncVariantSelection() {
@@ -546,10 +545,18 @@ function initDrawer() {
       if (proceedBtn) {
         proceedBtn.disabled = false;
         proceedBtn.style.opacity = '1';
+        updateCartUI();
       }
       return variant;
     }
 
+    // Combination does not exist in store
+    showDrawerAlert(`A combinação "${currentModel} - ${currentColor}" não está disponível na loja.`, 'error');
+    if (proceedBtn) {
+      proceedBtn.disabled = true;
+      proceedBtn.style.opacity = '0.6';
+      proceedBtn.innerHTML = '<span>COMBINAÇÃO INDISPONÍVEL</span>';
+    }
     return null;
   }
 

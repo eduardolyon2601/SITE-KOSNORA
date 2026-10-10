@@ -8,6 +8,8 @@ interface HeroSectionProps {
   onSelectTierAndBuy?: (tier: PricingTier, imageId?: string) => void;
   selectedModel?: string;
   onModelChange?: (model: string) => void;
+  selectedColor?: string;
+  onColorChange?: (colorName: string) => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
@@ -15,14 +17,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectTierAndBuy,
   selectedModel = 'iPhone 16 Pro Max',
   onModelChange,
+  selectedColor = 'Gray',
+  onColorChange,
 }) => {
-  const [activeImageIdx, setActiveImageIdx] = useState(0);
+  // Initialize activeImageIdx based on selectedColor if provided
+  const initialColorIdx = PRODUCT_IMAGES.findIndex(
+    (img) => img.name.toLowerCase() === selectedColor.toLowerCase() || img.id.toLowerCase() === selectedColor.toLowerCase()
+  );
+  const [activeImageIdx, setActiveImageIdx] = useState(initialColorIdx >= 0 ? initialColorIdx : 0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(true);
   const [internalModel, setInternalModel] = useState(selectedModel);
   const tiers = getPricingTiers();
   const [selectedTierId, setSelectedTierId] = useState<string>('single');
 
   const currentModel = onModelChange ? selectedModel : internalModel;
+
+  // Sync activeImageIdx if external selectedColor changes
+  React.useEffect(() => {
+    if (selectedColor) {
+      const idx = PRODUCT_IMAGES.findIndex(
+        (img) => img.name.toLowerCase() === selectedColor.toLowerCase() || img.id.toLowerCase() === selectedColor.toLowerCase()
+      );
+      if (idx >= 0 && idx !== activeImageIdx) {
+        setActiveImageIdx(idx);
+      }
+    }
+  }, [selectedColor]);
 
   const handleModelChange = (model: string) => {
     setInternalModel(model);
@@ -33,10 +53,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const handleTierClick = (tier: PricingTier) => {
     setSelectedTierId(tier.id);
+    const chosenColor = PRODUCT_IMAGES[activeImageIdx];
+    if (onColorChange && chosenColor) {
+      onColorChange(chosenColor.name);
+    }
     if (onSelectTierAndBuy) {
-      onSelectTierAndBuy(tier, PRODUCT_IMAGES[activeImageIdx]?.id);
+      onSelectTierAndBuy(tier, chosenColor?.id);
     } else {
-      onCtaClick(PRODUCT_IMAGES[activeImageIdx]?.id);
+      onCtaClick(chosenColor?.id);
     }
   };
 
@@ -44,6 +68,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     // STOP VIDEO WHEN CUSTOMER CLICKS ON COLORS
     setIsPlayingVideo(false);
     setActiveImageIdx(idx);
+    const chosenImg = PRODUCT_IMAGES[idx];
+    if (onColorChange && chosenImg) {
+      onColorChange(chosenImg.name);
+    }
   };
 
   const handleVideoClick = () => {
@@ -205,10 +233,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 type="button"
                 onClick={() => {
                   const selectedTier = tiers.find((t) => t.id === selectedTierId) || tiers[0];
+                  const chosenColor = PRODUCT_IMAGES[activeImageIdx] || PRODUCT_IMAGES[0];
+                  if (onColorChange) {
+                    onColorChange(chosenColor.name);
+                  }
                   if (onSelectTierAndBuy) {
-                    onSelectTierAndBuy(selectedTier, currentImage.id);
+                    onSelectTierAndBuy(selectedTier, chosenColor.id);
                   } else {
-                    onCtaClick(currentImage.id);
+                    onCtaClick(chosenColor.id);
                   }
                 }}
                 className="w-full sm:w-auto px-10 py-4.5 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white font-black text-sm tracking-widest rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-102 active:scale-95 flex items-center justify-center gap-2.5 uppercase cursor-pointer"
@@ -537,10 +569,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 type="button"
                 onClick={() => {
                   const selectedTier = tiers.find((t) => t.id === selectedTierId) || tiers[0];
+                  const chosenColor = PRODUCT_IMAGES[activeImageIdx] || PRODUCT_IMAGES[0];
+                  if (onColorChange) {
+                    onColorChange(chosenColor.name);
+                  }
                   if (onSelectTierAndBuy) {
-                    onSelectTierAndBuy(selectedTier, currentImage.id);
+                    onSelectTierAndBuy(selectedTier, chosenColor.id);
                   } else {
-                    onCtaClick(currentImage.id);
+                    onCtaClick(chosenColor.id);
                   }
                 }}
                 className="w-full py-4.5 px-8 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white font-black text-sm tracking-widest rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-2.5 uppercase cursor-pointer mb-5"
