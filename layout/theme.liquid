@@ -32,25 +32,27 @@
 
     {{ content_for_header }}
 
-    {%- assign target_product = product -%}
-    {%- if target_product == nil and settings.featured_product != blank -%}
+    {%- assign target_product = nil -%}
+    {%- if product != nil and product.id != blank -%}
+      {%- assign target_product = product -%}
+    {%- elsif settings.featured_product != blank and all_products[settings.featured_product] != blank -%}
       {%- assign target_product = all_products[settings.featured_product] -%}
-    {%- endif -%}
-    {%- if target_product == nil or target_product.id == blank -%}
-      {%- assign target_product = all_products['kosnora-ink-nfc-smart-phone-case'] -%}
-    {%- endif -%}
-    {%- if target_product == nil or target_product.id == blank -%}
-      {%- assign target_product = all_products['kosnora-smart-phone-case'] -%}
-    {%- endif -%}
-    {%- if target_product == nil or target_product.id == blank -%}
-      {%- assign target_product = all_products['kosnora'] -%}
-    {%- endif -%}
-    {%- if target_product == nil or target_product.id == blank -%}
+    {%- elsif collections.all.products.size > 0 -%}
       {%- assign target_product = collections.all.products.first -%}
-    {%- endif -%}
-    {%- if target_product == nil or target_product.id == blank -%}
+    {%- elsif collections.frontpage.products.size > 0 -%}
       {%- assign target_product = collections.frontpage.products.first -%}
+    {%- else -%}
+      {%- for col in collections -%}
+        {%- if col.products.size > 0 and target_product == nil -%}
+          {%- assign target_product = col.products.first -%}
+        {%- endif -%}
+      {%- endfor -%}
     {%- endif -%}
+
+    {%- if target_product == nil or target_product.id == blank -%}
+      {%- assign target_product = all_products['kosnora-case'] | default: all_products['kosnora'] | default: all_products['kosnora-ink-nfc-smart-phone-case'] | default: all_products['kosnora-smart-phone-case'] -%}
+    {%- endif -%}
+
     {%- assign real_variant = target_product.selected_or_first_available_variant | default: target_product.variants.first -%}
 
     <!-- Shopify Store & Checkout Routes Context -->
@@ -69,8 +71,13 @@
         variantId: {{ real_variant.id | default: '' | json }},
         productId: {{ target_product.id | default: '' | json }},
         productHandle: {{ target_product.handle | default: '' | json }},
-        productTitle: {{ target_product.title | default: 'KOSNORA Premium Phone Case' | json }}
+        productTitle: {{ target_product.title | default: 'KOSNORA Premium Phone Case' | json }},
+        variants: {% if target_product != nil %}{{ target_product.variants | json }}{% else %}[]{% endif %},
+        options: {% if target_product != nil %}{{ target_product.options | json }}{% else %}[]{% endif %}
       };
+
+      window.KOSNORA_PRODUCT = {% if target_product != nil %}{{ target_product | json }}{% else %}null{% endif %};
+      window.KOSNORA_COLLECTION_PRODUCTS = {{ collections.all.products | json | default: '[]' }};
 
       window.KOSNORA_CUSTOMER = {
         loggedIn: {% if customer %}true{% else %}false{% endif %},

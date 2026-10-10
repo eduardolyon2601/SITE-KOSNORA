@@ -1,20 +1,31 @@
-{%- assign target_product = product -%}
-{%- if target_product == nil and settings.featured_product != blank -%}
+{%- assign target_product = nil -%}
+{%- if product != nil and product.id != blank -%}
+  {%- assign target_product = product -%}
+{%- elsif settings.featured_product != blank and all_products[settings.featured_product] != blank -%}
   {%- assign target_product = all_products[settings.featured_product] -%}
-{%- endif -%}
-{%- if target_product == nil or target_product.id == blank -%}
-  {%- assign target_product = all_products['kosnora-case'] -%}
-{%- endif -%}
-{%- if target_product == nil or target_product.id == blank -%}
-  {%- assign target_product = all_products['kosnora'] -%}
-{%- endif -%}
-{%- if target_product == nil or target_product.id == blank -%}
+{%- elsif collections.all.products.size > 0 -%}
   {%- assign target_product = collections.all.products.first -%}
-{%- endif -%}
-{%- if target_product == nil or target_product.id == blank -%}
+{%- elsif collections.frontpage.products.size > 0 -%}
   {%- assign target_product = collections.frontpage.products.first -%}
+{%- else -%}
+  {%- for col in collections -%}
+    {%- if col.products.size > 0 and target_product == nil -%}
+      {%- assign target_product = col.products.first -%}
+    {%- endif -%}
+  {%- endfor -%}
 {%- endif -%}
+
+{%- if target_product == nil or target_product.id == blank -%}
+  {%- assign target_product = all_products['kosnora-case'] | default: all_products['kosnora'] | default: all_products['kosnora-ink-nfc-smart-phone-case'] | default: all_products['kosnora-smart-phone-case'] -%}
+{%- endif -%}
+
 {%- assign real_variant = target_product.selected_or_first_available_variant | default: target_product.variants.first -%}
+
+{%- if target_product != nil -%}
+  <script type="application/json" id="kosnora-product-data">
+    {{ target_product | json }}
+  </script>
+{%- endif -%}
 
 <div id="kosnora-order-drawer" class="kosnora-drawer-backdrop" aria-hidden="true">
   <div class="kosnora-drawer" role="dialog" aria-modal="true" aria-label="Order Configuration" style="background: #FFFFFF; color: #111111;">
@@ -193,6 +204,9 @@
 
     <!-- Drawer Footer -->
     <div style="padding: 1.25rem 1.5rem; border-top: 1px solid #E5E5E5; background: #FFFFFF;">
+      <!-- Variant Alert / Availability Message -->
+      <div id="drawer-variant-alert" style="display: none; padding: 0.65rem 0.85rem; border-radius: 0.75rem; font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 0.75rem; line-height: 1.4;"></div>
+
       <button type="button" id="drawer-proceed-checkout" class="kosnora-btn-primary" style="width: 100%; justify-content: center; cursor: pointer;">
         <span>PROCEED TO CHECKOUT (<span id="drawer-cta-total">$79.90</span>)</span>
         {% render 'icon-arrow-right' %}

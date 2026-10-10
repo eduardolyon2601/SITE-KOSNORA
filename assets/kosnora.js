@@ -350,6 +350,264 @@ function initDrawer() {
 
   syncEligibilityUI();
 
+  // ============================================================
+  // SHOPIFY PRODUCT & VARIANT ENGINE
+  // ============================================================
+  let activeProduct = null;
+  const variantAlertEl = document.getElementById('drawer-variant-alert');
+
+  function showDrawerAlert(msg, type = 'error') {
+    if (!variantAlertEl) return;
+    variantAlertEl.style.display = 'block';
+    if (type === 'error') {
+      variantAlertEl.style.backgroundColor = '#FEF2F2';
+      variantAlertEl.style.color = '#B91C1C';
+      variantAlertEl.style.border = '1px solid #FECACA';
+    } else if (type === 'info') {
+      variantAlertEl.style.backgroundColor = '#EFF6FF';
+      variantAlertEl.style.color = '#1D4ED8';
+      variantAlertEl.style.border = '1px solid #BFDBFE';
+    }
+    variantAlertEl.textContent = msg;
+  }
+
+  function hideDrawerAlert() {
+    if (!variantAlertEl) return;
+    variantAlertEl.style.display = 'none';
+    variantAlertEl.textContent = '';
+  }
+
+  function parseProductJson(jsonString) {
+    try {
+      if (!jsonString) return null;
+      const parsed = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+      if (parsed && (parsed.id || (parsed.variants && parsed.variants.length > 0))) {
+        return parsed;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function isColorMatch(optionVal, targetColor) {
+    if (!optionVal || !targetColor) return false;
+    const v = optionVal.toLowerCase().trim();
+    const t = targetColor.toLowerCase().trim();
+    if (v === t || v.includes(t) || t.includes(v)) return true;
+
+    const synonyms = {
+      'gray': ['gray', 'grey', 'cinza', 'titanium', 'grafite', 'slate'],
+      'black': ['black', 'preto', 'obsidian', 'dark', 'midnight', 'noir'],
+      'pink': ['pink', 'rosa', 'rose', 'blush'],
+      'white': ['white', 'branco', 'silver', 'prata', 'starlight', 'pearl'],
+      'orange': ['orange', 'laranja', 'sunset', 'amber']
+    };
+
+    for (const key in synonyms) {
+      if (synonyms[key].includes(t)) {
+        if (synonyms[key].some(s => v.includes(s))) return true;
+      }
+    }
+    return false;
+  }
+
+  function isModelMatch(optionVal, targetModel) {
+    if (!optionVal || !targetModel) return false;
+    const v = optionVal.toLowerCase().trim();
+    const t = targetModel.toLowerCase().trim();
+    if (v === t || v.includes(t) || t.includes(v)) return true;
+
+    const strippedTarget = t.replace(/^iphone\s*/i, '').trim();
+    const strippedOpt = v.replace(/^iphone\s*/i, '').trim();
+    if (strippedTarget && (strippedOpt === strippedTarget || strippedOpt.includes(strippedTarget) || strippedTarget.includes(strippedOpt))) {
+      return true;
+    }
+    return false;
+  }
+
+  async function loadActiveProduct() {
+    if (activeProduct && activeProduct.variants && activeProduct.variants.length > 0) {
+      return activeProduct;
+    }
+
+    // 1. Check window.KOSNORA_PRODUCT injected by theme.liquid
+    if (window.KOSNORA_PRODUCT && window.KOSNORA_PRODUCT.variants && window.KOSNORA_PRODUCT.variants.length > 0) {
+      activeProduct = window.KOSNORA_PRODUCT;
+      return activeProduct;
+    }
+
+    // 2. Check JSON script tags in DOM
+    const scriptTags = [
+      document.getElementById('kosnora-product-data'),
+      document.getElementById('kosnora-hero-product-data')
+    ];
+    for (const tag of scriptTags) {
+      if (tag && tag.textContent) {
+        const parsed = parseProductJson(tag.textContent);
+        if (parsed && parsed.variants && parsed.variants.length > 0) {
+          activeProduct = parsed;
+          return activeProduct;
+        }
+      }
+    }
+
+    // 3. Check window.KOSNORA_STORE variants
+    if (window.KOSNORA_STORE && Array.isArray(window.KOSNORA_STORE.variants) && window.KOSNORA_STORE.variants.length > 0) {
+      activeProduct = {
+        id: window.KOSNORA_STORE.productId,
+        handle: window.KOSNORA_STORE.productHandle,
+        title: window.KOSNORA_STORE.productTitle,
+        variants: window.KOSNORA_STORE.variants,
+        options: window.KOSNORA_STORE.options || []
+      };
+      return activeProduct;
+    }
+
+    // 4. Check window.KOSNORA_COLLECTION_PRODUCTS
+    if (window.KOSNORA_COLLECTION_PRODUCTS && Array.isArray(window.KOSNORA_COLLECTION_PRODUCTS) && window.KOSNORA_COLLECTION_PRODUCTS.length > 0) {
+      const match = window.KOSNORA_COLLECTION_PRODUCTS.find(p =>
+        (p.title && p.title.toLowerCase().includes('kosnora')) ||
+        (p.handle && p.handle.toLowerCase().includes('kosnora'))
+      ) || window.KOSNORA_COLLECTION_PRODUCTS[0];
+      if (match && match.variants && match.variants.length > 0) {
+        activeProduct = match;
+        return activeProduct;
+      }
+    }
+
+    // 5. Query /products.json dynamically on Shopify store
+    const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
+    try {
+      const res = await fetch(root + 'products.json?limit=25');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.products) && data.products.length > 0) {
+          const match = data.products.find(p =>
+            (p.title && p.title.toLowerCase().includes('kosnora')) ||
+            (p.handle && p.handle.toLowerCase().includes('kosnora'))
+          ) || data.products[0];
+          if (match && match.variants && match.variants.length > 0) {
+            activeProduct = match;
+            return activeProduct;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[KOSNORA] products.json lookup:', err);
+    }
+
+    return null;
+  }
+
+  function findVariantForOptions(modelName, colorName) {
+    if (!activeProduct || !activeProduct.variants || activeProduct.variants.length === 0) {
+      const domId = document.getElementById('drawer-variant-id')?.value;
+      const storeId = window.KOSNORA_STORE && window.KOSNORA_STORE.variantId;
+      const validFallback = (domId && domId !== '1' && domId.trim() !== '') ? domId.trim() : (storeId && String(storeId) !== '1' && String(storeId).trim() !== '') ? String(storeId).trim() : null;
+      if (validFallback) {
+        return { id: validFallback, available: true, title: 'Default' };
+      }
+      return null;
+    }
+
+    const variants = activeProduct.variants;
+
+    // 1. Match both Model and Color in option values (option1, option2, option3)
+    let matched = variants.find(v => {
+      const opts = [v.option1, v.option2, v.option3].filter(Boolean);
+      const hasColor = opts.some(o => isColorMatch(o, colorName));
+      const hasModel = opts.some(o => isModelMatch(o, modelName));
+      return hasColor && hasModel;
+    });
+
+    // 2. Match both in variant title
+    if (!matched) {
+      matched = variants.find(v => {
+        const title = (v.title || '').toLowerCase();
+        return isColorMatch(title, colorName) && isModelMatch(title, modelName);
+      });
+    }
+
+    // 3. Match Color alone (Model preserved via Line Item Properties)
+    if (!matched) {
+      matched = variants.find(v => {
+        const opts = [v.option1, v.option2, v.option3].filter(Boolean);
+        return opts.some(o => isColorMatch(o, colorName));
+      });
+    }
+
+    if (!matched) {
+      matched = variants.find(v => {
+        const title = (v.title || '').toLowerCase();
+        return isColorMatch(title, colorName);
+      });
+    }
+
+    // 4. Match Model alone (Color preserved via Line Item Properties)
+    if (!matched) {
+      matched = variants.find(v => {
+        const opts = [v.option1, v.option2, v.option3].filter(Boolean);
+        return opts.some(o => isModelMatch(o, modelName));
+      });
+    }
+
+    // 5. If only 1 variant in product (Standard single variant)
+    if (!matched && variants.length === 1) {
+      matched = variants[0];
+    }
+
+    // 6. Fallback: First available variant in product
+    if (!matched) {
+      matched = variants.find(v => v.available !== false) || variants[0];
+    }
+
+    return matched;
+  }
+
+  function updateSelectedVariant() {
+    const selectedModelVal = (summaryModel && summaryModel.textContent) || (modelSelect && modelSelect.value) || 'iPhone 17 Pro Max';
+    const selectedColorVal = (summaryColor && summaryColor.textContent) || 'Gray';
+
+    const variant = findVariantForOptions(selectedModelVal, selectedColorVal);
+    const varInput = document.getElementById('drawer-variant-id');
+
+    if (!variant || !variant.id) {
+      if (varInput) varInput.value = '';
+      showDrawerAlert('Selecione o produto KOSNORA no painel/tema da Shopify para ativar as opções.', 'info');
+      return null;
+    }
+
+    // Set real variant ID
+    const validId = String(variant.id);
+    if (varInput) varInput.value = validId;
+    if (window.KOSNORA_STORE) window.KOSNORA_STORE.variantId = validId;
+
+    // Check availability
+    if (variant.available === false) {
+      showDrawerAlert(`A opção "${selectedModelVal} - ${selectedColorVal}" está esgotada no momento. Por favor, escolha outra cor ou modelo.`, 'error');
+      if (proceedBtn) {
+        proceedBtn.disabled = true;
+        proceedBtn.style.opacity = '0.6';
+        proceedBtn.innerHTML = '<span>OPÇÃO ESGOTADA</span>';
+      }
+      return variant;
+    }
+
+    // Available and valid
+    hideDrawerAlert();
+    if (proceedBtn) {
+      proceedBtn.disabled = false;
+      proceedBtn.style.opacity = '1';
+      proceedBtn.innerHTML = `<span>PROCEED TO CHECKOUT (<span id="drawer-cta-total">$${currentTotal.toFixed(2)}</span>)</span>`;
+    }
+
+    return variant;
+  }
+
+  // Pre-load active product
+  loadActiveProduct().then(() => {
+    updateSelectedVariant();
+  });
+
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -363,16 +621,23 @@ function initDrawer() {
         setQuantity(currentQty);
       }
 
-      // Sync model and finish from section if selected on page
-      const sectionModel = document.getElementById('pricing-model-select');
-      if (sectionModel && modelSelect) {
-        modelSelect.value = sectionModel.options[sectionModel.selectedIndex].text;
-        if (summaryModel) summaryModel.textContent = modelSelect.value;
+      // Sync active color from page gallery
+      const activeDesktopThumb = document.querySelector('[data-gallery-desktop].active-thumb');
+      const activeMobileThumb = document.querySelector('[data-gallery-mobile].active-thumb');
+      const chosenColor = (activeDesktopThumb && activeDesktopThumb.getAttribute('data-name')) || (activeMobileThumb && activeMobileThumb.getAttribute('data-name'));
+      if (chosenColor && chosenColor !== 'Video') {
+        colorSelectBtns.forEach(b => {
+          if (b.getAttribute('data-name') === chosenColor) {
+            colorSelectBtns.forEach(cb => cb.classList.remove('active-color'));
+            b.classList.add('active-color');
+            if (summaryColor) summaryColor.textContent = chosenColor;
+            if (propColorInput) propColorInput.value = chosenColor;
+          }
+        });
       }
-      const sectionColorLabel = document.getElementById('pricing-finish-label');
-      if (sectionColorLabel && summaryColor) {
-        summaryColor.textContent = sectionColorLabel.textContent;
-      }
+
+      // Update variant match immediately
+      updateSelectedVariant();
 
       if (drawerBackdrop) drawerBackdrop.classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -383,6 +648,7 @@ function initDrawer() {
     btn.addEventListener('click', () => {
       if (drawerBackdrop) drawerBackdrop.classList.remove('open');
       document.body.style.overflow = '';
+      hideDrawerAlert();
     });
   });
 
@@ -397,6 +663,7 @@ function initDrawer() {
     modelSelect.addEventListener('change', () => {
       if (summaryModel) summaryModel.textContent = modelSelect.value;
       if (propModelInput) propModelInput.value = modelSelect.value;
+      updateSelectedVariant();
     });
   }
 
@@ -407,57 +674,39 @@ function initDrawer() {
       const name = btn.getAttribute('data-name');
       if (summaryColor && name) summaryColor.textContent = name;
       if (propColorInput && name) propColorInput.value = name;
+      updateSelectedVariant();
     });
   });
 
   let isSubmittingCheckout = false;
 
-  async function resolveShopifyVariantId() {
-    let vId = document.getElementById('drawer-variant-id')?.value;
-    if (vId && vId !== '1' && vId !== 'default' && vId.trim() !== '') {
-      return vId.trim();
-    }
-    if (window.KOSNORA_STORE && window.KOSNORA_STORE.variantId && String(window.KOSNORA_STORE.variantId).trim() !== '') {
-      return String(window.KOSNORA_STORE.variantId).trim();
-    }
-    // Dynamic query fallback to /products.json on Shopify store
-    try {
-      const rootUrl = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
-      const res = await fetch(rootUrl + 'products.json?limit=10');
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.products && data.products.length > 0) {
-          const product = data.products.find(p => p.title.toLowerCase().includes('kosnora')) || data.products[0];
-          const variant = (product.variants && product.variants.find(v => v.available)) || (product.variants && product.variants[0]);
-          if (variant && variant.id) {
-            const foundId = String(variant.id);
-            const input = document.getElementById('drawer-variant-id');
-            if (input) input.value = foundId;
-            if (window.KOSNORA_STORE) window.KOSNORA_STORE.variantId = foundId;
-            return foundId;
-          }
-        }
-      }
-    } catch (e) {
-      console.warn('Could not auto-resolve Shopify variant ID:', e);
-    }
-    return vId || null;
-  }
-
   if (proceedBtn) {
     proceedBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       if (isSubmittingCheckout) return;
-      isSubmittingCheckout = true;
 
-      // Visual feedback: prevent double submission
-      const originalBtnHtml = proceedBtn.innerHTML;
+      // 1. Ensure product is loaded and variant is matched
+      await loadActiveProduct();
+      const variant = updateSelectedVariant();
+      const variantId = document.getElementById('drawer-variant-id')?.value;
+
+      if (!variantId || variantId === '1' || variantId === 'default' || isNaN(Number(variantId))) {
+        showDrawerAlert('Não foi possível identificar a variante do produto. Por favor, verifique se o produto está selecionado no tema da Shopify.', 'error');
+        return;
+      }
+
+      if (variant && variant.available === false) {
+        showDrawerAlert('Esta variante está esgotada no momento. Por favor, selecione outra cor ou modelo.', 'error');
+        return;
+      }
+
+      isSubmittingCheckout = true;
       proceedBtn.disabled = true;
-      proceedBtn.style.opacity = '0.7';
-      proceedBtn.innerHTML = '<span>REDIRECTING TO CHECKOUT...</span>';
+      proceedBtn.style.opacity = '0.75';
+      proceedBtn.innerHTML = '<span>PROCESSANDO PEDIDO...</span>';
 
       const selectedModelVal = (summaryModel && summaryModel.textContent) || (modelSelect && modelSelect.value) || 'iPhone 17 Pro Max';
-      const selectedColorVal = (summaryColor && summaryColor.textContent) || 'Obsidian Black';
+      const selectedColorVal = (summaryColor && summaryColor.textContent) || 'Gray';
 
       if (propModelInput) propModelInput.value = selectedModelVal;
       if (propColorInput) propColorInput.value = selectedColorVal;
@@ -467,26 +716,7 @@ function initDrawer() {
       const checkoutUrl = root + 'checkout';
 
       try {
-        const variantId = await resolveShopifyVariantId();
-        if (variantId) {
-          const varInput = document.getElementById('drawer-variant-id');
-          if (varInput) varInput.value = variantId;
-        }
-
-        // 1. Clear cart first so the cart contains ONLY the chosen offer
-        try {
-          await fetch(root + 'cart/clear.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            }
-          });
-        } catch (clearErr) {
-          console.warn('Cart clear non-fatal error:', clearErr);
-        }
-
-        // 2. Add selected offer with exact quantity and item properties to Shopify cart
+        // Add selected offer with exact quantity and item properties to Shopify cart
         const cartAddRes = await fetch(root + 'cart/add.js', {
           method: 'POST',
           headers: {
@@ -495,56 +725,60 @@ function initDrawer() {
           },
           body: JSON.stringify({
             items: [{
-              id: variantId || 1,
+              id: Number(variantId),
               quantity: currentQty,
               properties: {
                 'iPhone Model': selectedModelVal,
                 'Case Color': selectedColorVal,
                 'Offer Selection': `${currentQty} Case${currentQty > 1 ? 's' : ''}`,
-                'Promotion Eligibility': checkCustomerFirstPurchase() ? 'First Purchase Offer Applied' : 'Standard Purchase',
-                'Pricing Structure': `$${currentUnitPrice.toFixed(2)} each · $${currentTotal.toFixed(2)} total`
+                'Promotion Eligibility': checkCustomerFirstPurchase() ? 'First Purchase Promotion Applied' : 'Standard Purchase',
+                'Price Structure': `$${currentUnitPrice.toFixed(2)} each · $${currentTotal.toFixed(2)} total`
               }
             }]
           })
         });
 
         if (cartAddRes.ok) {
+          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
           try {
             localStorage.setItem('kosnora_has_purchased', 'true');
           } catch (e) {}
 
-          // 3. Immediately redirect directly to the real Shopify checkout
           window.location.href = checkoutUrl;
           return;
         } else {
           const errData = await cartAddRes.json().catch(() => ({}));
-          console.warn('Shopify cart/add.js returned status:', cartAddRes.status, errData);
+          console.warn('[KOSNORA] cart/add.js returned status:', cartAddRes.status, errData);
 
-          // Fallback A: Checkout permalink if variant ID exists
-          if (variantId && variantId !== '1') {
+          // Fallback A: Checkout permalink with confirmed real variant ID
+          if (variantId && Number(variantId) > 1) {
+            proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
             window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
             return;
           }
 
-          // Fallback B: Standard POST form with return_to=/checkout
-          const form = document.getElementById('kosnora-drawer-cart-form');
-          if (form) {
-            form.submit();
-            return;
-          }
-        }
-      } catch (err) {
-        console.error('Checkout processing error:', err);
-        // Fallback form submit
-        const form = document.getElementById('kosnora-drawer-cart-form');
-        if (form) {
-          form.submit();
+          // Show Shopify error cleanly to user without submitting empty form
+          const errDescription = errData.description || errData.message || 'Erro ao adicionar o produto ao carrinho. Verifique a disponibilidade.';
+          showDrawerAlert(errDescription, 'error');
+          isSubmittingCheckout = false;
+          proceedBtn.disabled = false;
+          proceedBtn.style.opacity = '1';
+          proceedBtn.innerHTML = `<span>TENTAR NOVAMENTE ($${currentTotal.toFixed(2)})</span>`;
           return;
         }
+      } catch (err) {
+        console.error('[KOSNORA] Checkout exception:', err);
+        // Fallback permalink if variantId is numeric
+        if (variantId && Number(variantId) > 1) {
+          window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
+          return;
+        }
+        showDrawerAlert('Erro de conexão ao acessar o carrinho. Por favor, tente novamente.', 'error');
+        isSubmittingCheckout = false;
+        proceedBtn.disabled = false;
+        proceedBtn.style.opacity = '1';
+        proceedBtn.innerHTML = `<span>TENTAR NOVAMENTE ($${currentTotal.toFixed(2)})</span>`;
       }
-
-      // Final fallback: redirect directly to checkout URL
-      window.location.href = checkoutUrl;
     });
   }
 

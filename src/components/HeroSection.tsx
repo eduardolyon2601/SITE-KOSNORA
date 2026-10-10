@@ -48,15 +48,51 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* horizontal carousel of values below that                      */}
         {/* ============================================================ */}
         <div className="lg:hidden flex flex-col items-center max-w-2xl mx-auto text-center">
-          {/* Social Proof Star Rating Tag */}
-          <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1 rounded-full bg-[#FAF5FF] border border-[#E9D5FF] text-xs font-bold text-neutral-800">
-            <div className="flex items-center text-[#9333EA]">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA]" />
-              ))}
+          {/* Social Proof Star Rating Tag with High Personality & 4.7 Stars */}
+          <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs">
+            {/* Micro Avatar Stack */}
+            <div className="flex -space-x-2 shrink-0">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80"
+                alt="Verified Customer"
+                className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80"
+                alt="Verified Customer"
+                className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80"
+                alt="Verified Customer"
+                className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
+              />
             </div>
-            <span className="text-[11px] font-black uppercase text-[#9333EA] tracking-wider">
-              140+ Happy Customers
+
+            {/* 4.7 Star Rating */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs font-black text-neutral-900 leading-none">4.7</span>
+              <div className="flex items-center text-[#9333EA] -space-x-0.5">
+                {[...Array(4)].map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA]" />
+                ))}
+                {/* 5th Star partially filled to 70% (4.7 rating) */}
+                <div className="relative w-3.5 h-3.5">
+                  <Star className="w-3.5 h-3.5 text-neutral-200 fill-neutral-200 absolute inset-0" />
+                  <div className="overflow-hidden absolute inset-0 w-[70%]">
+                    <Star className="w-3.5 h-3.5 fill-[#9333EA] text-[#9333EA]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <span className="text-[11px] font-bold text-neutral-700 tracking-wide flex items-center gap-1.5">
+              <span className="w-1 h-1 rounded-full bg-neutral-300" />
+              <span><strong className="font-black text-neutral-900">140+</strong> Happy Customers</span>
+            </span>
+
+            <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] font-black uppercase tracking-wider text-[#9333EA] bg-[#FAF5FF] px-1.5 py-0.5 rounded-md border border-[#E9D5FF]">
+              <Check className="w-2.5 h-2.5 stroke-[3]" /> Verified
             </span>
           </div>
 
@@ -341,15 +377,51 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* RIGHT COLUMN: Bundles and values on the right next to the product */}
             <div className="col-span-7 flex flex-col pt-1">
-              {/* Star Rating Badge */}
-              <div className="inline-flex items-center gap-2 mb-3 px-3.5 py-1 rounded-full bg-[#FAF5FF] border border-[#E9D5FF] text-xs font-bold text-neutral-800 self-start">
-                <div className="flex items-center text-[#9333EA]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA]" />
-                  ))}
+              {/* Star Rating Badge with High Personality & 4.7 Stars */}
+              <div className="inline-flex items-center gap-2.5 mb-3 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs self-start">
+                {/* Micro Avatar Stack */}
+                <div className="flex -space-x-2 shrink-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80"
+                    alt="Verified Customer"
+                    className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80"
+                    alt="Verified Customer"
+                    className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80"
+                    alt="Verified Customer"
+                    className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
+                  />
                 </div>
-                <span className="text-[11px] font-black uppercase text-[#9333EA] tracking-wider">
-                  140+ Happy Customers
+
+                {/* 4.7 Star Rating */}
+                <div className="flex items-center gap-1">
+                  <span className="text-xs font-black text-neutral-900 leading-none">4.7</span>
+                  <div className="flex items-center text-[#9333EA] -space-x-0.5">
+                    {[...Array(4)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA]" />
+                    ))}
+                    {/* 5th Star partially filled to 70% (4.7 rating) */}
+                    <div className="relative w-3.5 h-3.5">
+                      <Star className="w-3.5 h-3.5 text-neutral-200 fill-neutral-200 absolute inset-0" />
+                      <div className="overflow-hidden absolute inset-0 w-[70%]">
+                        <Star className="w-3.5 h-3.5 fill-[#9333EA] text-[#9333EA]" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <span className="text-[11px] font-bold text-neutral-700 tracking-wide flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full bg-neutral-300" />
+                  <span><strong className="font-black text-neutral-900">140+</strong> Happy Customers</span>
+                </span>
+
+                <span className="inline-flex items-center gap-0.5 text-[10px] font-black uppercase tracking-wider text-[#9333EA] bg-[#FAF5FF] px-1.5 py-0.5 rounded-md border border-[#E9D5FF]">
+                  <Check className="w-2.5 h-2.5 stroke-[3]" /> Verified
                 </span>
               </div>
 

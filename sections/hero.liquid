@@ -1,3 +1,10 @@
+{%- assign hero_product = section.settings.product | default: target_product | default: product -%}
+{%- if hero_product != blank and hero_product.id != blank -%}
+  <script type="application/json" id="kosnora-hero-product-data">
+    {{ hero_product | json }}
+  </script>
+{%- endif -%}
+
 <section id="pricing" class="section-light kosnora-py kosnora-pricing-section" style="position: relative; overflow: visible; background: #FFFFFF; color: #111827; border-bottom: 1px solid #E5E7EB; padding-top: 2rem; padding-bottom: 3.5rem;">
   <div class="kosnora-container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem; position: relative; z-index: 2;">
     
@@ -43,8 +50,40 @@
 
         <!-- Right: Headline, Color Options (Above Pricing), CTA, and 3 Values Options -->
         <div style="display: flex; flex-direction: column;">
-          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE; font-size: 11px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; align-self: flex-start; margin-bottom: 0.75rem;">
-            <span>★★★★★ 140+ HAPPY CUSTOMERS</span>
+          <!-- Social Proof Star Rating Tag with High Personality & 4.7 Stars -->
+          <div style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 9999px; background: #FFFFFF; border: 1px solid #E9D5FF; box-shadow: 0 1px 2px rgba(0,0,0,0.04); align-self: flex-start; margin-bottom: 0.75rem;">
+            <!-- Micro Customer Avatars -->
+            <div style="display: flex; align-items: center;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Customer" style="width: 20px; height: 20px; border-radius: 9999px; border: 2px solid #FFF; object-fit: cover; margin-right: -6px;" />
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80" alt="Customer" style="width: 20px; height: 20px; border-radius: 9999px; border: 2px solid #FFF; object-fit: cover; margin-right: -6px;" />
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80" alt="Customer" style="width: 20px; height: 20px; border-radius: 9999px; border: 2px solid #FFF; object-fit: cover;" />
+            </div>
+
+            <!-- 4.7 Score & Stars -->
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 12px; font-weight: 900; color: #111827; line-height: 1;">4.7</span>
+              <div style="display: flex; align-items: center; gap: 1px; color: #9333EA;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <!-- 5th star 70% filled (4.7 rating) -->
+                <div style="position: relative; width: 13px; height: 13px; display: inline-block;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#E5E7EB" stroke="#E5E7EB" stroke-width="1.5" style="position: absolute; inset: 0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <div style="position: absolute; inset: 0; width: 70%; overflow: hidden;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <span style="font-size: 11px; font-weight: 700; color: #374151; letter-spacing: 0.02em;">
+              <strong style="font-weight: 900; color: #111827;">140+</strong> Happy Customers
+            </span>
+
+            <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 900; color: #7E22CE; background: #FAF5FF; padding: 2px 6px; border-radius: 6px; border: 1px solid #E9D5FF; text-transform: uppercase;">
+              ✓ Verified
+            </span>
           </div>
 
           <h1 style="font-size: 2.25rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; color: #111827; margin: 0 0 0.5rem 0; line-height: 1.1;">
@@ -205,8 +244,40 @@
 
     <!-- MOBILE VIEW (Photo on top, thumbnails below, GET YOUR KOSNORA button, carousel of values below) -->
     <div class="kosnora-mobile-hero" style="display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 440px; margin: 0 auto;">
-      <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE; font-size: 11px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem;">
-        <span>★★★★★ 140+ HAPPY CUSTOMERS</span>
+      <!-- Social Proof Star Rating Tag with High Personality & 4.7 Stars -->
+      <div style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 9999px; background: #FFFFFF; border: 1px solid #E9D5FF; box-shadow: 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 1rem;">
+        <!-- Micro Customer Avatars -->
+        <div style="display: flex; align-items: center;">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Customer" style="width: 20px; height: 20px; border-radius: 9999px; border: 2px solid #FFF; object-fit: cover; margin-right: -6px;" />
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80" alt="Customer" style="width: 20px; height: 20px; border-radius: 9999px; border: 2px solid #FFF; object-fit: cover; margin-right: -6px;" />
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80" alt="Customer" style="width: 20px; height: 20px; border-radius: 9999px; border: 2px solid #FFF; object-fit: cover;" />
+        </div>
+
+        <!-- 4.7 Score & Stars -->
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span style="font-size: 12px; font-weight: 900; color: #111827; line-height: 1;">4.7</span>
+          <div style="display: flex; align-items: center; gap: 1px; color: #9333EA;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <!-- 5th star 70% filled (4.7 rating) -->
+            <div style="position: relative; width: 13px; height: 13px; display: inline-block;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#E5E7EB" stroke="#E5E7EB" stroke-width="1.5" style="position: absolute; inset: 0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <div style="position: absolute; inset: 0; width: 70%; overflow: hidden;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <span style="font-size: 11px; font-weight: 700; color: #374151; letter-spacing: 0.02em;">
+          <strong style="font-weight: 900; color: #111827;">140+</strong> Happy Customers
+        </span>
+
+        <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 900; color: #7E22CE; background: #FAF5FF; padding: 2px 6px; border-radius: 6px; border: 1px solid #E9D5FF; text-transform: uppercase;">
+          ✓ Verified
+        </span>
       </div>
 
       <!-- Main Media (Vimeo loop by default, switches to photo on color click) -->
@@ -387,6 +458,12 @@
 {
   "name": "Hero Section",
   "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Featured Product",
+      "info": "Select the KOSNORA product to sell on this landing page"
+    },
     {
       "type": "text",
       "id": "headline",
