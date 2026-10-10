@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "bundle": {
+      "type": "kosnora-multi-variant-bundle",
+      "settings": {
+        "headline": "KOSNORA Smart Case",
+        "subheadline": "Design minimalista refinado, proteção de impacto reforçada e display inteligente NFC sem bateria. Combine modelos e cores livremente no mesmo pedido."
+      }
+    },
+    "why_kosnora": {
+      "type": "why-kosnora",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {}
+    }
+  },
+  "order": [
+    "bundle",
+    "why_kosnora",
+    "faq"
+  ]
+}

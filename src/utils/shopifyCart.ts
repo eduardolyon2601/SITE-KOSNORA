@@ -3,6 +3,7 @@
  * 
  * Manages adding selected bundles (1, 2, or 3 phone cases) to the real Shopify cart
  * and redirecting the customer directly into the real Shopify checkout.
+ * Supports both Native Shopify Online Store 2.0 (Ajax Cart API) and External App Mode (Storefront API / Permalinks).
  */
 
 import { isVariantInStoreCatalog } from '../data/storeInventory';
@@ -28,6 +29,8 @@ declare global {
       productTitle?: string;
       variants?: any[];
       options?: string[];
+      storeDomain?: string;
+      storefrontAccessToken?: string;
     };
     KOSNORA_PRODUCT?: any;
     KOSNORA_COLLECTION_PRODUCTS?: any[];
@@ -50,6 +53,75 @@ export interface MultiUnitCheckoutPayload {
   unitPrice: number;
   totalPrice: number;
   isFirstPurchase?: boolean;
+}
+
+/**
+ * Native Ajax Cart API Multi-Variant Addition Helper
+ * Strict adherence to Shopify specifications: validates safe integer IDs, sends individual units with qty: 1,
+ * and confirms response with /cart.js before proceeding.
+ */
+export async function addVariantsToShopifyCart(
+  selectedUnits: Array<{ variantId: string | number; model: string; color: string; unitIndex?: number; totalUnits?: number }>
+): Promise<{ success: boolean; cart?: any; checkoutUrl?: string }> {
+  if (typeof window === 'undefined') {
+    throw new Error('Ambiente de execução inválido.');
+  }
+
+  const root = window.Shopify?.routes?.root || window.KOSNORA_STORE?.root || '/';
+
+  if (!Array.isArray(selectedUnits) || selectedUnits.length === 0) {
+    throw new Error('Selecione pelo menos uma unidade.');
+  }
+
+  const items = selectedUnits.map((unit, idx) => {
+    const variantId = Number(unit.variantId);
+
+    if (!Number.isSafeInteger(variantId) || variantId <= 0) {
+      throw new Error(`ID de variante inválido para a Capa #${idx + 1} (${unit.model} - ${unit.color}).`);
+    }
+
+    return {
+      id: variantId,
+      quantity: 1,
+      properties: {
+        'Capa': `#${(unit.unitIndex !== undefined ? unit.unitIndex : idx) + 1} de ${unit.totalUnits || selectedUnits.length}`,
+        'iPhone Model': unit.model,
+        'Case Color': unit.color,
+        'Pacote': `${unit.totalUnits || selectedUnits.length} Capas`,
+      },
+    };
+  });
+
+  // 1. Clear previous cart lines to ensure clean bundle price structure
+  await fetch(`${root}cart/clear.js`, { method: 'POST' }).catch(() => {});
+
+  // 2. Add all items via official Shopify Ajax Cart API
+  const response = await fetch(`${root}cart/add.js`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ items }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.description || result.message || 'Não foi possível adicionar os produtos ao carrinho da Shopify.');
+  }
+
+  // 3. Confirm items in real cart
+  const verifyRes = await fetch(`${root}cart.js`);
+  let confirmedCart: any = null;
+  if (verifyRes.ok) {
+    confirmedCart = await verifyRes.json();
+    if (!confirmedCart.items || confirmedCart.items.length === 0) {
+      throw new Error('O carrinho da Shopify não confirmou os itens.');
+    }
+  }
+
+  return { success: true, cart: confirmedCart || result };
 }
 
 function isColorMatch(optionVal: string, targetColor: string): boolean {

@@ -1,0 +1,643 @@
+/* KOSNORA Multi-Variant Bundle Styles */
+
+.kosnora-multi-bundle-section {
+  padding: 3rem 0;
+  background-color: #FFFFFF;
+  color: #111827;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.kosnora-bundle-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .kosnora-bundle-grid {
+    grid-template-columns: 5fr 7fr;
+    gap: 3.5rem;
+  }
+}
+
+/* Gallery & Preview */
+.kosnora-bundle-preview-card {
+  width: 100%;
+  aspect-ratio: 645 / 800;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.kosnora-bundle-video-wrap {
+  position: absolute;
+  inset: 0.75rem;
+  border-radius: 1rem;
+  background: #000000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.kosnora-bundle-video-wrap iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%) scale(1.5);
+  border: 0;
+  pointer-events: none;
+}
+
+.kosnora-video-badge {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.kosnora-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9333EA;
+  display: inline-block;
+}
+
+.kosnora-bundle-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 1rem;
+  background: #F9FAFB;
+}
+
+.kosnora-bundle-color-badge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 3;
+}
+
+.kosnora-bundle-badges {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E5E7EB;
+  display: flex;
+  justify-content: space-around;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6B7280;
+  text-align: center;
+}
+
+/* Configurator Column */
+.kosnora-social-proof-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E9D5FF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  align-self: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.kosnora-avatars-row {
+  display: flex;
+  align-items: center;
+}
+
+.kosnora-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  border: 2px solid #FFFFFF;
+  object-fit: cover;
+  margin-right: -6px;
+}
+
+.kosnora-rating-score {
+  font-size: 12px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.kosnora-stars {
+  color: #9333EA;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.kosnora-review-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.kosnora-verified-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: #7E22CE;
+  background: #FAF5FF;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid #E9D5FF;
+  text-transform: uppercase;
+}
+
+.kosnora-bundle-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.1;
+}
+
+.kosnora-bundle-desc {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4B5563;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.6;
+}
+
+/* Tier Selector */
+.kosnora-bundle-tiers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.kosnora-tiers-label {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #111827;
+  letter-spacing: 0.05em;
+}
+
+.kosnora-tiers-sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.kosnora-tiers-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.kosnora-tier-tab {
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.875rem;
+  border: 2px solid #E5E7EB;
+  background: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.kosnora-tier-tab.active {
+  border-color: #9333EA;
+  background: #FAF5FF;
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
+}
+
+.tier-tab-qty {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #111827;
+}
+
+.tier-tab-price {
+  font-size: 12px;
+  font-weight: 800;
+  color: #9333EA;
+}
+
+.tier-tab-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: #F3F4F6;
+  color: #4B5563;
+  text-transform: uppercase;
+}
+
+.tier-tab-badge.popular {
+  background: #9333EA;
+  color: #FFFFFF;
+}
+
+.tier-tab-badge.value {
+  background: #059669;
+  color: #FFFFFF;
+}
+
+/* Multi-Unit Customizer */
+.kosnora-multi-unit-configurator {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.kosnora-units-tabs-bar {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.kosnora-unit-tab-btn {
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.65rem;
+  border: 1.5px solid #E5E7EB;
+  background: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #374151;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.kosnora-unit-tab-btn.active {
+  border-color: #9333EA;
+  background: #FAF5FF;
+  color: #9333EA;
+  box-shadow: 0 2px 6px rgba(147, 51, 234, 0.15);
+}
+
+.unit-tab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.kosnora-active-unit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kosnora-unit-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+@media (min-width: 640px) {
+  .kosnora-unit-field-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.kosnora-field-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #4B5563;
+}
+
+.kosnora-model-select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #D1D5DB;
+  background: #FFFFFF;
+  font-size: 12px;
+  font-weight: 800;
+  color: #111827;
+  cursor: pointer;
+  outline: none;
+  min-width: 220px;
+}
+
+.kosnora-model-select:focus {
+  border-color: #9333EA;
+}
+
+.kosnora-colors-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.kosnora-selected-color-name {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #9333EA;
+  letter-spacing: 0.05em;
+}
+
+.kosnora-color-buttons-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.kosnora-color-pill {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1.5px solid #E5E7EB;
+  background: #FFFFFF;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #374151;
+  transition: all 0.15s ease;
+}
+
+.kosnora-color-pill.active {
+  border-color: #9333EA;
+  background: #FAF5FF;
+  color: #9333EA;
+  box-shadow: 0 1px 3px rgba(147, 51, 234, 0.2);
+}
+
+.kosnora-color-pill.is-out-of-stock {
+  opacity: 0.65;
+  background: #F3F4F6;
+  color: #9CA3AF;
+  border-color: #E5E7EB;
+}
+
+.color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.play-icon {
+  font-size: 9px;
+  color: #9333EA;
+}
+
+/* Stock Status Pill */
+.kosnora-availability-status {
+  padding-top: 0.25rem;
+}
+
+.status-in-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  color: #065F46;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.status-in-stock .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+}
+
+.status-out-of-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.status-out-of-stock .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #F59E0B;
+}
+
+/* Summary Card */
+.kosnora-bundle-summary-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4B5563;
+}
+
+.summary-value {
+  color: #111827;
+  font-weight: 700;
+}
+
+.discount-line {
+  background: #ECFDF5;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #A7F3D0;
+  color: #059669;
+  font-weight: 800;
+}
+
+.discount-value {
+  color: #059669;
+  font-weight: 900;
+}
+
+.shipping-value {
+  color: #059669;
+  font-weight: 800;
+}
+
+.summary-total-row {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 8px;
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.total-label {
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #111827;
+}
+
+.savings-note {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #059669;
+}
+
+.total-val {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #111827;
+}
+
+/* Add Unit Button */
+.kosnora-add-unit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1.5px dashed #C084FC;
+  background: #FAF5FF;
+  color: #9333EA;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 1.25rem;
+}
+
+.kosnora-add-unit-btn:hover {
+  background: #F3E8FF;
+  border-color: #9333EA;
+}
+
+/* Buy Action Button */
+.kosnora-actions-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kosnora-bundle-error {
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.kosnora-main-buy-btn {
+  width: 100%;
+  padding: 1.15rem 2rem;
+  border-radius: 0.875rem;
+  border: none;
+  background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%);
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35);
+  transition: all 0.2s ease;
+}
+
+.kosnora-main-buy-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(147, 51, 234, 0.45);
+}
+
+.kosnora-main-buy-btn:disabled {
+  background: #E5E7EB;
+  color: #9CA3AF;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.kosnora-security-note {
+  font-size: 10px;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-align: center;
+  margin: 0;
+}

@@ -1,0 +1,297 @@
+{%- comment -%}
+  KOSNORA - Native Online Store 2.0 Multi-Variant Bundle Section
+  Allows independent Model and Color selection for each case in the order (1, 2, or 3 units)
+  Outputs valid Shopify product variant JSON and integrates directly with Ajax Cart API
+{%- endcomment -%}
+
+{%- assign target_product = section.settings.product | default: product | default: all_products[settings.featured_product] -%}
+{%- if target_product == nil or target_product.id == blank -%}
+  {%- assign target_product = all_products['case-kosnora-digital'] | default: all_products['ink-nfc-phone-case-for-iphone-17-16-15-14-pro-max-12-diy-picture-smart-screen-phone-cases-four-colors-image-screen-battery-free'] | default: all_products['kosnora-case'] | default: all_products['kosnora'] | default: collections.all.products.first -%}
+{%- endif -%}
+
+<div
+  class="kosnora-multi-bundle-section"
+  id="kosnora-bundle-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ target_product.id }}"
+  data-product-handle="{{ target_product.handle }}"
+>
+  <!-- Real Shopify Product Data for Browser JavaScript -->
+  {%- if target_product != nil -%}
+    <script type="application/json" data-kosnora-product-json>
+      {{ target_product | json }}
+    </script>
+    <script type="application/json" data-kosnora-variants-json>
+      {{ target_product.variants | json }}
+    </script>
+  {%- endif -%}
+
+  <div class="kosnora-container">
+    <div class="kosnora-bundle-grid">
+      <!-- Left: Visual Showcase (Gallery / Video / Selected Color) -->
+      <div class="kosnora-bundle-gallery-col">
+        <div class="kosnora-bundle-preview-card">
+          <!-- Video Player (Active by default) -->
+          <div id="bundle-video-container-{{ section.id }}" class="kosnora-bundle-video-wrap">
+            <iframe
+              id="bundle-vimeo-{{ section.id }}"
+              src="https://player.vimeo.com/video/1234575864?h=86322bd9-a325-437a-a838-9ae5a0653601&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              title="KOSNORA Smart Case Video"
+            ></iframe>
+            <div class="kosnora-video-badge">
+              <span class="kosnora-live-dot"></span>
+              <span>Video Demonstration</span>
+            </div>
+          </div>
+
+          <!-- Active Variant Image -->
+          <img
+            id="bundle-main-image-{{ section.id }}"
+            src="{{ target_product.featured_image | default: 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg' | img_url: '800x' }}"
+            alt="{{ target_product.title | escape }}"
+            class="kosnora-bundle-main-img"
+            style="display: none;"
+          >
+
+          <div id="bundle-color-badge-{{ section.id }}" class="kosnora-bundle-color-badge" style="display: none;">
+            Gray
+          </div>
+        </div>
+
+        <!-- Trust Badges Under Image -->
+        <div class="kosnora-bundle-badges">
+          <span>🛡️ 30-Day Guarantee</span>
+          <span>•</span>
+          <span>🚚 Tracked Worldwide Shipping</span>
+          <span>•</span>
+          <span>🔒 100% Secure Checkout</span>
+        </div>
+      </div>
+
+      <!-- Right: Bundle Configurator & Multi-Unit Selector -->
+      <div class="kosnora-bundle-config-col">
+        <!-- Review Stars Tag -->
+        <div class="kosnora-social-proof-pill">
+          <div class="kosnora-avatars-row">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Customer" class="kosnora-avatar" />
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80" alt="Customer" class="kosnora-avatar" />
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80" alt="Customer" class="kosnora-avatar" />
+          </div>
+          <span class="kosnora-rating-score">4.7</span>
+          <span class="kosnora-stars">★★★★★</span>
+          <span class="kosnora-review-text"><strong>140+</strong> Happy Customers</span>
+          <span class="kosnora-verified-tag">✓ Verified</span>
+        </div>
+
+        <h1 class="kosnora-bundle-title">
+          {{ section.settings.headline | default: target_product.title | default: 'KOSNORA Case' }}
+        </h1>
+        <p class="kosnora-bundle-desc">
+          {{ section.settings.subheadline | default: 'Refined minimalist design, reinforced impact protection, and battery-free NFC smart display. Combine different models and colors freely in the same order.' }}
+        </p>
+
+        <!-- Tier Selection (1, 2, or 3 Units) -->
+        <div class="kosnora-bundle-tiers-header">
+          <span class="kosnora-tiers-label">1. Escolha a Quantidade (Pacote):</span>
+          <span class="kosnora-tiers-sub">Desconto progressivo por quantidade</span>
+        </div>
+
+        <div class="kosnora-tiers-selector" id="bundle-tier-selector-{{ section.id }}">
+          <!-- 1 Case -->
+          <button type="button" class="kosnora-tier-tab active" data-bundle-qty="1">
+            <span class="tier-tab-qty">1 Capa</span>
+            <span class="tier-tab-price">R$ 79,90</span>
+            <span class="tier-tab-badge">Single</span>
+          </button>
+          <!-- 2 Cases (Save R$ 19,90) -->
+          <button type="button" class="kosnora-tier-tab" data-bundle-qty="2">
+            <span class="tier-tab-qty">2 Capas</span>
+            <span class="tier-tab-price">R$ 139,90</span>
+            <span class="tier-tab-badge popular">Mais Vendido (-R$ 19,90)</span>
+          </button>
+          <!-- 3 Cases (Save R$ 44,80) -->
+          <button type="button" class="kosnora-tier-tab" data-bundle-qty="3">
+            <span class="tier-tab-qty">3 Capas</span>
+            <span class="tier-tab-price">R$ 194,90</span>
+            <span class="tier-tab-badge value">Melhor Oferta (-R$ 44,80)</span>
+          </button>
+        </div>
+
+        <!-- Multi-Unit Individual Customizer Area -->
+        <div class="kosnora-multi-unit-configurator" id="bundle-units-configurator-{{ section.id }}">
+          <div class="kosnora-units-tabs-bar" id="bundle-units-tabs-bar-{{ section.id }}">
+            <!-- Injected by JavaScript: Tab for each unit (Capa #1, Capa #2, Capa #3) -->
+          </div>
+
+          <div class="kosnora-active-unit-box" id="bundle-active-unit-box-{{ section.id }}">
+            <!-- Unit Model Selector -->
+            <div class="kosnora-unit-field-row">
+              <label for="bundle-model-select-{{ section.id }}" class="kosnora-field-label">
+                <span id="bundle-model-label-text-{{ section.id }}">Modelo da Capa #1:</span>
+              </label>
+              <select id="bundle-model-select-{{ section.id }}" class="kosnora-model-select">
+                <option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
+                <option value="iPhone 17 Pro">iPhone 17 Pro</option>
+                <option value="iPhone 17">iPhone 17</option>
+                <option value="iPhone 16 Pro Max" selected>iPhone 16 Pro Max</option>
+                <option value="iPhone 16 Pro">iPhone 16 Pro</option>
+                <option value="iPhone 16 Plus">iPhone 16 Plus</option>
+                <option value="iPhone 16">iPhone 16</option>
+                <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
+                <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+                <option value="iPhone 15 Plus">iPhone 15 Plus</option>
+                <option value="iPhone 15">iPhone 15</option>
+                <option value="iPhone 14 Pro Max">iPhone 14 Pro Max</option>
+                <option value="iPhone 14 Pro">iPhone 14 Pro</option>
+                <option value="iPhone 14 Plus">iPhone 14 Plus</option>
+                <option value="iPhone 14">iPhone 14</option>
+                <option value="iPhone 13 Pro Max">iPhone 13 Pro Max</option>
+                <option value="iPhone 13 Pro">iPhone 13 Pro</option>
+                <option value="iPhone 13">iPhone 13</option>
+                <option value="iPhone 12 Pro Max">iPhone 12 Pro Max</option>
+                <option value="iPhone 12 Pro">iPhone 12 Pro</option>
+                <option value="iPhone 12">iPhone 12</option>
+              </select>
+            </div>
+
+            <!-- Unit Color Selector -->
+            <div class="kosnora-unit-colors-row">
+              <div class="kosnora-colors-header">
+                <span class="kosnora-field-label" id="bundle-color-label-text-{{ section.id }}">Cor da Capa #1:</span>
+                <span class="kosnora-selected-color-name" id="bundle-color-name-display-{{ section.id }}">Gray</span>
+              </div>
+              <div class="kosnora-color-buttons-list" id="bundle-color-buttons-{{ section.id }}">
+                <button type="button" class="kosnora-color-pill" data-color="Video" title="Reproduzir Vídeo">
+                  <span class="play-icon">▶</span>
+                  <span>Vídeo</span>
+                </button>
+                <button type="button" class="kosnora-color-pill active" data-color="Gray" data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg">
+                  <span class="color-dot" style="background-color: #808080;"></span>
+                  <span>Gray</span>
+                </button>
+                <button type="button" class="kosnora-color-pill" data-color="Black" data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg">
+                  <span class="color-dot" style="background-color: #111111;"></span>
+                  <span>Black</span>
+                </button>
+                <button type="button" class="kosnora-color-pill" data-color="Pink" data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg">
+                  <span class="color-dot" style="background-color: #F472B6;"></span>
+                  <span>Pink</span>
+                </button>
+                <button type="button" class="kosnora-color-pill" data-color="White" data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg">
+                  <span class="color-dot" style="background-color: #FFFFFF; border: 1px solid #D1D5DB;"></span>
+                  <span>White</span>
+                </button>
+                <button type="button" class="kosnora-color-pill" data-color="Orange" data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg">
+                  <span class="color-dot" style="background-color: #FB923C;"></span>
+                  <span>Orange</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Availability Status Pill -->
+            <div class="kosnora-availability-status" id="bundle-stock-status-{{ section.id }}">
+              <span class="status-in-stock">
+                <span class="status-dot"></span>
+                <span>Em estoque · Pronta entrega</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary & Financial Recalculation -->
+        <div class="kosnora-bundle-summary-card">
+          <div class="summary-line">
+            <span id="bundle-summary-label-{{ section.id }}">Subtotal (1 capa):</span>
+            <span id="bundle-summary-subtotal-{{ section.id }}" class="summary-value">R$ 79,90</span>
+          </div>
+          <div id="bundle-discount-row-{{ section.id }}" class="summary-line discount-line" style="display: none;">
+            <span>Desconto Progressivo:</span>
+            <span id="bundle-summary-discount-{{ section.id }}" class="discount-value">-R$ 19,90</span>
+          </div>
+          <div class="summary-line">
+            <span>Envio para todo o Brasil:</span>
+            <span class="shipping-value">Grátis</span>
+          </div>
+          <div class="summary-total-row">
+            <div>
+              <span class="total-label">Total do Pedido:</span>
+              <span id="bundle-savings-note-{{ section.id }}" class="savings-note" style="display: none;"></span>
+            </div>
+            <div class="total-val-box">
+              <span id="bundle-summary-total-{{ section.id }}" class="total-val">R$ 79,90</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Another Unit Button -->
+        <button
+          type="button"
+          id="bundle-add-unit-btn-{{ section.id }}"
+          class="kosnora-add-unit-btn"
+        >
+          <span>+ Adicionar Outra Capa (Modelo e Cor Diferentes)</span>
+        </button>
+
+        <!-- Main Purchase Action Button: Direct Integration with Shopify Ajax Cart API -->
+        <div class="kosnora-actions-wrapper">
+          <div id="bundle-error-message-{{ section.id }}" class="kosnora-bundle-error" style="display: none;"></div>
+
+          <button
+            type="button"
+            id="bundle-buy-button-{{ section.id }}"
+            class="kosnora-main-buy-btn"
+          >
+            <span id="bundle-buy-button-text-{{ section.id }}">FINALIZAR COMPRA (1 CAPA)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+          <p class="kosnora-security-note">
+            🔒 Checkout oficial Shopify · Suas opções e descontos são preservados
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ 'kosnora-multi-variant-bundle.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kosnora-multi-variant-bundle.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "KOSNORA Multi Bundle",
+  "tag": "section",
+  "class": "section-kosnora-multi-bundle",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Produto KOSNORA"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Título Principal",
+      "default": "KOSNORA Case"
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Subtítulo / Descrição",
+      "default": "Design minimalista refinado, proteção de impacto reforçada e display inteligente NFC sem bateria. Combine modelos e cores livremente no mesmo pedido."
+    }
+  ],
+  "presets": [
+    {
+      "name": "KOSNORA Multi Bundle",
+      "category": "Custom KOSNORA"
+    }
+  ]
+}
+{% endschema %}
