@@ -148,213 +148,134 @@ function initFaqAccordion() {
   });
 }
 
-// 3. Checkout & Order Drawer
+// 3. Checkout & Order Drawer (Minimalist, Conversion-Optimized)
 function initDrawer() {
   const drawerBackdrop = document.getElementById('kosnora-order-drawer');
   const closeBtns = document.querySelectorAll('[data-close-drawer]');
   const openBtns = document.querySelectorAll('[data-open-drawer]');
-  const bundleCards = document.querySelectorAll('[data-bundle-quantity]');
-  const modelSelect = document.getElementById('drawer-model-select');
-  const colorSelectBtns = document.querySelectorAll('[data-drawer-color]');
-  const summaryQty = document.getElementById('drawer-summary-qty');
+
+  // Stepper elements
+  const qtyMinusBtn = document.getElementById('drawer-qty-minus');
+  const qtyPlusBtn = document.getElementById('drawer-qty-plus');
+  const qtyDisplay = document.getElementById('drawer-qty-display');
+  const itemCountLabel = document.getElementById('drawer-item-count-label');
+
+  // Product card elements
+  const productImg = document.getElementById('drawer-product-img');
   const summaryModel = document.getElementById('drawer-summary-model');
   const summaryColor = document.getElementById('drawer-summary-color');
-  const summaryTotal = document.getElementById('drawer-summary-total');
-  const summarySavings = document.getElementById('drawer-summary-savings');
+  const unitPriceVal = document.getElementById('drawer-unit-price-val');
+  const unitPriceSuffix = document.getElementById('drawer-unit-price-suffix');
+  const bundleTag = document.getElementById('drawer-bundle-tag');
+
+  // Financial summary elements
+  const subtotalLabel = document.getElementById('drawer-subtotal-label');
+  const subtotalVal = document.getElementById('drawer-subtotal-val');
+  const discountRow = document.getElementById('drawer-discount-row');
+  const discountVal = document.getElementById('drawer-discount-val');
+  const savingsNote = document.getElementById('drawer-savings-note');
+  const totalPriceEl = document.getElementById('drawer-total-price');
   const ctaTotal = document.getElementById('drawer-cta-total');
   const proceedBtn = document.getElementById('drawer-proceed-checkout');
+
+  // Hidden form inputs
+  const varInput = document.getElementById('drawer-variant-id');
   const qtyInput = document.getElementById('drawer-quantity-input');
   const propModelInput = document.getElementById('drawer-prop-model');
   const propColorInput = document.getElementById('drawer-prop-color');
+  const propOfferInput = document.getElementById('drawer-prop-offer');
 
-  function checkCustomerFirstPurchase() {
-    if (window.KOSNORA_CUSTOMER) {
-      if (window.KOSNORA_CUSTOMER.hasPreviousPurchase === true || (window.KOSNORA_CUSTOMER.ordersCount && window.KOSNORA_CUSTOMER.ordersCount > 0)) {
-        return false;
-      }
-    }
-    try {
-      if (localStorage.getItem('kosnora_has_purchased') === 'true') {
-        return false;
-      }
-      const rawOrders = localStorage.getItem('kosnora_customer_orders');
-      if (rawOrders && JSON.parse(rawOrders).length > 0) {
-        return false;
-      }
-    } catch (e) {}
-    return true;
-  }
-
-  const PROMO_OFFERS = {
-    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Case' },
-    2: { qty: 2, unitPrice: 69.95, total: 139.90, savings: 19.90, label: '2x KOSNORA Cases' },
-    3: { qty: 3, unitPrice: 64.97, total: 194.90, savings: 44.80, label: '3x KOSNORA Cases' }
-  };
-
-  const REGULAR_OFFERS = {
-    1: { qty: 1, unitPrice: 79.90, total: 79.90, savings: 0, label: '1x KOSNORA Case' },
-    2: { qty: 2, unitPrice: 69.95, total: 139.90, savings: 19.90, label: '2x KOSNORA Cases' },
-    3: { qty: 3, unitPrice: 64.97, total: 194.90, savings: 44.80, label: '3x KOSNORA Cases' }
-  };
-
-  function getActiveOffers() {
-    return checkCustomerFirstPurchase() ? PROMO_OFFERS : REGULAR_OFFERS;
-  }
+  const variantAlertEl = document.getElementById('drawer-variant-alert');
 
   let currentQty = 1;
-  let currentUnitPrice = 79.90;
-  let currentTotal = 79.90;
-  let currentSavings = 0;
-
-  function syncEligibilityUI() {
-    const isFirst = checkCustomerFirstPurchase();
-    const offers = getActiveOffers();
-
-    // Sync Offer Section on page
-    const kicker = document.getElementById('pricing-offer-kicker');
-    if (kicker) {
-      kicker.textContent = isFirst ? 'EXCLUSIVE FIRST-PURCHASE OFFER' : 'PRODUCT & OFFER';
-    }
-    const subheadline = document.getElementById('pricing-offer-subheadline');
-    if (subheadline) {
-      subheadline.textContent = isFirst 
-        ? 'Special promotional pricing available on your first order only.' 
-        : 'Select your iPhone model and quantity bundle.';
-    }
-
-    const badge2 = document.getElementById('pricing-badge-2');
-    if (badge2) {
-      badge2.style.display = isFirst ? 'block' : 'none';
-    }
-    const badge3 = document.getElementById('pricing-badge-3');
-    if (badge3) {
-      badge3.style.display = isFirst ? 'block' : 'none';
-    }
-
-    const unitPrice2 = document.getElementById('pricing-unit-price-2');
-    if (unitPrice2) unitPrice2.textContent = `$${offers[2].unitPrice.toFixed(2)}`;
-    const totalPrice2 = document.getElementById('pricing-total-price-2');
-    if (totalPrice2) totalPrice2.textContent = `$${offers[2].total.toFixed(2)} TOTAL`;
-
-    const unitPrice3 = document.getElementById('pricing-unit-price-3');
-    if (unitPrice3) unitPrice3.textContent = `$${offers[3].unitPrice.toFixed(2)}`;
-    const totalPrice3 = document.getElementById('pricing-total-price-3');
-    if (totalPrice3) totalPrice3.textContent = `$${offers[3].total.toFixed(2)} TOTAL`;
-
-    // Sync bundle card details inside drawer
-    bundleCards.forEach(card => {
-      const q = parseInt(card.getAttribute('data-bundle-quantity'), 10);
-      const offer = offers[q];
-      if (!offer) return;
-
-      const priceDiv = card.querySelector(':scope > div:last-child > div:first-child');
-      if (priceDiv) priceDiv.textContent = `$${offer.total.toFixed(2)}`;
-
-      const savingsDiv = card.querySelector(':scope > div:last-child > div:nth-child(2)');
-      if (savingsDiv) {
-        if (offer.savings > 0 && isFirst) {
-          savingsDiv.style.display = 'block';
-          savingsDiv.textContent = `Save $${offer.savings.toFixed(2)}`;
-        } else {
-          savingsDiv.style.display = 'none';
-        }
-      }
-
-      const descDiv = card.querySelector(':scope > div:first-child > div:last-child > div:last-child');
-      if (descDiv) {
-        if (q === 1) {
-          descDiv.textContent = '$79.90 single case';
-        } else {
-          descDiv.textContent = isFirst 
-            ? `$${offer.unitPrice.toFixed(2)} each · $${offer.total.toFixed(2)} total`
-            : `$${offer.unitPrice.toFixed(2)} each · $${offer.total.toFixed(2)} total`;
-        }
-      }
-    });
-  }
-
-  function updateSummary() {
-    if (summaryQty) summaryQty.textContent = `${currentQty}x KOSNORA Case`;
-    if (summaryTotal) summaryTotal.textContent = `$${currentTotal.toFixed(2)}`;
-    if (ctaTotal) ctaTotal.textContent = `$${currentTotal.toFixed(2)}`;
-    if (qtyInput) qtyInput.value = currentQty;
-
-    if (summarySavings) {
-      if (currentSavings > 0 && checkCustomerFirstPurchase()) {
-        summarySavings.textContent = `-$${currentSavings.toFixed(2)}`;
-        summarySavings.parentElement.style.display = 'flex';
-      } else {
-        summarySavings.parentElement.style.display = 'none';
-      }
-    }
-  }
-
-  function setQuantity(qty) {
-    qty = parseInt(qty, 10);
-    const offers = getActiveOffers();
-    if (!offers[qty]) qty = 1;
-
-    currentQty = qty;
-    currentUnitPrice = offers[qty].unitPrice;
-    currentTotal = offers[qty].total;
-    currentSavings = offers[qty].savings;
-
-    if (qtyInput) qtyInput.value = currentQty;
-
-    bundleCards.forEach(card => {
-      const cardQty = parseInt(card.getAttribute('data-bundle-quantity'), 10);
-      const isSelected = cardQty === currentQty;
-      const radio = card.querySelector('.bundle-radio-circle');
-      const dot = card.querySelector('.bundle-radio-dot');
-
-      if (isSelected) {
-        card.classList.add('active-bundle');
-        card.style.setProperty('border', '2px solid #9333EA', 'important');
-        card.style.setProperty('background-color', '#FAF5FF', 'important');
-        card.style.setProperty('box-shadow', '0 4px 14px rgba(147, 51, 234, 0.12)', 'important');
-        if (radio) {
-          radio.style.setProperty('border-color', '#9333EA', 'important');
-          radio.style.setProperty('background-color', '#9333EA', 'important');
-        }
-        if (dot) {
-          dot.style.setProperty('display', 'block', 'important');
-          dot.style.setProperty('background-color', '#FFFFFF', 'important');
-        }
-      } else {
-        card.classList.remove('active-bundle');
-        card.style.setProperty('border', '1px solid #E5E5E5', 'important');
-        card.style.setProperty('background-color', '#FFFFFF', 'important');
-        card.style.setProperty('box-shadow', 'none', 'important');
-        if (radio) {
-          radio.style.setProperty('border-color', '#D1D5DB', 'important');
-          radio.style.setProperty('background-color', '#FFFFFF', 'important');
-        }
-        if (dot) {
-          dot.style.setProperty('display', 'none', 'important');
-        }
-      }
-    });
-
-    updateSummary();
-  }
-
-  // Subscribe to purchase completed event
-  window.addEventListener('kosnora:purchase-completed', () => {
-    syncEligibilityUI();
-    setQuantity(currentQty);
-  });
-  window.addEventListener('storage', () => {
-    syncEligibilityUI();
-    setQuantity(currentQty);
-  });
-
-  syncEligibilityUI();
-
-  // ============================================================
-  // SHOPIFY PRODUCT & VARIANT ENGINE
-  // ============================================================
+  let currentColor = 'Gray';
+  let currentModel = 'iPhone 16 Pro Max';
   let activeProduct = null;
-  const variantAlertEl = document.getElementById('drawer-variant-alert');
+  let isSubmittingCheckout = false;
+  let syncTimeout = null;
+
+  // Currency helper
+  function getCurrencySymbol() {
+    return (window.KOSNORA_STORE && window.KOSNORA_STORE.currency) || 'R$';
+  }
+
+  function formatMoney(amount) {
+    const sym = getCurrencySymbol();
+    const formatted = (amount || 0).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return `${sym} ${formatted}`;
+  }
+
+  /**
+   * KOSNORA Progressive Pricing Rules:
+   * 1 unit: R$ 79,90 (R$ 79,90/each, 0 discount)
+   * 2 units: R$ 139,90 (R$ 69,95/each, R$ 19,90 discount from 159.80)
+   * 3 units: R$ 194,90 (R$ 64,97/each, R$ 44,80 discount from 239.70)
+   * 4+ units: R$ 64,97/each, progressive volume savings
+   */
+  function calculatePricing(qty) {
+    qty = Math.max(1, parseInt(qty, 10) || 1);
+    const baseUnitPrice = 79.90;
+    const subtotal = Number((qty * baseUnitPrice).toFixed(2));
+
+    if (qty === 1) {
+      return {
+        qty: 1,
+        unitPrice: baseUnitPrice,
+        subtotal,
+        discount: 0,
+        total: baseUnitPrice,
+        tag: null,
+        savingsText: null
+      };
+    }
+
+    if (qty === 2) {
+      const total = 139.90;
+      const unitPrice = 69.95;
+      const discount = Number((subtotal - total).toFixed(2)); // 19.90
+      return {
+        qty: 2,
+        unitPrice,
+        subtotal,
+        discount,
+        total,
+        tag: '2x Pack',
+        savingsText: 'Você economiza ' + formatMoney(discount)
+      };
+    }
+
+    if (qty === 3) {
+      const total = 194.90;
+      const unitPrice = 64.97;
+      const discount = Number((subtotal - total).toFixed(2)); // 44.80
+      return {
+        qty: 3,
+        unitPrice,
+        subtotal,
+        discount,
+        total,
+        tag: 'Melhor Valor',
+        savingsText: 'Você economiza ' + formatMoney(discount)
+      };
+    }
+
+    // 4 or more
+    const unitPrice = 64.97;
+    const total = Number((qty * unitPrice).toFixed(2));
+    const discount = Number((subtotal - total).toFixed(2));
+    return {
+      qty,
+      unitPrice,
+      subtotal,
+      discount,
+      total,
+      tag: `Oferta Volume (${qty}x)`,
+      savingsText: 'Você economiza ' + formatMoney(discount)
+    };
+  }
 
   function showDrawerAlert(msg, type = 'error') {
     if (!variantAlertEl) return;
@@ -363,7 +284,7 @@ function initDrawer() {
       variantAlertEl.style.backgroundColor = '#FEF2F2';
       variantAlertEl.style.color = '#B91C1C';
       variantAlertEl.style.border = '1px solid #FECACA';
-    } else if (type === 'info') {
+    } else {
       variantAlertEl.style.backgroundColor = '#EFF6FF';
       variantAlertEl.style.color = '#1D4ED8';
       variantAlertEl.style.border = '1px solid #BFDBFE';
@@ -377,15 +298,81 @@ function initDrawer() {
     variantAlertEl.textContent = '';
   }
 
+  function updateCartUI() {
+    const pricing = calculatePricing(currentQty);
+
+    if (qtyDisplay) qtyDisplay.textContent = String(pricing.qty);
+    if (qtyInput) qtyInput.value = String(pricing.qty);
+
+    if (itemCountLabel) {
+      itemCountLabel.textContent = `${pricing.qty} ${pricing.qty === 1 ? 'item selecionado' : 'itens selecionados'}`;
+    }
+
+    // Unit price
+    if (unitPriceVal) unitPriceVal.textContent = formatMoney(pricing.unitPrice);
+    if (unitPriceSuffix) {
+      unitPriceSuffix.style.display = pricing.qty > 1 ? 'inline' : 'none';
+    }
+
+    // Bundle tag badge
+    if (bundleTag) {
+      if (pricing.tag) {
+        bundleTag.style.display = 'inline-block';
+        bundleTag.textContent = pricing.tag;
+      } else {
+        bundleTag.style.display = 'none';
+      }
+    }
+
+    // Financial breakdown
+    if (subtotalLabel) {
+      subtotalLabel.textContent = `Subtotal (${pricing.qty} ${pricing.qty === 1 ? 'unidade' : 'unidades'}):`;
+    }
+    if (subtotalVal) subtotalVal.textContent = formatMoney(pricing.subtotal);
+
+    // Promotional discount row (Instant and dynamic!)
+    if (discountRow) {
+      if (pricing.discount > 0) {
+        discountRow.style.display = 'flex';
+        if (discountVal) discountVal.textContent = `-${formatMoney(pricing.discount)}`;
+      } else {
+        discountRow.style.display = 'none';
+      }
+    }
+
+    // Savings note
+    if (savingsNote) {
+      if (pricing.savingsText) {
+        savingsNote.style.display = 'block';
+        savingsNote.textContent = pricing.savingsText;
+      } else {
+        savingsNote.style.display = 'none';
+      }
+    }
+
+    // Total and CTA
+    if (totalPriceEl) totalPriceEl.textContent = formatMoney(pricing.total);
+    if (ctaTotal) ctaTotal.textContent = formatMoney(pricing.total);
+
+    if (proceedBtn && !isSubmittingCheckout) {
+      proceedBtn.innerHTML = `<span>CONTINUAR PARA O CHECKOUT (<span id="drawer-cta-total">${formatMoney(pricing.total)}</span>)</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px;"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>`;
+    }
+
+    if (propOfferInput) {
+      propOfferInput.value = pricing.tag || `${pricing.qty} Case${pricing.qty > 1 ? 's' : ''}`;
+    }
+  }
+
+  // ============================================================
+  // SHOPIFY VARIANT ENGINE (Matches and Preserves)
+  // ============================================================
   function parseProductJson(jsonString) {
     try {
       if (!jsonString) return null;
-      const parsed = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
-      if (parsed && (parsed.id || (parsed.variants && parsed.variants.length > 0))) {
-        return parsed;
-      }
-    } catch (e) {}
-    return null;
+      return typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+    } catch (e) {
+      return null;
+    }
   }
 
   function isColorMatch(optionVal, targetColor) {
@@ -429,13 +416,11 @@ function initDrawer() {
       return activeProduct;
     }
 
-    // 1. Check window.KOSNORA_PRODUCT injected by theme.liquid
     if (window.KOSNORA_PRODUCT && window.KOSNORA_PRODUCT.variants && window.KOSNORA_PRODUCT.variants.length > 0) {
       activeProduct = window.KOSNORA_PRODUCT;
       return activeProduct;
     }
 
-    // 2. Check JSON script tags in DOM
     const scriptTags = [
       document.getElementById('kosnora-product-data'),
       document.getElementById('kosnora-hero-product-data')
@@ -450,7 +435,6 @@ function initDrawer() {
       }
     }
 
-    // 3. Check window.KOSNORA_STORE variants
     if (window.KOSNORA_STORE && Array.isArray(window.KOSNORA_STORE.variants) && window.KOSNORA_STORE.variants.length > 0) {
       activeProduct = {
         id: window.KOSNORA_STORE.productId,
@@ -462,19 +446,6 @@ function initDrawer() {
       return activeProduct;
     }
 
-    // 4. Check window.KOSNORA_COLLECTION_PRODUCTS
-    if (window.KOSNORA_COLLECTION_PRODUCTS && Array.isArray(window.KOSNORA_COLLECTION_PRODUCTS) && window.KOSNORA_COLLECTION_PRODUCTS.length > 0) {
-      const match = window.KOSNORA_COLLECTION_PRODUCTS.find(p =>
-        (p.title && p.title.toLowerCase().includes('kosnora')) ||
-        (p.handle && p.handle.toLowerCase().includes('kosnora'))
-      ) || window.KOSNORA_COLLECTION_PRODUCTS[0];
-      if (match && match.variants && match.variants.length > 0) {
-        activeProduct = match;
-        return activeProduct;
-      }
-    }
-
-    // 5. Query /products.json dynamically on Shopify store
     const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
     try {
       const res = await fetch(root + 'products.json?limit=25');
@@ -500,7 +471,7 @@ function initDrawer() {
 
   function findVariantForOptions(modelName, colorName) {
     if (!activeProduct || !activeProduct.variants || activeProduct.variants.length === 0) {
-      const domId = document.getElementById('drawer-variant-id')?.value;
+      const domId = varInput?.value;
       const storeId = window.KOSNORA_STORE && window.KOSNORA_STORE.variantId;
       const validFallback = (domId && domId !== '1' && domId.trim() !== '') ? domId.trim() : (storeId && String(storeId) !== '1' && String(storeId).trim() !== '') ? String(storeId).trim() : null;
       if (validFallback) {
@@ -511,15 +482,12 @@ function initDrawer() {
 
     const variants = activeProduct.variants;
 
-    // 1. Match both Model and Color in option values (option1, option2, option3)
+    // 1. Match both Model and Color
     let matched = variants.find(v => {
       const opts = [v.option1, v.option2, v.option3].filter(Boolean);
-      const hasColor = opts.some(o => isColorMatch(o, colorName));
-      const hasModel = opts.some(o => isModelMatch(o, modelName));
-      return hasColor && hasModel;
+      return opts.some(o => isColorMatch(o, colorName)) && opts.some(o => isModelMatch(o, modelName));
     });
 
-    // 2. Match both in variant title
     if (!matched) {
       matched = variants.find(v => {
         const title = (v.title || '').toLowerCase();
@@ -527,7 +495,7 @@ function initDrawer() {
       });
     }
 
-    // 3. Match Color alone (Model preserved via Line Item Properties)
+    // 2. Match Color alone
     if (!matched) {
       matched = variants.find(v => {
         const opts = [v.option1, v.option2, v.option3].filter(Boolean);
@@ -535,14 +503,7 @@ function initDrawer() {
       });
     }
 
-    if (!matched) {
-      matched = variants.find(v => {
-        const title = (v.title || '').toLowerCase();
-        return isColorMatch(title, colorName);
-      });
-    }
-
-    // 4. Match Model alone (Color preserved via Line Item Properties)
+    // 3. Match Model alone
     if (!matched) {
       matched = variants.find(v => {
         const opts = [v.option1, v.option2, v.option3].filter(Boolean);
@@ -550,12 +511,12 @@ function initDrawer() {
       });
     }
 
-    // 5. If only 1 variant in product (Standard single variant)
+    // 4. Default variant if single
     if (!matched && variants.length === 1) {
       matched = variants[0];
     }
 
-    // 6. Fallback: First available variant in product
+    // 5. First available variant
     if (!matched) {
       matched = variants.find(v => v.available !== false) || variants[0];
     }
@@ -563,87 +524,146 @@ function initDrawer() {
     return matched;
   }
 
-  function updateSelectedVariant() {
-    const selectedModelVal = (summaryModel && summaryModel.textContent) || (modelSelect && modelSelect.value) || 'iPhone 17 Pro Max';
-    const selectedColorVal = (summaryColor && summaryColor.textContent) || 'Gray';
+  function syncVariantSelection() {
+    const variant = findVariantForOptions(currentModel, currentColor);
 
-    const variant = findVariantForOptions(selectedModelVal, selectedColorVal);
-    const varInput = document.getElementById('drawer-variant-id');
+    if (variant && variant.id) {
+      const validId = String(variant.id);
+      if (varInput) varInput.value = validId;
+      if (window.KOSNORA_STORE) window.KOSNORA_STORE.variantId = validId;
 
-    if (!variant || !variant.id) {
-      if (varInput) varInput.value = '';
-      showDrawerAlert('Selecione o produto KOSNORA no painel/tema da Shopify para ativar as opções.', 'info');
-      return null;
-    }
+      if (variant.available === false) {
+        showDrawerAlert(`A opção "${currentModel} - ${currentColor}" está esgotada no momento.`, 'error');
+        if (proceedBtn) {
+          proceedBtn.disabled = true;
+          proceedBtn.style.opacity = '0.6';
+          proceedBtn.innerHTML = '<span>OPÇÃO ESGOTADA</span>';
+        }
+        return variant;
+      }
 
-    // Set real variant ID
-    const validId = String(variant.id);
-    if (varInput) varInput.value = validId;
-    if (window.KOSNORA_STORE) window.KOSNORA_STORE.variantId = validId;
-
-    // Check availability
-    if (variant.available === false) {
-      showDrawerAlert(`A opção "${selectedModelVal} - ${selectedColorVal}" está esgotada no momento. Por favor, escolha outra cor ou modelo.`, 'error');
+      hideDrawerAlert();
       if (proceedBtn) {
-        proceedBtn.disabled = true;
-        proceedBtn.style.opacity = '0.6';
-        proceedBtn.innerHTML = '<span>OPÇÃO ESGOTADA</span>';
+        proceedBtn.disabled = false;
+        proceedBtn.style.opacity = '1';
       }
       return variant;
     }
 
-    // Available and valid
-    hideDrawerAlert();
-    if (proceedBtn) {
-      proceedBtn.disabled = false;
-      proceedBtn.style.opacity = '1';
-      proceedBtn.innerHTML = `<span>PROCEED TO CHECKOUT (<span id="drawer-cta-total">$${currentTotal.toFixed(2)}</span>)</span>`;
-    }
-
-    return variant;
+    return null;
   }
 
-  // Pre-load active product
-  loadActiveProduct().then(() => {
-    updateSelectedVariant();
-  });
+  // Real Shopify Cart API Sync (Debounced for flawless performance)
+  function syncShopifyCartLive() {
+    clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(async () => {
+      const variantId = varInput?.value;
+      if (!variantId || variantId === '1' || isNaN(Number(variantId))) return;
 
+      const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
+      const pricing = calculatePricing(currentQty);
+
+      try {
+        await fetch(root + 'cart/clear.js', { method: 'POST' }).catch(() => {});
+        await fetch(root + 'cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            items: [{
+              id: Number(variantId),
+              quantity: currentQty,
+              properties: {
+                'iPhone Model': currentModel,
+                'Case Color': currentColor,
+                'Offer Selection': pricing.tag || `${currentQty} Case${currentQty > 1 ? 's' : ''}`,
+                'Price Structure': `${formatMoney(pricing.unitPrice)} cada · ${formatMoney(pricing.total)} total`
+              }
+            }]
+          })
+        });
+      } catch (e) {
+        console.warn('[KOSNORA] Background cart sync:', e);
+      }
+    }, 400);
+  }
+
+  // Stepper Event Listeners
+  if (qtyPlusBtn) {
+    qtyPlusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentQty += 1;
+      updateCartUI();
+      syncShopifyCartLive();
+    });
+  }
+
+  if (qtyMinusBtn) {
+    qtyMinusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (currentQty > 1) {
+        currentQty -= 1;
+        updateCartUI();
+        syncShopifyCartLive();
+      }
+    });
+  }
+
+  // Open Drawer Listeners
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+
+      // Set quantity from tier if specified (e.g. data-qty="2")
       if (btn.hasAttribute('data-qty')) {
         const reqQty = parseInt(btn.getAttribute('data-qty'), 10);
-        if ([1, 2, 3].includes(reqQty)) {
-          setQuantity(reqQty);
-        }
-      } else {
-        setQuantity(currentQty);
+        if (reqQty >= 1) currentQty = reqQty;
       }
 
-      // Sync active color from page gallery
+      // Capture selected color from the landing page
       const activeDesktopThumb = document.querySelector('[data-gallery-desktop].active-thumb');
       const activeMobileThumb = document.querySelector('[data-gallery-mobile].active-thumb');
-      const chosenColor = (activeDesktopThumb && activeDesktopThumb.getAttribute('data-name')) || (activeMobileThumb && activeMobileThumb.getAttribute('data-name'));
+      const chosenColor = (activeDesktopThumb && activeDesktopThumb.getAttribute('data-name')) ||
+                          (activeMobileThumb && activeMobileThumb.getAttribute('data-name'));
       if (chosenColor && chosenColor !== 'Video') {
-        colorSelectBtns.forEach(b => {
-          if (b.getAttribute('data-name') === chosenColor) {
-            colorSelectBtns.forEach(cb => cb.classList.remove('active-color'));
-            b.classList.add('active-color');
-            if (summaryColor) summaryColor.textContent = chosenColor;
-            if (propColorInput) propColorInput.value = chosenColor;
-          }
-        });
+        currentColor = chosenColor;
       }
 
-      // Update variant match immediately
-      updateSelectedVariant();
+      // Match product thumbnail with chosen color
+      const colorSrc = (activeDesktopThumb && activeDesktopThumb.getAttribute('data-src')) ||
+                       (activeMobileThumb && activeMobileThumb.getAttribute('data-src'));
+      if (colorSrc && productImg) {
+        productImg.src = colorSrc;
+      }
+
+      // Capture selected model from the landing page
+      const desktopModelSelect = document.getElementById('hero-desktop-model-select');
+      const mobileModelSelect = document.getElementById('hero-mobile-model-select');
+      const chosenModel = (desktopModelSelect && desktopModelSelect.value) ||
+                          (mobileModelSelect && mobileModelSelect.value);
+      if (chosenModel) {
+        currentModel = chosenModel;
+      }
+
+      // Update read-only pill labels (Preserving customer choices!)
+      if (summaryColor) summaryColor.textContent = currentColor;
+      if (summaryModel) summaryModel.textContent = currentModel;
+      if (propColorInput) propColorInput.value = currentColor;
+      if (propModelInput) propModelInput.value = currentModel;
+
+      updateCartUI();
+      syncVariantSelection();
+      syncShopifyCartLive();
 
       if (drawerBackdrop) drawerBackdrop.classList.add('open');
       document.body.style.overflow = 'hidden';
     });
   });
 
+  // Close Drawer Listeners
   closeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       if (drawerBackdrop) drawerBackdrop.classList.remove('open');
@@ -652,71 +672,68 @@ function initDrawer() {
     });
   });
 
-  bundleCards.forEach(card => {
-    card.addEventListener('click', () => {
-      const qty = parseInt(card.getAttribute('data-bundle-quantity'), 10);
-      setQuantity(qty);
+  // Sync on page model changes
+  const desktopModelSelect = document.getElementById('hero-desktop-model-select');
+  const mobileModelSelect = document.getElementById('hero-mobile-model-select');
+  if (desktopModelSelect) {
+    desktopModelSelect.addEventListener('change', () => {
+      currentModel = desktopModelSelect.value;
+      if (mobileModelSelect) mobileModelSelect.value = currentModel;
+      if (summaryModel) summaryModel.textContent = currentModel;
+      syncVariantSelection();
     });
-  });
-
-  if (modelSelect) {
-    modelSelect.addEventListener('change', () => {
-      if (summaryModel) summaryModel.textContent = modelSelect.value;
-      if (propModelInput) propModelInput.value = modelSelect.value;
-      updateSelectedVariant();
+  }
+  if (mobileModelSelect) {
+    mobileModelSelect.addEventListener('change', () => {
+      currentModel = mobileModelSelect.value;
+      if (desktopModelSelect) desktopModelSelect.value = currentModel;
+      if (summaryModel) summaryModel.textContent = currentModel;
+      syncVariantSelection();
     });
   }
 
-  colorSelectBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      colorSelectBtns.forEach(b => b.classList.remove('active-color'));
-      btn.classList.add('active-color');
-      const name = btn.getAttribute('data-name');
-      if (summaryColor && name) summaryColor.textContent = name;
-      if (propColorInput && name) propColorInput.value = name;
-      updateSelectedVariant();
-    });
+  // Pre-load active product
+  loadActiveProduct().then(() => {
+    syncVariantSelection();
   });
 
-  let isSubmittingCheckout = false;
-
+  // Proceed to Checkout Button Listener
   if (proceedBtn) {
     proceedBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       if (isSubmittingCheckout) return;
 
-      // 1. Ensure product is loaded and variant is matched
       await loadActiveProduct();
-      const variant = updateSelectedVariant();
-      const variantId = document.getElementById('drawer-variant-id')?.value;
+      const variant = syncVariantSelection();
+      const variantId = varInput?.value;
 
       if (!variantId || variantId === '1' || variantId === 'default' || isNaN(Number(variantId))) {
-        showDrawerAlert('Não foi possível identificar a variante do produto. Por favor, verifique se o produto está selecionado no tema da Shopify.', 'error');
+        showDrawerAlert('Não foi possível identificar a variante do produto. Por favor, verifique se o produto está selecionado na loja da Shopify.', 'error');
         return;
       }
 
       if (variant && variant.available === false) {
-        showDrawerAlert('Esta variante está esgotada no momento. Por favor, selecione outra cor ou modelo.', 'error');
+        showDrawerAlert('Esta variante está esgotada no momento. Por favor, selecione outra opção.', 'error');
         return;
       }
 
       isSubmittingCheckout = true;
       proceedBtn.disabled = true;
-      proceedBtn.style.opacity = '0.75';
+      proceedBtn.style.opacity = '0.8';
       proceedBtn.innerHTML = '<span>PROCESSANDO PEDIDO...</span>';
 
-      const selectedModelVal = (summaryModel && summaryModel.textContent) || (modelSelect && modelSelect.value) || 'iPhone 17 Pro Max';
-      const selectedColorVal = (summaryColor && summaryColor.textContent) || 'Gray';
-
-      if (propModelInput) propModelInput.value = selectedModelVal;
-      if (propColorInput) propColorInput.value = selectedColorVal;
-      if (qtyInput) qtyInput.value = currentQty;
-
+      const pricing = calculatePricing(currentQty);
       const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
-      const checkoutUrl = root + 'checkout';
+      let checkoutUrl = root + 'checkout';
+
+      if (currentQty === 2) {
+        checkoutUrl += '?discount=BUNDLE2';
+      } else if (currentQty >= 3) {
+        checkoutUrl += '?discount=BUNDLE3';
+      }
 
       try {
-        // Add selected offer with exact quantity and item properties to Shopify cart
+        await fetch(root + 'cart/clear.js', { method: 'POST' }).catch(() => {});
         const cartAddRes = await fetch(root + 'cart/add.js', {
           method: 'POST',
           headers: {
@@ -728,11 +745,10 @@ function initDrawer() {
               id: Number(variantId),
               quantity: currentQty,
               properties: {
-                'iPhone Model': selectedModelVal,
-                'Case Color': selectedColorVal,
-                'Offer Selection': `${currentQty} Case${currentQty > 1 ? 's' : ''}`,
-                'Promotion Eligibility': checkCustomerFirstPurchase() ? 'First Purchase Promotion Applied' : 'Standard Purchase',
-                'Price Structure': `$${currentUnitPrice.toFixed(2)} each · $${currentTotal.toFixed(2)} total`
+                'iPhone Model': currentModel,
+                'Case Color': currentColor,
+                'Offer Selection': pricing.tag || `${currentQty} Case${currentQty > 1 ? 's' : ''}`,
+                'Price Structure': `${formatMoney(pricing.unitPrice)} cada · ${formatMoney(pricing.total)} total`
               }
             }]
           })
@@ -742,48 +758,26 @@ function initDrawer() {
           proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
           try {
             localStorage.setItem('kosnora_has_purchased', 'true');
-          } catch (e) {}
+          } catch (err) {}
 
           window.location.href = checkoutUrl;
           return;
         } else {
-          const errData = await cartAddRes.json().catch(() => ({}));
-          console.warn('[KOSNORA] cart/add.js returned status:', cartAddRes.status, errData);
-
-          // Fallback A: Checkout permalink with confirmed real variant ID
-          if (variantId && Number(variantId) > 1) {
-            proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
-            window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
-            return;
-          }
-
-          // Show Shopify error cleanly to user without submitting empty form
-          const errDescription = errData.description || errData.message || 'Erro ao adicionar o produto ao carrinho. Verifique a disponibilidade.';
-          showDrawerAlert(errDescription, 'error');
-          isSubmittingCheckout = false;
-          proceedBtn.disabled = false;
-          proceedBtn.style.opacity = '1';
-          proceedBtn.innerHTML = `<span>TENTAR NOVAMENTE ($${currentTotal.toFixed(2)})</span>`;
+          // Fallback permalink
+          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
+          window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
           return;
         }
       } catch (err) {
         console.error('[KOSNORA] Checkout exception:', err);
-        // Fallback permalink if variantId is numeric
-        if (variantId && Number(variantId) > 1) {
-          window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
-          return;
-        }
-        showDrawerAlert('Erro de conexão ao acessar o carrinho. Por favor, tente novamente.', 'error');
-        isSubmittingCheckout = false;
-        proceedBtn.disabled = false;
-        proceedBtn.style.opacity = '1';
-        proceedBtn.innerHTML = `<span>TENTAR NOVAMENTE ($${currentTotal.toFixed(2)})</span>`;
+        // Fallback permalink
+        window.location.href = `${root}cart/${variantId}:${currentQty}?return_to=/checkout`;
       }
     });
   }
 
-  // Initialize with Option 1 (1 Case - $79.90) as default
-  setQuantity(1);
+  // Initial render
+  updateCartUI();
 }
 
 // 4. Policy Modals

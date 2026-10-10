@@ -1,7 +1,28 @@
-import { ProductImage, PricingTier, FaqItem } from '../types';
+import { ProductImage, PricingTier, FaqItem, CartCalculation } from '../types';
 
 export const BRAND_NAME = "KOSNORA";
 export const PRODUCT_NAME = "KOSNORA Premium Phone Case";
+
+export const IPHONE_MODELS = [
+  'iPhone 17 Pro Max',
+  'iPhone 17 Pro',
+  'iPhone 17',
+  'iPhone 16 Pro Max',
+  'iPhone 16 Pro',
+  'iPhone 16 Plus',
+  'iPhone 16',
+  'iPhone 15 Pro Max',
+  'iPhone 15 Pro',
+  'iPhone 15 Plus',
+  'iPhone 15',
+  'iPhone 14 Pro Max',
+  'iPhone 14 Pro',
+  'iPhone 14 Plus',
+  'iPhone 14',
+  'iPhone 12 Pro Max',
+  'iPhone 12 Pro',
+  'iPhone 12',
+];
 
 // The 5 official product images
 export const PRODUCT_IMAGES: ProductImage[] = [
@@ -69,6 +90,83 @@ export const PRICING_TIERS: PricingTier[] = [
 
 export function getPricingTiers(): PricingTier[] {
   return PRICING_TIERS;
+}
+
+/**
+ * Calculates progressive volume pricing according to official KOSNORA rules:
+ * - 1 Unit: R$ 79,90 (unit: R$ 79,90, discount: R$ 0,00)
+ * - 2 Units: R$ 139,90 (unit: R$ 69,95, discount: R$ 19,90 - 2x 79.90 = 159.80)
+ * - 3 Units: R$ 194,90 (unit: R$ 64,97, discount: R$ 44,80 - 3x 79.90 = 239.70)
+ * - 4+ Units: Volume pricing based on best unit rate R$ 64,97
+ */
+export function calculateCartPricing(quantity: number, currency = 'R$'): CartCalculation {
+  const qty = Math.max(1, Math.round(quantity || 1));
+  const basePricePerUnit = 79.90;
+  const subtotal = Number((qty * basePricePerUnit).toFixed(2));
+
+  if (qty === 1) {
+    return {
+      quantity: 1,
+      unitPrice: basePricePerUnit,
+      subtotal,
+      discount: 0,
+      total: basePricePerUnit,
+      discountLabel: null,
+      currency,
+    };
+  }
+
+  if (qty === 2) {
+    const total = 139.90;
+    const unitPrice = 69.95;
+    const discount = Number((subtotal - total).toFixed(2)); // 19.90
+    return {
+      quantity: 2,
+      unitPrice,
+      subtotal,
+      discount,
+      total,
+      discountLabel: 'Oferta 2 Cases (Economize R$ 19,90)',
+      currency,
+    };
+  }
+
+  if (qty === 3) {
+    const total = 194.90;
+    const unitPrice = 64.97;
+    const discount = Number((subtotal - total).toFixed(2)); // 44.80
+    return {
+      quantity: 3,
+      unitPrice,
+      subtotal,
+      discount,
+      total,
+      discountLabel: 'Oferta 3 Cases (Economize R$ 44,80)',
+      currency,
+    };
+  }
+
+  // 4 or more units: Maintain best bundle unit rate (R$ 64,97 / unit)
+  const unitPrice = 64.97;
+  const total = Number((qty * unitPrice).toFixed(2));
+  const discount = Number((subtotal - total).toFixed(2));
+  return {
+    quantity: qty,
+    unitPrice,
+    subtotal,
+    discount,
+    total,
+    discountLabel: `Oferta Volume ${qty} Cases (Melhor Valor)`,
+    currency,
+  };
+}
+
+export function formatCurrency(amount: number, symbol = 'R$'): string {
+  const formatted = amount.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  return `${symbol} ${formatted}`;
 }
 
 export const WHATS_INCLUDED = [

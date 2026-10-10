@@ -20,6 +20,7 @@
 {%- endif -%}
 
 {%- assign real_variant = target_product.selected_or_first_available_variant | default: target_product.variants.first -%}
+{%- assign initial_image = real_variant.featured_image | default: target_product.featured_image | default: 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg' -%}
 
 {%- if target_product != nil -%}
   <script type="application/json" id="kosnora-product-data">
@@ -28,192 +29,182 @@
 {%- endif -%}
 
 <div id="kosnora-order-drawer" class="kosnora-drawer-backdrop" aria-hidden="true">
-  <div class="kosnora-drawer" role="dialog" aria-modal="true" aria-label="Order Configuration" style="background: #FFFFFF; color: #111111;">
+  <div class="kosnora-drawer" role="dialog" aria-modal="true" aria-label="Seu Carrinho KOSNORA" style="background: #FFFFFF; color: #111111; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+    
     <!-- Header -->
-    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; justify-content: space-between; background: #FFFFFF;">
-      <div>
-        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #9333EA;">
-          Order Configuration
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; justify-content: space-between; background: #FFFFFF; position: sticky; top: 0; z-index: 10;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #FAF5FF; color: #9333EA; display: flex; align-items: center; justify-content: center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
         </div>
-        <h3 style="font-size: 1.125rem; font-weight: 800; color: #111111; margin-top: 2px;">
-          KOSNORA Case
-        </h3>
+        <div>
+          <h2 style="font-size: 0.95rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: #111827; margin: 0;">
+            Seu Carrinho
+          </h2>
+          <p id="drawer-item-count-label" style="font-size: 11px; font-weight: 600; color: #6B7280; margin: 1px 0 0 0;">
+            1 item selecionado
+          </p>
+        </div>
       </div>
-      <button type="button" data-close-drawer style="background: none; border: none; color: #555555; cursor: pointer; padding: 6px; border-radius: 8px;">
+      <button type="button" data-close-drawer style="background: none; border: none; color: #6B7280; cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center;" aria-label="Fechar carrinho">
         {% render 'icon-close' %}
       </button>
     </div>
 
-    <!-- Configuration Body -->
-    <div id="drawer-config-area" style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1.5rem; background: #FFFFFF; overflow-y: auto;">
-      <!-- 1. Bundle selection -->
-      <div>
-        <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.75rem;">
-          1. Select Quantity Bundle:
-        </label>
-        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-          <!-- 1 Case -->
-          <div data-bundle-quantity="1" class="kosnora-bundle-card active-bundle" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 2px solid #9333EA; background: #FAF5FF;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #9333EA;">
-                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #FFF;"></span>
-              </div>
-              <div>
-                <div style="font-size: 0.875rem; font-weight: 800; color: #111111;">1 CASE</div>
-                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$79.90 single case</div>
-              </div>
-            </div>
-            <div style="font-size: 1rem; font-weight: 800; color: #111111;">$79.90</div>
+    <!-- Minimalist Cart Body: Clean, Conversion-Optimized (Zero duplicate selectors!) -->
+    <div id="drawer-config-area" style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 1.25rem; background: #FFFFFF; overflow-y: auto;">
+      
+      <!-- Essential Product Card -->
+      <div style="padding: 1rem; border-radius: 1rem; border: 1px solid #E5E7EB; background: #F9FAFB; display: flex; gap: 1rem; align-items: flex-start;">
+        <!-- Product Thumbnail (Dynamic matching variant/color) -->
+        <div style="width: 80px; height: 96px; border-radius: 0.75rem; overflow: hidden; background: #FFFFFF; border: 1px solid #E5E7EB; flex-shrink: 0; padding: 4px; display: flex; align-items: center; justify-content: center;">
+          <img
+            id="drawer-product-img"
+            src="{{ initial_image }}"
+            alt="{{ target_product.title | default: 'KOSNORA Case' }}"
+            style="width: 100%; height: 100%; object-fit: contain;"
+          >
+        </div>
+
+        <!-- Product Details -->
+        <div style="flex: 1; min-width: 0;">
+          <h3 id="drawer-product-title" style="font-size: 0.9rem; font-weight: 900; text-transform: uppercase; color: #111827; margin: 0; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            {{ target_product.title | default: 'KOSNORA Case' }}
+          </h3>
+
+          <!-- Preserved Variant Selection (Read-only badge - NEVER forces re-selecting!) -->
+          <div id="drawer-options-pill" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 5px; padding: 3px 8px; border-radius: 6px; background: #FFFFFF; border: 1px solid #E5E7EB; font-size: 11px; font-weight: 700; color: #374151;">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #9333EA;"></span>
+            <span id="drawer-summary-color">Gray</span>
+            <span style="color: #D1D5DB;">•</span>
+            <span id="drawer-summary-model">iPhone 16 Pro Max</span>
           </div>
 
-          <!-- 2 Cases -->
-          <div data-bundle-quantity="2" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #E5E5E5; background: #FFF;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #D1D5DB;">
-                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
-              </div>
-              <div>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span style="font-size: 0.875rem; font-weight: 800; color: #111111;">2 CASES</span>
-                  <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #9333EA; color: #FFFFFF;">POPULAR</span>
-                </div>
-                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$69.95 each · $139.90 total</div>
-              </div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 1rem; font-weight: 800; color: #111111;">$139.90</div>
-              <div style="font-size: 11px; color: #059669; font-weight: 700;">Save $19.90</div>
-            </div>
+          <!-- Unit price row -->
+          <div id="drawer-unit-price-display" style="margin-top: 6px; font-size: 12px; font-weight: 700; color: #4B5563;">
+            <span id="drawer-unit-price-val">R$ 79,90</span>
+            <span id="drawer-unit-price-suffix" style="display: none; font-size: 10px; color: #9CA3AF; font-weight: 600;">/ cada</span>
           </div>
 
-          <!-- 3 Cases -->
-          <div data-bundle-quantity="3" class="kosnora-bundle-card" style="padding: 1rem; border-radius: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #E5E5E5; background: #FFF;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div class="bundle-radio-circle" style="width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #D1D5DB;">
-                <span class="bundle-radio-dot" style="width: 8px; height: 8px; border-radius: 50%;"></span>
-              </div>
-              <div>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span style="font-size: 0.875rem; font-weight: 800; color: #111111;">3 CASES</span>
-                  <span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #059669; color: #FFFFFF;">BEST VALUE</span>
-                </div>
-                <div style="font-size: 0.75rem; color: #777777; font-weight: 500;">$64.97 each · $194.90 total</div>
-              </div>
+          <!-- Quantity Stepper [ - ] qty [ + ] -->
+          <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+            <div style="display: inline-flex; align-items: center; border-radius: 10px; background: #FFFFFF; border: 1px solid #D1D5DB; padding: 2px;">
+              <button
+                type="button"
+                id="drawer-qty-minus"
+                style="width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent; color: #374151; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease;"
+                aria-label="Diminuir quantidade"
+              >
+                −
+              </button>
+              
+              <span id="drawer-qty-display" style="width: 36px; text-align: center; font-size: 13px; font-weight: 900; color: #111827;">
+                1
+              </span>
+
+              <button
+                type="button"
+                id="drawer-qty-plus"
+                style="width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent; color: #374151; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease;"
+                aria-label="Aumentar quantidade"
+              >
+                +
+              </button>
             </div>
-            <div style="text-align: right;">
-              <div style="font-size: 1rem; font-weight: 800; color: #111111;">$194.90</div>
-              <div style="font-size: 11px; color: #059669; font-weight: 700;">Save $44.80</div>
-            </div>
+
+            <!-- Volume Tag badge -->
+            <span id="drawer-bundle-tag" style="display: none; font-size: 10px; font-weight: 900; text-transform: uppercase; color: #9333EA; background: #FAF5FF; padding: 3px 8px; border-radius: 9999px; border: 1px solid #E9D5FF;">
+              2x Pack
+            </span>
           </div>
         </div>
       </div>
 
-      <!-- 2. Model selection -->
-      <div>
-        <label for="drawer-model-select" style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.5rem;">
-          2. Compatible iPhone Model:
-        </label>
-        <select id="drawer-model-select" style="width: 100%; padding: 0.85rem 1rem; border-radius: 0.75rem; background: #FFFFFF; border: 1px solid #E5E5E5; color: #111111; font-size: 0.875rem; font-weight: 600;">
-          <option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
-          <option value="iPhone 17 Pro">iPhone 17 Pro</option>
-          <option value="iPhone 17">iPhone 17</option>
-          <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
-          <option value="iPhone 16 Pro">iPhone 16 Pro</option>
-          <option value="iPhone 16 Plus">iPhone 16 Plus</option>
-          <option value="iPhone 16">iPhone 16</option>
-          <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
-          <option value="iPhone 15 Pro">iPhone 15 Pro</option>
-          <option value="iPhone 15 Plus">iPhone 15 Plus</option>
-          <option value="iPhone 15">iPhone 15</option>
-          <option value="iPhone 14 Pro Max">iPhone 14 Pro Max</option>
-          <option value="iPhone 14 Pro">iPhone 14 Pro</option>
-          <option value="iPhone 14 Plus">iPhone 14 Plus</option>
-          <option value="iPhone 14">iPhone 14</option>
-          <option value="iPhone 12 Pro Max">iPhone 12 Pro Max</option>
-          <option value="iPhone 12 Pro">iPhone 12 Pro</option>
-          <option value="iPhone 12">iPhone 12</option>
-        </select>
-      </div>
+      <!-- Financial Breakdown / Automatic Pricing Recalculation -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.65rem;">
+        <div style="font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; margin-bottom: 2px;">
+          Resumo do Pedido
+        </div>
 
-      <!-- 3. Color selection (Gray, Black, Pink, White, Orange) -->
-      <div>
-        <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555555; margin-bottom: 0.5rem;">
-          3. Case Color:
-        </label>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
-          <button type="button" data-drawer-color data-name="Gray" class="active-color" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 2px solid #9333EA; background: #FAF5FF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
-            <span style="width: 12px; height: 12px; border-radius: 50%; background: #6B7280; border: 1px solid #D1D5DB;"></span>
-            <span>Gray</span>
-          </button>
-          <button type="button" data-drawer-color data-name="Black" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
-            <span style="width: 12px; height: 12px; border-radius: 50%; background: #111827; border: 1px solid #374151;"></span>
-            <span>Black</span>
-          </button>
-          <button type="button" data-drawer-color data-name="Pink" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
-            <span style="width: 12px; height: 12px; border-radius: 50%; background: #F472B6; border: 1px solid #FBCFE8;"></span>
-            <span>Pink</span>
-          </button>
-          <button type="button" data-drawer-color data-name="White" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
-            <span style="width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF; border: 1px solid #D1D5DB;"></span>
-            <span>White</span>
-          </button>
-          <button type="button" data-drawer-color data-name="Orange" style="padding: 0.65rem 0.5rem; border-radius: 0.75rem; border: 1px solid #E5E5E5; background: #FFFFFF; color: #111111; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
-            <span style="width: 12px; height: 12px; border-radius: 50%; background: #F97316; border: 1px solid #FED7AA;"></span>
-            <span>Orange</span>
-          </button>
+        <!-- Subtotal -->
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: #4B5563;">
+          <span id="drawer-subtotal-label">Subtotal (1 unidade):</span>
+          <span id="drawer-subtotal-val" style="color: #111827; font-weight: 700;">R$ 79,90</span>
+        </div>
+
+        <!-- Promotional Discount Line (Dynamic and Instant) -->
+        <div id="drawer-discount-row" style="display: none; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 900; color: #059669; background: #ECFDF5; padding: 6px 10px; border-radius: 8px; border: 1px solid #A7F3D0;">
+          <span style="display: flex; align-items: center; gap: 5px;">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981;"></span>
+            <span id="drawer-discount-title">Desconto Promocional:</span>
+          </span>
+          <span id="drawer-discount-val">-R$ 19,90</span>
+        </div>
+
+        <!-- Shipping Row -->
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: #4B5563;">
+          <span>Envio:</span>
+          <span style="color: #059669; font-weight: 800;">Grátis</span>
+        </div>
+
+        <!-- Total Row -->
+        <div style="border-top: 1px solid #E5E7EB; padding-top: 10px; margin-top: 4px; display: flex; justify-content: space-between; align-items: baseline;">
+          <div>
+            <span style="font-size: 14px; font-weight: 900; color: #111827; text-transform: uppercase;">Total:</span>
+            <span id="drawer-savings-note" style="display: none; font-size: 10px; font-weight: 700; color: #059669; margin-top: 1px;">
+              Você economiza R$ 19,90
+            </span>
+          </div>
+          <div style="text-align: right;">
+            <span id="drawer-total-price" style="font-size: 1.25rem; font-weight: 900; color: #111827;">
+              R$ 79,90
+            </span>
+          </div>
         </div>
       </div>
 
-      <!-- Order Summary Card -->
-      <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 1rem; padding: 1.25rem;">
-        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #555555; margin-bottom: 0.75rem;">
-          Order Summary
+      <!-- Trust Badges -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px; font-weight: 700; color: #4B5563; text-align: center;">
+        <div style="padding: 8px; border-radius: 10px; background: #F9FAFB; border: 1px solid #E5E7EB; display: flex; align-items: center; justify-content: center; gap: 5px;">
+          <span>🚚</span>
+          <span>Envio Rastreado</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
-          <span>Item:</span>
-          <span id="drawer-summary-qty" style="color: #111111; font-weight: 600;">1x KOSNORA Case</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
-          <span>Model:</span>
-          <span id="drawer-summary-model" style="color: #111111; font-weight: 600;">iPhone 17 Pro Max</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555555; margin-bottom: 6px;">
-          <span>Color:</span>
-          <span id="drawer-summary-color" style="color: #111111; font-weight: 600;">Gray</span>
-        </div>
-        <div style="display: none; justify-content: space-between; font-size: 13px; color: #059669; margin-bottom: 6px;">
-          <span>Bundle Savings:</span>
-          <span id="drawer-summary-savings" style="font-weight: 700;">-$0.00</span>
-        </div>
-        <div style="border-top: 1px solid #E5E5E5; padding-top: 8px; margin-top: 8px; display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #111111;">
-          <span>Total:</span>
-          <span id="drawer-summary-total">$79.90</span>
+        <div style="padding: 8px; border-radius: 10px; background: #F9FAFB; border: 1px solid #E5E7EB; display: flex; align-items: center; justify-content: center; gap: 5px;">
+          <span>🛡️</span>
+          <span>Garantia de 30 Dias</span>
         </div>
       </div>
+
     </div>
 
-    <!-- Real Shopify Cart Add Form with Dynamic Quantity and Return to Checkout -->
+    <!-- Hidden Shopify Cart Add Form preserving the real variant and dynamic quantity -->
     <form action="{{ routes.cart_add_url | default: '/cart/add' }}" method="post" id="kosnora-drawer-cart-form" enctype="multipart/form-data" style="display: none;">
       <input type="hidden" name="id" id="drawer-variant-id" value="{{ real_variant.id }}">
       <input type="hidden" name="quantity" id="drawer-quantity-input" value="1">
       <input type="hidden" name="return_to" value="/checkout">
-      <input type="hidden" name="properties[iPhone Model]" id="drawer-prop-model" value="iPhone 17 Pro Max">
+      <input type="hidden" name="properties[iPhone Model]" id="drawer-prop-model" value="iPhone 16 Pro Max">
       <input type="hidden" name="properties[Case Color]" id="drawer-prop-color" value="Gray">
       <input type="hidden" name="properties[Offer Selection]" id="drawer-prop-offer" value="1 Case">
     </form>
 
-    <!-- Drawer Footer -->
-    <div style="padding: 1.25rem 1.5rem; border-top: 1px solid #E5E5E5; background: #FFFFFF;">
+    <!-- Drawer Footer: Official Shopify Checkout CTA -->
+    <div style="padding: 1.25rem 1.5rem; border-top: 1px solid #E5E7EB; background: #FFFFFF; position: sticky; bottom: 0;">
       <!-- Variant Alert / Availability Message -->
       <div id="drawer-variant-alert" style="display: none; padding: 0.65rem 0.85rem; border-radius: 0.75rem; font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 0.75rem; line-height: 1.4;"></div>
 
-      <button type="button" id="drawer-proceed-checkout" class="kosnora-btn-primary" style="width: 100%; justify-content: center; cursor: pointer;">
-        <span>PROCEED TO CHECKOUT (<span id="drawer-cta-total">$79.90</span>)</span>
+      <button type="button" id="drawer-proceed-checkout" class="kosnora-btn-primary" style="width: 100%; justify-content: center; cursor: pointer; padding: 1rem 1.5rem; font-size: 0.875rem; font-weight: 900; letter-spacing: 0.05em; border-radius: 12px; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFF; border: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(147, 51, 234, 0.35);">
+        <span>CONTINUAR PARA O CHECKOUT (<span id="drawer-cta-total">R$ 79,90</span>)</span>
         {% render 'icon-arrow-right' %}
       </button>
-      <div style="font-size: 11px; color: #777777; text-align: center; margin-top: 8px;">
-        Tax calculated at checkout · Free domestic shipping
+
+      <div style="font-size: 10px; color: #9CA3AF; text-align: center; margin-top: 8px; font-weight: 500;">
+        Ambiente seguro Shopify · Seus dados e variantes estão preservados
       </div>
     </div>
+
   </div>
 </div>

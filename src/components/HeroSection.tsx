@@ -1,21 +1,35 @@
 import React, { useState } from 'react';
 import { ArrowRight, Star, ShieldCheck, Check, ShoppingBag, Truck } from 'lucide-react';
 import { PricingTier } from '../types';
-import { getPricingTiers, PRODUCT_IMAGES } from '../data/productData';
+import { getPricingTiers, PRODUCT_IMAGES, IPHONE_MODELS } from '../data/productData';
 
 interface HeroSectionProps {
   onCtaClick: (imageId?: string) => void;
   onSelectTierAndBuy?: (tier: PricingTier, imageId?: string) => void;
+  selectedModel?: string;
+  onModelChange?: (model: string) => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onCtaClick,
   onSelectTierAndBuy,
+  selectedModel = 'iPhone 16 Pro Max',
+  onModelChange,
 }) => {
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(true);
+  const [internalModel, setInternalModel] = useState(selectedModel);
   const tiers = getPricingTiers();
   const [selectedTierId, setSelectedTierId] = useState<string>('single');
+
+  const currentModel = onModelChange ? selectedModel : internalModel;
+
+  const handleModelChange = (model: string) => {
+    setInternalModel(model);
+    if (onModelChange) {
+      onModelChange(model);
+    }
+  };
 
   const handleTierClick = (tier: PricingTier) => {
     setSelectedTierId(tier.id);
@@ -164,6 +178,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </button>
               );
             })}
+          </div>
+
+          {/* Model selection on page */}
+          <div className="w-full max-w-xs mt-3 flex items-center justify-center gap-2">
+            <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+              Modelo:
+            </span>
+            <select
+              value={currentModel}
+              onChange={(e) => handleModelChange(e.target.value)}
+              className="py-1 px-2.5 text-xs font-bold text-neutral-800 bg-white border border-neutral-300 rounded-lg shadow-2xs focus:outline-none focus:border-[#9333EA] cursor-pointer"
+            >
+              {IPHONE_MODELS.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Direct CTA Button (Placed Below the First Photo) */}
@@ -432,6 +464,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <p className="text-sm font-semibold text-neutral-600 mb-4 leading-relaxed">
                 Refined minimalist design, reinforced impact protection, and a smooth tactile finish. Pick your favorite color and enjoy our progressive bundle discounts.
               </p>
+
+              {/* iPhone Model Selection on the page */}
+              <div className="w-full mb-3 flex items-center justify-between gap-3 p-2.5 rounded-xl bg-neutral-50 border border-neutral-200">
+                <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wider whitespace-nowrap">
+                  Modelo do iPhone:
+                </span>
+                <select
+                  value={currentModel}
+                  onChange={(e) => handleModelChange(e.target.value)}
+                  className="w-full max-w-[220px] py-1 px-2.5 text-xs font-bold text-neutral-900 bg-white border border-neutral-300 rounded-lg shadow-2xs focus:outline-none focus:border-[#9333EA] cursor-pointer"
+                >
+                  {IPHONE_MODELS.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               {/* Compact Color Selection (Smaller than prices to keep customer focus on purchase, located above pricing options) */}
               <div className="w-full mb-4">

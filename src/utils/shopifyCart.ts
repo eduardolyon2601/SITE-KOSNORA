@@ -215,26 +215,23 @@ export async function resolveShopifyVariantId(model?: string, color?: string): P
 }
 
 /**
- * Executes direct checkout by populating the Shopify cart and redirecting to /checkout.
+ * Synchronizes the item quantity and metadata directly with the Shopify Ajax Cart API.
  */
-export async function redirectToShopifyCheckout(payload: CheckoutPayload): Promise<void> {
-  if (typeof window === 'undefined') return;
+export async function syncShopifyCartItem(payload: CheckoutPayload): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
 
   const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
-  const checkoutUrl = `${root}checkout`;
-
   const variantId = payload.variantId || (await resolveShopifyVariantId(payload.model, payload.color));
 
   if (!variantId || variantId === '1' || isNaN(Number(variantId))) {
-    console.warn('[KOSNORA] No valid variant ID found. Redirecting to storefront.');
-    window.location.href = checkoutUrl;
-    return;
+    return false;
   }
 
-  // 1. Add selected offer with exact quantity and item properties
-  let addSuccess = false;
   try {
-    const addRes = await fetch(`${root}cart/add.js`, {
+    // Clear and re-add with exact single line item to guarantee 100% price and bundle integrity
+    await fetch(`${root}cart/clear.js`, { method: 'POST' }).catch(() => {});
+
+    const res = await fetch(`${root}cart/add.js`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -249,31 +246,54 @@ export async function redirectToShopifyCheckout(payload: CheckoutPayload): Promi
               'iPhone Model': payload.model,
               'Case Color': payload.color,
               'Offer Selection': `${payload.quantity} Case${payload.quantity > 1 ? 's' : ''}`,
-              'Promotion Eligibility': payload.isFirstPurchase ? 'First Purchase Promotion Applied' : 'Standard Purchase',
-              'Price Structure': `$${payload.unitPrice.toFixed(2)} each · $${payload.totalPrice.toFixed(2)} total`,
+              'Price Structure': `R$ ${payload.unitPrice.toFixed(2)} cada · R$ ${payload.totalPrice.toFixed(2)} total`,
             },
           },
         ],
       }),
     });
 
-    if (addRes.ok) {
-      addSuccess = true;
-    } else {
-      const err = await addRes.json().catch(() => ({}));
-      console.warn('[KOSNORA] cart/add.js returned status:', addRes.status, err);
-    }
+    return res.ok;
   } catch (err) {
-    console.warn('[KOSNORA] cart/add.js fetch exception:', err);
+    console.warn('[KOSNORA] syncShopifyCartItem error:', err);
+    return false;
+  }
+}
+
+/**
+ * Executes direct checkout by populating the Shopify cart and redirecting to /checkout.
+ */
+export async function redirectToShopifyCheckout(payload: CheckoutPayload): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
+  let checkoutUrl = `${root}checkout`;
+
+  // Attach bundle promo code if configured
+  if (payload.quantity === 2) {
+    checkoutUrl += '?discount=BUNDLE2';
+  } else if (payload.quantity >= 3) {
+    checkoutUrl += '?discount=BUNDLE3';
   }
 
-  // 2. If successfully added, navigate immediately to real Shopify checkout
-  if (addSuccess) {
+  const variantId = payload.variantId || (await resolveShopifyVariantId(payload.model, payload.color));
+
+  if (!variantId || variantId === '1' || isNaN(Number(variantId))) {
+    console.warn('[KOSNORA] No valid variant ID found. Redirecting to storefront.');
     window.location.href = checkoutUrl;
     return;
   }
 
-  // 3. Fallback: Shopify Checkout Permalink /cart/{variant}:{quantity}
+  // 1. Sync with Shopify cart
+  const synced = await syncShopifyCartItem({ ...payload, variantId });
+
+  // 2. If successfully synced, navigate to real Shopify checkout
+  if (synced) {
+    window.location.href = checkoutUrl;
+    return;
+  }
+
+  // 3. Fallback: Shopify Direct Checkout Permalink /cart/{variant}:{quantity}
   if (variantId && Number(variantId) > 1) {
     window.location.href = `${root}cart/${variantId}:${payload.quantity}?return_to=/checkout`;
     return;

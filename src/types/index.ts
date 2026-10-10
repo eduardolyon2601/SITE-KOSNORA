@@ -29,3 +29,13 @@ export type ReviewItem = {
   verified: boolean;
   rating: number;
 };
+
+export type CartCalculation = {
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+  discount: number;
+  total: number;
+  discountLabel: string | null;
+  currency: string;
+};
