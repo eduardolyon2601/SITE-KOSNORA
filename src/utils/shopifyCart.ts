@@ -6,6 +6,7 @@
  */
 
 import { isVariantInStoreCatalog } from '../data/storeInventory';
+import { CartItemUnit } from '../types';
 
 declare global {
   interface Window {
@@ -41,6 +42,14 @@ export interface CheckoutPayload {
   totalPrice: number;
   isFirstPurchase?: boolean;
   variantId?: string | number;
+}
+
+export interface MultiUnitCheckoutPayload {
+  units: CartItemUnit[];
+  totalQuantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  isFirstPurchase?: boolean;
 }
 
 function isColorMatch(optionVal: string, targetColor: string): boolean {
@@ -350,6 +359,116 @@ export async function redirectToShopifyCheckout(payload: CheckoutPayload): Promi
   // 3. Fallback: Shopify Direct Checkout Permalink /cart/{variant}:{quantity}
   if (variantId && Number(variantId) > 1) {
     window.location.href = `${root}cart/${variantId}:${payload.quantity}?return_to=/checkout`;
+    return;
+  }
+
+  window.location.href = checkoutUrl;
+}
+
+/**
+ * Synchronizes multiple distinct phone case units with the Shopify Ajax Cart API.
+ * Each unit preserves its individual model and color variant, maintaining volume bundle discounts.
+ */
+export async function syncShopifyMultiUnitCart(payload: MultiUnitCheckoutPayload): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
+
+  const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
+
+  // 1. Resolve variant ID for every single unit
+  const resolvedItems: Array<{ id: number; quantity: number; properties: Record<string, string> }> = [];
+
+  for (let i = 0; i < payload.units.length; i++) {
+    const unit = payload.units[i];
+    let vId = unit.variantId;
+    if (!vId) {
+      const res = await resolveShopifyVariant(unit.model, unit.color);
+      if (!res || res.available === false || !res.id) {
+        console.warn(`[KOSNORA] Unit #${i + 1} (${unit.model} - ${unit.color}) is not available or has no variant ID`);
+        return false;
+      }
+      vId = res.id;
+    }
+
+    if (!vId || vId === '1' || isNaN(Number(vId))) {
+      return false;
+    }
+
+    resolvedItems.push({
+      id: Number(vId),
+      quantity: 1,
+      properties: {
+        'Capa': `#${i + 1} de ${payload.totalQuantity}`,
+        'iPhone Model': unit.model,
+        'Case Color': unit.color,
+        'Pacote': `${payload.totalQuantity} Capas`,
+        'Preço Unitário': `R$ ${payload.unitPrice.toFixed(2)}`,
+        'Total do Pedido': `R$ ${payload.totalPrice.toFixed(2)}`,
+      },
+    });
+  }
+
+  if (resolvedItems.length === 0) return false;
+
+  try {
+    // 2. Clear cart and add all customized units
+    await fetch(`${root}cart/clear.js`, { method: 'POST' }).catch(() => {});
+
+    const res = await fetch(`${root}cart/add.js`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ items: resolvedItems }),
+    });
+
+    return res.ok;
+  } catch (err) {
+    console.warn('[KOSNORA] syncShopifyMultiUnitCart error:', err);
+    return false;
+  }
+}
+
+/**
+ * Redirects to official Shopify Checkout with all distinct unit variants and bundle coupon.
+ */
+export async function redirectMultiUnitCheckout(payload: MultiUnitCheckoutPayload): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
+  let checkoutUrl = `${root}checkout`;
+
+  // Attach bundle promo code if configured
+  if (payload.totalQuantity === 2) {
+    checkoutUrl += '?discount=BUNDLE2';
+  } else if (payload.totalQuantity >= 3) {
+    checkoutUrl += '?discount=BUNDLE3';
+  }
+
+  // 1. Sync with Shopify Ajax Cart API
+  const synced = await syncShopifyMultiUnitCart(payload);
+  if (synced) {
+    window.location.href = checkoutUrl;
+    return;
+  }
+
+  // 2. Fallback: Shopify direct multi-variant cart permalink: /cart/{id1}:1,{id2}:1?discount=...
+  const permalinkPairs: string[] = [];
+  for (const unit of payload.units) {
+    const vId = unit.variantId || (await resolveShopifyVariantId(unit.model, unit.color));
+    if (vId && Number(vId) > 1) {
+      permalinkPairs.push(`${vId}:1`);
+    }
+  }
+
+  if (permalinkPairs.length > 0) {
+    let permalink = `${root}cart/${permalinkPairs.join(',')}`;
+    if (payload.totalQuantity === 2) {
+      permalink += '?discount=BUNDLE2';
+    } else if (payload.totalQuantity >= 3) {
+      permalink += '?discount=BUNDLE3';
+    }
+    window.location.href = permalink;
     return;
   }
 

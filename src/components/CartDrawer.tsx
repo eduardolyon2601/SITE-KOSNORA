@@ -1,106 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { X, Minus, Plus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock, AlertCircle } from 'lucide-react';
-import { calculateCartPricing, formatCurrency, PRODUCT_IMAGES, PRODUCT_NAME } from '../data/productData';
-import { redirectToShopifyCheckout, resolveShopifyVariant } from '../utils/shopifyCart';
+import React, { useState } from 'react';
+import { X, Trash2, Plus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock, AlertCircle, Sparkles } from 'lucide-react';
+import { calculateCartPricing, formatCurrency, PRODUCT_IMAGES, PRODUCT_NAME, IPHONE_MODELS } from '../data/productData';
+import { isVariantInStoreCatalog } from '../data/storeInventory';
+import { redirectMultiUnitCheckout } from '../utils/shopifyCart';
+import { CartItemUnit } from '../types';
 
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  quantity: number;
-  onQuantityChange: (qty: number) => void;
-  selectedColor: string;
-  selectedModel: string;
+  units: CartItemUnit[];
+  onUpdateUnit: (index: number, partial: Partial<CartItemUnit>) => void;
+  onAddUnit: () => void;
+  onRemoveUnit: (index: number) => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
   isOpen,
   onClose,
-  quantity,
-  onQuantityChange,
-  selectedColor,
-  selectedModel,
+  units,
+  onUpdateUnit,
+  onAddUnit,
+  onRemoveUnit,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [variantError, setVariantError] = useState<string | null>(null);
-  const [isCheckingVariant, setIsCheckingVariant] = useState(false);
-  const [resolvedVariant, setResolvedVariant] = useState<{ id: string; available?: boolean } | null>(null);
-
-  // Validate and resolve variant whenever drawer opens or options change
-  useEffect(() => {
-    if (!isOpen) {
-      setVariantError(null);
-      return;
-    }
-
-    let isMounted = true;
-    setIsCheckingVariant(true);
-    setVariantError(null);
-
-    resolveShopifyVariant(selectedModel, selectedColor)
-      .then((res) => {
-        if (!isMounted) return;
-        setResolvedVariant(res);
-        if (res && res.available === false) {
-          setVariantError(`A opção "${selectedModel} - ${selectedColor}" está esgotada no momento.`);
-        } else {
-          setVariantError(null);
-        }
-      })
-      .catch((err) => {
-        console.warn('[KOSNORA] Variant check error:', err);
-      })
-      .finally(() => {
-        if (isMounted) setIsCheckingVariant(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [isOpen, selectedModel, selectedColor]);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  // Active product image based on selected color
-  const matchedImage = PRODUCT_IMAGES.find(
-    (img) => img.name.toLowerCase() === selectedColor.toLowerCase() || img.id.toLowerCase() === selectedColor.toLowerCase()
-  ) || PRODUCT_IMAGES[0];
+  const totalQuantity = Math.max(1, units.length);
+  const pricing = calculateCartPricing(totalQuantity, 'R$');
 
-  const pricing = calculateCartPricing(quantity, 'R$');
+  // Check which units are out of stock
+  const outOfStockUnits = units
+    .map((u, idx) => ({ unit: u, index: idx, available: isVariantInStoreCatalog(u.model, u.color) }))
+    .filter((item) => !item.available);
 
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      onQuantityChange(quantity - 1);
-    }
-  };
-
-  const handleIncrease = () => {
-    onQuantityChange(quantity + 1);
-  };
+  const hasOutOfStockUnit = outOfStockUnits.length > 0;
 
   const handleProceedToCheckout = async () => {
     if (isSubmitting) return;
 
-    // Check if variant is available
-    if (resolvedVariant && resolvedVariant.available === false) {
-      setVariantError(`A opção "${selectedModel} - ${selectedColor}" está esgotada no momento. Escolha outra opção para continuar.`);
+    if (hasOutOfStockUnit) {
+      const firstBad = outOfStockUnits[0];
+      setCheckoutError(
+        `A Capa #${firstBad.index + 1} (${firstBad.unit.model} · ${firstBad.unit.color}) está esgotada no momento. Altere para outra opção para prosseguir.`
+      );
       return;
     }
 
     setIsSubmitting(true);
-    setVariantError(null);
+    setCheckoutError(null);
 
     try {
-      await redirectToShopifyCheckout({
-        quantity: pricing.quantity,
-        model: selectedModel,
-        color: selectedColor,
+      await redirectMultiUnitCheckout({
+        units,
+        totalQuantity,
         unitPrice: pricing.unitPrice,
         totalPrice: pricing.total,
-        variantId: resolvedVariant?.id,
       });
     } catch (err) {
-      console.error('[KOSNORA] Checkout error:', err);
-      setVariantError('Ocorreu um erro ao processar o checkout. Por favor, tente novamente.');
+      console.error('[KOSNORA] Multi-unit checkout error:', err);
+      setCheckoutError('Ocorreu um erro ao processar o checkout da Shopify. Por favor, tente novamente.');
       setIsSubmitting(false);
     }
   };
@@ -113,21 +73,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         onClick={onClose}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-250">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
+        <div className="w-screen max-w-lg bg-white shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-250">
           
           {/* Header */}
-          <div className="px-6 py-4.5 border-b border-neutral-200 flex items-center justify-between bg-white sticky top-0 z-10">
+          <div className="px-5 py-4 border-b border-neutral-200 flex items-center justify-between bg-white sticky top-0 z-20">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-[#FAF5FF] text-[#9333EA] flex items-center justify-center">
                 <ShoppingBag className="w-4.5 h-4.5" />
               </div>
               <div>
                 <h2 id="cart-title" className="text-sm font-black uppercase tracking-wider text-neutral-900">
-                  Seu Carrinho
+                  Seu Carrinho KOSNORA
                 </h2>
                 <p className="text-[11px] font-semibold text-neutral-500">
-                  {quantity} {quantity === 1 ? 'item selecionado' : 'itens selecionados'}
+                  {totalQuantity} {totalQuantity === 1 ? 'capa selecionada' : 'capas personalizadas'}
                 </p>
               </div>
             </div>
@@ -142,105 +102,213 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             </button>
           </div>
 
-          {/* Cart Content: Minimalist & Focused on Conversion */}
-          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+          {/* Cart Content: Multi-Unit Customized Items */}
+          <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
             
-            {/* Essential Product Card (Zero duplicate selectors!) */}
-            <div className="p-4 rounded-2xl border border-neutral-200 bg-neutral-50/50 flex gap-4 items-start">
-              {/* Product Thumbnail */}
-              <div className="w-20 h-24 rounded-xl overflow-hidden bg-white border border-neutral-200 shrink-0 p-1.5 flex items-center justify-center shadow-xs">
-                <img
-                  src={matchedImage.url}
-                  alt={matchedImage.name}
-                  className="w-full h-full object-contain"
-                />
+            {/* Promotional Bundle Progress Banner */}
+            {totalQuantity === 1 && (
+              <div className="p-3 rounded-xl bg-[#FAF5FF] border border-[#E9D5FF] flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-[#9333EA] font-bold">
+                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <span>Leve 2 capas por R$ 139,90 e economize R$ 19,90!</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={onAddUnit}
+                  className="px-2.5 py-1 rounded-md bg-[#9333EA] text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
+                >
+                  + Adicionar
+                </button>
               </div>
+            )}
 
-              {/* Product Info */}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-black text-neutral-950 uppercase tracking-tight truncate">
-                  {PRODUCT_NAME}
-                </h3>
-
-                {/* Selected Options Badge (Preserves page selection - NO duplicate selector!) */}
-                <div className="inline-flex items-center gap-1.5 mt-1 px-2.5 py-1 rounded-md bg-white border border-neutral-200 text-[11px] font-bold text-neutral-700 shadow-2xs">
-                  <span className="w-2 h-2 rounded-full bg-[#9333EA]" />
-                  <span className="truncate">{selectedColor}</span>
-                  <span className="text-neutral-300">•</span>
-                  <span className="truncate">{selectedModel}</span>
+            {totalQuantity === 2 && (
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-emerald-800 font-bold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Desconto BUNDLE2 Ativado! Economia de R$ 19,90</span>
                 </div>
+                <button
+                  type="button"
+                  onClick={onAddUnit}
+                  className="px-2 py-1 rounded-md bg-emerald-700 text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
+                >
+                  + Levar 3 (Melhor Valor)
+                </button>
+              </div>
+            )}
 
-                {/* Unit Price when applicable */}
-                <div className="mt-2 text-xs font-bold text-neutral-600">
-                  {quantity > 1 ? (
-                    <span>
-                      {formatCurrency(pricing.unitPrice)} <span className="text-[10px] text-neutral-400 font-semibold">/ cada</span>
-                    </span>
-                  ) : (
-                    <span>{formatCurrency(pricing.unitPrice)}</span>
-                  )}
-                </div>
+            {totalQuantity >= 3 && (
+              <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-50 to-[#FAF5FF] border border-emerald-200 flex items-center gap-2 text-xs text-emerald-900 font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <span>Super Pacote Ativado! Maior desconto por unidade aplicado (R$ 64,97 cada)</span>
+              </div>
+            )}
 
-                {/* Quantity Stepper [ - ] qty [ + ] */}
-                <div className="mt-3 flex items-center gap-3">
-                  <div className="inline-flex items-center rounded-xl bg-white border border-neutral-300 p-0.5 shadow-2xs">
-                    <button
-                      type="button"
-                      onClick={handleDecrease}
-                      disabled={quantity <= 1}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-600 hover:bg-neutral-100 hover:text-neutral-950 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer transition-colors"
-                      aria-label="Diminuir quantidade"
-                    >
-                      <Minus className="w-3.5 h-3.5 stroke-[2.5]" />
-                    </button>
+            {/* List of Customized Phone Case Units */}
+            <div className="space-y-3.5">
+              {units.map((unit, idx) => {
+                const isUnitAvailable = isVariantInStoreCatalog(unit.model, unit.color);
+                const matchedImage = PRODUCT_IMAGES.find(
+                  (img) => img.name.toLowerCase() === unit.color.toLowerCase() || img.id.toLowerCase() === unit.color.toLowerCase()
+                ) || PRODUCT_IMAGES[0];
 
-                    <span className="w-10 text-center text-xs font-black text-neutral-950">
-                      {quantity}
-                    </span>
+                return (
+                  <div
+                    key={unit.id || `unit-${idx}`}
+                    className={`p-3.5 rounded-2xl border transition-all bg-white relative ${
+                      !isUnitAvailable
+                        ? 'border-amber-300 ring-2 ring-amber-200/50 shadow-xs'
+                        : 'border-neutral-200 shadow-2xs hover:border-neutral-300'
+                    }`}
+                  >
+                    {/* Unit Card Header */}
+                    <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-neutral-100">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#FAF5FF] text-[#9333EA] border border-[#E9D5FF]">
+                          Capa #{idx + 1}
+                        </span>
+                        <span className="text-[11px] font-bold text-neutral-800">
+                          {unit.model} · {unit.color}
+                        </span>
+                      </div>
 
-                    <button
-                      type="button"
-                      onClick={handleIncrease}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-600 hover:bg-neutral-100 hover:text-neutral-950 cursor-pointer transition-colors"
-                      aria-label="Aumentar quantidade"
-                    >
-                      <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                    </button>
+                      {units.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => onRemoveUnit(idx)}
+                          className="p-1 rounded-md text-neutral-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                          title="Remover esta capa"
+                          aria-label={`Remover Capa #${idx + 1}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Unit Controls: Image Preview + Model & Color Selectors */}
+                    <div className="flex gap-3 items-start">
+                      {/* Color Preview Thumbnail */}
+                      <div className="w-16 h-20 rounded-xl overflow-hidden bg-neutral-50 border border-neutral-200 shrink-0 p-1 flex items-center justify-center">
+                        <img
+                          src={matchedImage.url}
+                          alt={matchedImage.name}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+
+                      {/* Selectors for this Unit */}
+                      <div className="flex-1 min-w-0 space-y-2">
+                        {/* Model Dropdown */}
+                        <div>
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-0.5">
+                            Modelo:
+                          </label>
+                          <select
+                            value={unit.model}
+                            onChange={(e) => onUpdateUnit(idx, { model: e.target.value })}
+                            className="w-full py-1 px-2 text-xs font-bold text-neutral-900 bg-neutral-50 border border-neutral-200 rounded-lg focus:outline-none focus:border-[#9333EA] cursor-pointer"
+                          >
+                            {IPHONE_MODELS.map((m) => {
+                              const isModelAvailableForColor = isVariantInStoreCatalog(m, unit.color);
+                              return (
+                                <option key={m} value={m}>
+                                  {m}{!isModelAvailableForColor ? ' · (Esgotado)' : ''}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
+
+                        {/* Color Buttons */}
+                        <div>
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">
+                            Cor:
+                          </label>
+                          <div className="flex flex-wrap gap-1">
+                            {PRODUCT_IMAGES.map((img) => {
+                              const isSelected = unit.color.toLowerCase() === img.name.toLowerCase();
+                              const isColorAvailableForModel = isVariantInStoreCatalog(unit.model, img.name);
+                              return (
+                                <button
+                                  key={img.id}
+                                  type="button"
+                                  onClick={() => onUpdateUnit(idx, { color: img.name })}
+                                  className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1 ${
+                                    isSelected
+                                      ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-2xs'
+                                      : isColorAvailableForModel
+                                      ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
+                                      : 'bg-neutral-100 border border-neutral-200 text-neutral-400 opacity-70'
+                                  }`}
+                                  title={isColorAvailableForModel ? `${img.name} disponível` : `${img.name} esgotado para ${unit.model}`}
+                                >
+                                  <span
+                                    className="w-2 h-2 rounded-full border border-black/10 inline-block"
+                                    style={{
+                                      backgroundColor:
+                                        img.name === 'Gray' ? '#808080' :
+                                        img.name === 'Black' ? '#111111' :
+                                        img.name === 'Pink' ? '#F472B6' :
+                                        img.name === 'White' ? '#F9FAFB' : '#FB923C'
+                                    }}
+                                  />
+                                  <span>{img.name}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Availability Pill */}
+                        <div className="pt-0.5">
+                          {isUnitAvailable ? (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <span>Em estoque</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-300">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              <span>Esgotado nesta combinação</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Quantity Badge */}
-                  {quantity === 2 && (
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#9333EA] bg-[#FAF5FF] px-2 py-0.5 rounded-full border border-[#E9D5FF]">
-                      2x Pack
-                    </span>
-                  )}
-                  {quantity >= 3 && (
-                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                      Melhor Valor
-                    </span>
-                  )}
-                </div>
-              </div>
+                );
+              })}
             </div>
 
+            {/* Add Another Case Button */}
+            <button
+              type="button"
+              onClick={onAddUnit}
+              className="w-full py-2.5 px-3 rounded-xl border border-dashed border-[#9333EA]/60 hover:border-[#9333EA] bg-[#FAF5FF]/50 hover:bg-[#FAF5FF] text-[#9333EA] text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs"
+            >
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <span>Adicionar Outra Capa (Escolha Outro Modelo / Cor)</span>
+            </button>
+
             {/* Financial Summary & Instant Pricing Recalculation */}
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 space-y-3 shadow-2xs">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-4.5 space-y-2.5 shadow-2xs">
               <div className="text-[11px] font-black uppercase tracking-wider text-neutral-500 mb-1">
-                Resumo do Pedido
+                Resumo do Pedido ({totalQuantity} {totalQuantity === 1 ? 'capa' : 'capas'})
               </div>
 
               {/* Subtotal */}
               <div className="flex justify-between text-xs font-semibold text-neutral-600">
-                <span>Subtotal ({quantity} {quantity === 1 ? 'unidade' : 'unidades'}):</span>
+                <span>Subtotal ({totalQuantity}x R$ 79,90):</span>
                 <span>{formatCurrency(pricing.subtotal)}</span>
               </div>
 
-              {/* Promotional Discount Line (Dynamic and Instant) */}
+              {/* Promotional Discount Line */}
               {pricing.discount > 0 && (
-                <div className="flex justify-between items-center text-xs font-black text-emerald-600 bg-emerald-50/70 px-2.5 py-1.5 rounded-lg border border-emerald-200">
+                <div className="flex justify-between items-center text-xs font-black text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200">
                   <span className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span>Desconto Promocional:</span>
+                    <span>Desconto por Quantidade:</span>
                   </span>
                   <span>-{formatCurrency(pricing.discount)}</span>
                 </div>
@@ -248,11 +316,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               {/* Shipping Tag */}
               <div className="flex justify-between text-xs font-semibold text-neutral-600">
-                <span>Envio:</span>
+                <span>Envio para todo o Brasil:</span>
                 <span className="text-emerald-600 font-bold">Grátis</span>
               </div>
 
-              <div className="pt-3 border-t border-neutral-200 flex justify-between items-baseline">
+              {/* Total */}
+              <div className="pt-2.5 border-t border-neutral-200 flex justify-between items-baseline">
                 <div>
                   <span className="text-sm font-black text-neutral-950 uppercase tracking-tight">Total:</span>
                   {pricing.discount > 0 && (
@@ -264,6 +333,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="text-right">
                   <span className="text-xl font-black text-neutral-950">
                     {formatCurrency(pricing.total)}
+                  </span>
+                  <span className="block text-[10px] text-neutral-400 font-medium">
+                    (R$ {pricing.unitPrice.toFixed(2)} / capa)
                   </span>
                 </div>
               </div>
@@ -283,24 +355,35 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </div>
 
           {/* Drawer Footer: Official Shopify Checkout CTA */}
-          <div className="p-6 border-t border-neutral-200 bg-white space-y-2 sticky bottom-0">
-            {variantError && (
-              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
+          <div className="p-5 border-t border-neutral-200 bg-white space-y-2 sticky bottom-0 z-20">
+            {checkoutError && (
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>{variantError}</span>
+                <span>{checkoutError}</span>
+              </div>
+            )}
+
+            {hasOutOfStockUnit && !checkoutError && (
+              <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-semibold flex items-center gap-2">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <span>Uma ou mais capas estão esgotadas. Ajuste o modelo ou cor para continuar.</span>
               </div>
             )}
 
             <button
               type="button"
               onClick={handleProceedToCheckout}
-              disabled={Boolean(isSubmitting || (resolvedVariant && resolvedVariant.available === false))}
-              className="w-full py-4 px-6 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 active:scale-98 text-white font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              disabled={isSubmitting || hasOutOfStockUnit}
+              className={`w-full py-4 px-6 text-white font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-md transition-all flex items-center justify-center gap-2 ${
+                hasOutOfStockUnit
+                  ? 'bg-neutral-200 text-neutral-400 border border-neutral-300 cursor-not-allowed opacity-80'
+                  : 'bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 active:scale-98 hover:shadow-lg cursor-pointer'
+              }`}
             >
               {isSubmitting ? (
                 <span>REDIRECIONANDO PARA O CHECKOUT...</span>
-              ) : resolvedVariant && resolvedVariant.available === false ? (
-                <span>OPÇÃO ESGOTADA</span>
+              ) : hasOutOfStockUnit ? (
+                <span>AJUSTE AS OPÇÕES ESGOTADAS</span>
               ) : (
                 <>
                   <Lock className="w-4 h-4" />
@@ -311,7 +394,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             </button>
 
             <p className="text-[10px] text-center font-medium text-neutral-400">
-              Ambiente seguro Shopify · Seus dados e variantes estão preservados
+              Ambiente oficial Shopify · Todas as variantes e descontos são preservados
             </p>
           </div>
 

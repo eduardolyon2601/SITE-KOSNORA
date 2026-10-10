@@ -1,82 +1,58 @@
-import React, { useState } from 'react';
-import { ArrowRight, Star, ShieldCheck, Check, ShoppingBag, Truck } from 'lucide-react';
-import { PricingTier } from '../types';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, Star, ShieldCheck, Check, ShoppingBag, Truck, Layers } from 'lucide-react';
+import { PricingTier, CartItemUnit } from '../types';
 import { getPricingTiers, PRODUCT_IMAGES, IPHONE_MODELS } from '../data/productData';
 import { isVariantInStoreCatalog } from '../data/storeInventory';
 
 interface HeroSectionProps {
-  onCtaClick: (imageId?: string) => void;
-  onSelectTierAndBuy?: (tier: PricingTier, imageId?: string) => void;
-  selectedModel?: string;
-  onModelChange?: (model: string) => void;
-  selectedColor?: string;
-  onColorChange?: (colorName: string) => void;
+  onCtaClick: () => void;
+  units: CartItemUnit[];
+  activeUnitIndex: number;
+  onActiveUnitIndexChange: (idx: number) => void;
+  onUpdateUnit: (index: number, partial: Partial<CartItemUnit>) => void;
+  selectedTier: PricingTier;
+  onSelectTier: (tier: PricingTier) => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onCtaClick,
-  onSelectTierAndBuy,
-  selectedModel = 'iPhone 16 Pro Max',
-  onModelChange,
-  selectedColor = 'Gray',
-  onColorChange,
+  units,
+  activeUnitIndex,
+  onActiveUnitIndexChange,
+  onUpdateUnit,
+  selectedTier,
+  onSelectTier,
 }) => {
-  // Initialize activeImageIdx based on selectedColor if provided
-  const initialColorIdx = PRODUCT_IMAGES.findIndex(
-    (img) => img.name.toLowerCase() === selectedColor.toLowerCase() || img.id.toLowerCase() === selectedColor.toLowerCase()
-  );
-  const [activeImageIdx, setActiveImageIdx] = useState(initialColorIdx >= 0 ? initialColorIdx : 0);
-  const [isPlayingVideo, setIsPlayingVideo] = useState(true);
-  const [internalModel, setInternalModel] = useState(selectedModel);
   const tiers = getPricingTiers();
-  const [selectedTierId, setSelectedTierId] = useState<string>('single');
+  const currentUnit = units[activeUnitIndex] || units[0] || { id: 'unit-1', model: 'iPhone 16 Pro Max', color: 'Gray' };
+  
+  // Media state
+  const [isPlayingVideo, setIsPlayingVideo] = useState(true);
 
-  const currentModel = onModelChange ? selectedModel : internalModel;
+  // Current active unit's color image index
+  const activeColorIdx = PRODUCT_IMAGES.findIndex(
+    (img) => img.name.toLowerCase() === currentUnit.color.toLowerCase() || img.id.toLowerCase() === currentUnit.color.toLowerCase()
+  );
+  const currentImage = PRODUCT_IMAGES[activeColorIdx >= 0 ? activeColorIdx : 0];
 
-  // Sync activeImageIdx if external selectedColor changes
-  React.useEffect(() => {
-    if (selectedColor) {
-      const idx = PRODUCT_IMAGES.findIndex(
-        (img) => img.name.toLowerCase() === selectedColor.toLowerCase() || img.id.toLowerCase() === selectedColor.toLowerCase()
-      );
-      if (idx >= 0 && idx !== activeImageIdx) {
-        setActiveImageIdx(idx);
-      }
-    }
-  }, [selectedColor]);
+  // Stock check for active unit
+  const isActiveUnitAvailable = isVariantInStoreCatalog(currentUnit.model, currentUnit.color);
 
-  const handleModelChange = (model: string) => {
-    setInternalModel(model);
-    if (onModelChange) {
-      onModelChange(model);
-    }
-  };
+  // Check if ANY unit in the bundle is out of stock
+  const outOfStockList = units
+    .map((u, i) => ({ ...u, index: i, available: isVariantInStoreCatalog(u.model, u.color) }))
+    .filter((u) => !u.available);
+  const hasOutOfStock = outOfStockList.length > 0;
 
-  const currentImage = PRODUCT_IMAGES[activeImageIdx];
-  const isSelectionAvailable = isVariantInStoreCatalog(currentModel, currentImage.name);
-
-  const handleTierClick = (tier: PricingTier) => {
-    setSelectedTierId(tier.id);
-    if (!isSelectionAvailable) {
-      return;
-    }
-    const chosenColor = PRODUCT_IMAGES[activeImageIdx];
-    if (onColorChange && chosenColor) {
-      onColorChange(chosenColor.name);
-    }
-    if (onSelectTierAndBuy) {
-      onSelectTierAndBuy(tier, chosenColor?.id);
-    } else {
-      onCtaClick(chosenColor?.id);
-    }
+  const handleModelChange = (newModel: string) => {
+    onUpdateUnit(activeUnitIndex, { model: newModel });
   };
 
   const handleColorClick = (idx: number) => {
     setIsPlayingVideo(false);
-    setActiveImageIdx(idx);
-    const chosenImg = PRODUCT_IMAGES[idx];
-    if (onColorChange && chosenImg) {
-      onColorChange(chosenImg.name);
+    const chosen = PRODUCT_IMAGES[idx];
+    if (chosen) {
+      onUpdateUnit(activeUnitIndex, { color: chosen.name });
     }
   };
 
@@ -84,19 +60,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     setIsPlayingVideo(true);
   };
 
+  const getColorHex = (c: string) => {
+    const norm = (c || '').toLowerCase();
+    if (norm.includes('gray') || norm.includes('grey') || norm.includes('cinza')) return '#808080';
+    if (norm.includes('black') || norm.includes('preto')) return '#111111';
+    if (norm.includes('pink') || norm.includes('rosa')) return '#F472B6';
+    if (norm.includes('white') || norm.includes('branco')) return '#E5E7EB';
+    if (norm.includes('orange') || norm.includes('laranja')) return '#FB923C';
+    return '#9333EA';
+  };
+
   return (
     <section id="pricing" className="bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative overflow-visible">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* ============================================================ */}
-        {/* MOBILE VIEW (< lg): Unchanged layout flow                    */}
-        {/* Photo on top, thumbnails below, GET YOUR KOSNORA button,      */}
-        {/* horizontal carousel of values below that                      */}
+        {/* MOBILE VIEW (< lg)                                           */}
         {/* ============================================================ */}
         <div className="lg:hidden flex flex-col items-center max-w-2xl mx-auto text-center">
-          {/* Social Proof Star Rating Tag with High Personality & 4.7 Stars */}
+          {/* Social Proof Star Rating Tag */}
           <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs">
-            {/* Micro Avatar Stack */}
             <div className="flex -space-x-2 shrink-0">
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80"
@@ -115,14 +98,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               />
             </div>
 
-            {/* 4.7 Star Rating */}
             <div className="flex items-center gap-1">
               <span className="text-xs font-black text-neutral-900 leading-none">4.7</span>
               <div className="flex items-center text-[#9333EA] -space-x-0.5">
                 {[...Array(4)].map((_, i) => (
                   <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA]" />
                 ))}
-                {/* 5th Star partially filled to 70% (4.7 rating) */}
                 <div className="relative w-3.5 h-3.5">
                   <Star className="w-3.5 h-3.5 text-neutral-200 fill-neutral-200 absolute inset-0" />
                   <div className="overflow-hidden absolute inset-0 w-[70%]">
@@ -142,7 +123,41 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </span>
           </div>
 
-          {/* Mobile Media: Looping Video by default, switches to photo on color click */}
+          {/* Multi-Unit Switcher for Bundles (Mobile) */}
+          {units.length > 1 && (
+            <div className="w-full max-w-sm mb-3">
+              <div className="text-[10px] font-black uppercase tracking-wider text-[#9333EA] mb-1.5 flex items-center justify-center gap-1.5">
+                <Layers className="w-3.5 h-3.5" />
+                <span>Personalize cada capa do seu pacote:</span>
+              </div>
+              <div className="flex items-center justify-center gap-1.5 p-1 bg-neutral-100/90 rounded-2xl overflow-x-auto">
+                {units.map((u, i) => {
+                  const isActive = i === activeUnitIndex;
+                  const isUAvail = isVariantInStoreCatalog(u.model, u.color);
+                  return (
+                    <button
+                      key={u.id || i}
+                      type="button"
+                      onClick={() => onActiveUnitIndexChange(i)}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
+                        isActive
+                          ? 'bg-white text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30'
+                          : 'text-neutral-600 hover:text-neutral-950 hover:bg-white/50'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full border border-black/10 shrink-0" style={{ backgroundColor: getColorHex(u.color) }} />
+                      <span>Capa #{i + 1}</span>
+                      {!isUAvail && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" title="Esgotado" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Mobile Media: Looping Video / Photo */}
           <div className="relative w-full max-w-[340px] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 flex items-center justify-center">
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
               {isPlayingVideo ? (
@@ -166,7 +181,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     alt={`KOSNORA - ${currentImage.name}`}
                     className="w-full h-full object-contain block select-none transition-all duration-300 bg-neutral-50"
                   />
-                  <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20">
+                  <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20 flex items-center gap-1.5">
+                    {units.length > 1 && <span className="text-[#E9D5FF] font-bold">Capa #{activeUnitIndex + 1}:</span>}
                     <span>{currentImage.name}</span>
                   </div>
                 </>
@@ -174,9 +190,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* Compact Mobile Media & Color Thumbnails (Pills smaller than prices) */}
+          {/* Color Pills for Active Unit */}
           <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3.5 max-w-sm">
-            {/* Video Option */}
             <button
               type="button"
               onClick={handleVideoClick}
@@ -189,10 +204,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <span>▶ Video</span>
             </button>
 
-            {/* Colors (clicking any color stops the video immediately) */}
             {PRODUCT_IMAGES.map((img, idx) => {
-              const isSelected = !isPlayingVideo && activeImageIdx === idx;
-              const isColorAvailable = isVariantInStoreCatalog(currentModel, img.name);
+              const isSelected = !isPlayingVideo && currentUnit.color.toLowerCase() === img.name.toLowerCase();
+              const isColorAvailable = isVariantInStoreCatalog(currentUnit.model, img.name);
               return (
                 <button
                   key={img.id}
@@ -205,7 +219,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
                       : 'bg-neutral-50 border border-neutral-200 text-neutral-400 hover:bg-neutral-100 opacity-80'
                   }`}
-                  title={isColorAvailable ? `${img.name} - Em estoque` : `${img.name} - Esgotado para ${currentModel}`}
+                  title={isColorAvailable ? `${img.name} - Em estoque` : `${img.name} - Esgotado para ${currentUnit.model}`}
                 >
                   <div className="w-3 h-4 rounded overflow-hidden bg-neutral-100 border border-black/10 shrink-0 flex items-center justify-center">
                     <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
@@ -221,18 +235,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             })}
           </div>
 
-          {/* Model selection on page */}
+          {/* Model selection on page for Active Unit */}
           <div className="w-full max-w-xs mt-3 flex items-center justify-center gap-2">
-            <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-              Modelo:
+            <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider whitespace-nowrap">
+              {units.length > 1 ? `Modelo (Capa #${activeUnitIndex + 1}):` : 'Modelo:'}
             </span>
             <select
-              value={currentModel}
+              value={currentUnit.model}
               onChange={(e) => handleModelChange(e.target.value)}
               className="py-1 px-2.5 text-xs font-bold text-neutral-800 bg-white border border-neutral-300 rounded-lg shadow-2xs focus:outline-none focus:border-[#9333EA] cursor-pointer"
             >
               {IPHONE_MODELS.map((m) => {
-                const isModelAvailable = isVariantInStoreCatalog(m, currentImage.name);
+                const isModelAvailable = isVariantInStoreCatalog(m, currentUnit.color);
                 return (
                   <option key={m} value={m}>
                     {m}{!isModelAvailable ? ' · (Esgotado)' : ''}
@@ -242,75 +256,65 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </select>
           </div>
 
-          {/* Stock Availability Indicator Pill (Keeps user informed without removing variants) */}
+          {/* Stock Availability Indicator Pill */}
           <div className="mt-2.5">
-            {isSelectionAvailable ? (
+            {isActiveUnitAvailable ? (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Em estoque · Pronta entrega</span>
+                <span>Em estoque · Pronta entrega {units.length > 1 ? `(Capa #${activeUnitIndex + 1})` : ''}</span>
               </span>
             ) : (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                <span>Esgotado nesta combinação ({currentImage.name} / {currentModel})</span>
+                <span>Esgotado nesta combinação {units.length > 1 ? `(Capa #${activeUnitIndex + 1})` : `(${currentUnit.color} / ${currentUnit.model})`}</span>
               </span>
             )}
           </div>
 
-          {/* Direct CTA Button (Placed Below the First Photo) */}
+          {/* Direct CTA Button */}
           <div className="w-full flex flex-col items-center mt-4">
             <div className="w-full sm:w-auto flex flex-col items-center justify-center gap-3 mb-6">
               <button
                 type="button"
-                disabled={!isSelectionAvailable}
-                onClick={() => {
-                  if (!isSelectionAvailable) return;
-                  const selectedTier = tiers.find((t) => t.id === selectedTierId) || tiers[0];
-                  const chosenColor = PRODUCT_IMAGES[activeImageIdx] || PRODUCT_IMAGES[0];
-                  if (onColorChange) {
-                    onColorChange(chosenColor.name);
-                  }
-                  if (onSelectTierAndBuy) {
-                    onSelectTierAndBuy(selectedTier, chosenColor.id);
-                  } else {
-                    onCtaClick(chosenColor.id);
-                  }
-                }}
+                disabled={hasOutOfStock}
+                onClick={onCtaClick}
                 className={`w-full sm:w-auto px-10 py-4.5 font-black text-sm tracking-widest rounded-xl shadow-md transition-all flex items-center justify-center gap-2.5 uppercase ${
-                  isSelectionAvailable
+                  !hasOutOfStock
                     ? 'bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white hover:shadow-lg transform hover:scale-102 active:scale-95 cursor-pointer'
                     : 'bg-neutral-200 text-neutral-400 border border-neutral-300 cursor-not-allowed opacity-80'
                 }`}
               >
-                <span>{isSelectionAvailable ? 'GET YOUR KOSNORA' : 'COMBINAÇÃO ESGOTADA'}</span>
-                {isSelectionAvailable && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
+                <span>
+                  {hasOutOfStock
+                    ? `COMBINAÇÃO ESGOTADA (Capa #${outOfStockList[0].index + 1})`
+                    : `GET YOUR KOSNORA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
+                </span>
+                {!hasOutOfStock && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
               </button>
 
               <div className="flex items-center justify-center gap-2 text-xs font-bold text-neutral-500 uppercase tracking-wider">
-                <span>Choose your bundle below to purchase</span>
+                <span>Clique em um pacote abaixo para comprar com desconto</span>
               </div>
             </div>
 
-            {/* Zero-Clipping Responsive Purchasing Options (1 for $79.90, 2 for 139.90, and 3 for 194.90) */}
+            {/* Purchasing Options Tiers (Mobile Stack) */}
             <div className="w-full max-w-4xl relative mt-1">
-              {/* Responsive Container (Clean full-width stack on mobile, 3-col on tablet - Zero border clipping) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4 pb-2 px-1">
                 {tiers.map((tier) => {
-                  const isSelected = selectedTierId === tier.id;
+                  const isSelected = selectedTier.id === tier.id;
                   const isDouble = tier.quantity === 2;
                   const isTriple = tier.quantity === 3;
 
                   return (
                     <div
                       key={tier.id}
-                      onClick={() => handleTierClick(tier)}
+                      onClick={() => onSelectTier(tier)}
                       className={`w-full rounded-2xl p-4 sm:p-5 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg ${
                         isSelected
                           ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20 -translate-y-0.5'
                           : 'border-neutral-200 hover:border-neutral-300'
                       }`}
                     >
-                      {/* Top Badge for special bundles */}
                       {isDouble && (
                         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap z-10">
                           Most Popular · 2 Cases
@@ -323,7 +327,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       )}
 
                       <div>
-                        {/* Header quantity and tag */}
                         <div className="flex items-center justify-between mb-2 mt-1">
                           <span className="text-sm font-black text-neutral-950 uppercase tracking-tight">
                             {tier.quantity === 1 ? '1 Case' : `${tier.quantity} Cases`}
@@ -337,7 +340,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           </span>
                         </div>
 
-                        {/* Price Display */}
                         <div className="text-left mb-2">
                           <div className="flex items-baseline gap-1">
                             <span className="text-2xl sm:text-3xl font-black text-neutral-950">
@@ -356,17 +358,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                               ? '2 for $139.90'
                               : '3 for $194.90'}
                           </span>
+                          {tier.quantity > 1 && (
+                            <span className="text-[10px] font-bold text-emerald-600 block mt-0.5">
+                              {tier.quantity === 2 ? 'Save $19.90 (Modelos e cores livres!)' : 'Save $44.80 (Modelos e cores livres!)'}
+                            </span>
+                          )}
                         </div>
 
-                        {/* Feature bullets */}
                         <ul className="space-y-1.5 text-[11px] font-medium text-neutral-700 text-left mb-4">
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x KOSNORA Case</span>
+                            <span>{tier.quantity}x KOSNORA Smart Case</span>
                           </li>
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Raised Protective Bezels</span>
+                            <span>Misture modelos e cores à vontade</span>
                           </li>
                           <li className="flex items-center gap-1.5">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
@@ -375,7 +381,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </ul>
                       </div>
 
-                      {/* Buy / Select Button inside card */}
                       <div className="pt-3 border-t border-neutral-100 flex items-center justify-between gap-2">
                         <div className="text-left">
                           <span className="text-[10px] uppercase font-bold text-neutral-400 block">Total</span>
@@ -386,21 +391,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                         <button
                           type="button"
-                          disabled={!isSelectionAvailable}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleTierClick(tier);
+                            onSelectTier(tier);
+                            onCtaClick();
                           }}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all ${
-                            !isSelectionAvailable
-                              ? 'bg-neutral-200 text-neutral-400 border border-neutral-300 cursor-not-allowed'
-                              : isSelected
-                              ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110 cursor-pointer'
-                              : 'bg-neutral-900 text-white hover:bg-neutral-800 cursor-pointer'
+                          className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110'
+                              : 'bg-neutral-900 text-white hover:bg-neutral-800'
                           }`}
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
-                          <span>{isSelectionAvailable ? 'Buy Now' : 'Esgotado'}</span>
+                          <span>Selecionar</span>
                         </button>
                       </div>
                     </div>
@@ -408,33 +411,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 })}
               </div>
             </div>
-
-            {/* Quick Guarantees */}
-            <div className="flex items-center justify-center gap-4 text-xs font-semibold text-neutral-500 pt-3">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-[#9333EA]" />
-                <span>30-Day Guarantee</span>
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1.5">
-                <Truck className="w-4 h-4 text-[#9333EA]" />
-                <span>Tracked Shipping</span>
-              </span>
-            </div>
           </div>
         </div>
 
         {/* ============================================================ */}
-        {/* DESKTOP VIEW (Only for computer - lg:block):                 */}
-        {/* Product & photos on the LEFT, values on the RIGHT            */}
+        {/* DESKTOP VIEW (>= lg)                                         */}
         {/* ============================================================ */}
         <div className="hidden lg:block max-w-6xl mx-auto">
-          <div className="grid grid-cols-12 gap-10 xl:gap-14 items-start">
+          <div className="grid grid-cols-12 gap-8 xl:gap-12 items-start">
             
-            {/* LEFT COLUMN: Product & photos on the left of the page */}
+            {/* LEFT COLUMN: Media Container */}
             <div className="col-span-5 flex flex-col items-center">
-              {/* Product Hero Media Gallery (Vimeo Video loop by default, stops when color is clicked) */}
-              <div className="relative w-full aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-3 flex items-center justify-center group">
+              <div className="relative w-full aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-2xl p-2.5 xl:p-3 flex items-center justify-center">
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
                   {isPlayingVideo ? (
                     <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
@@ -457,7 +445,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         alt={`KOSNORA - ${currentImage.name}`}
                         className="w-full h-full object-contain block select-none transition-all duration-300 bg-neutral-50"
                       />
-                      <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20">
+                      <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20 flex items-center gap-1.5">
+                        {units.length > 1 && <span className="text-[#E9D5FF] font-bold">Capa #{activeUnitIndex + 1}:</span>}
                         <span>{currentImage.name}</span>
                       </div>
                     </>
@@ -479,11 +468,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Bundles and values on the right next to the product */}
+            {/* RIGHT COLUMN: Configuration, Units & Bundles */}
             <div className="col-span-7 flex flex-col pt-1">
-              {/* Star Rating Badge with High Personality & 4.7 Stars */}
+              {/* Star Rating Badge */}
               <div className="inline-flex items-center gap-2.5 mb-3 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs self-start">
-                {/* Micro Avatar Stack */}
                 <div className="flex -space-x-2 shrink-0">
                   <img
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80"
@@ -502,14 +490,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   />
                 </div>
 
-                {/* 4.7 Star Rating */}
                 <div className="flex items-center gap-1">
                   <span className="text-xs font-black text-neutral-900 leading-none">4.7</span>
                   <div className="flex items-center text-[#9333EA] -space-x-0.5">
                     {[...Array(4)].map((_, i) => (
                       <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA]" />
                     ))}
-                    {/* 5th Star partially filled to 70% (4.7 rating) */}
                     <div className="relative w-3.5 h-3.5">
                       <Star className="w-3.5 h-3.5 text-neutral-200 fill-neutral-200 absolute inset-0" />
                       <div className="overflow-hidden absolute inset-0 w-[70%]">
@@ -530,25 +516,72 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
 
               {/* Product Headline */}
-              <h1 className="text-3xl xl:text-4xl font-black uppercase tracking-tight text-neutral-950 mb-2">
+              <h1 className="text-3xl xl:text-4xl font-black uppercase tracking-tight text-neutral-950 mb-1.5">
                 KOSNORA Case
               </h1>
-              <p className="text-sm font-semibold text-neutral-600 mb-4 leading-relaxed">
-                Refined minimalist design, reinforced impact protection, and a smooth tactile finish. Pick your favorite color and enjoy our progressive bundle discounts.
+              <p className="text-sm font-semibold text-neutral-600 mb-3 leading-relaxed">
+                Refined minimalist design, reinforced impact protection, and battery-free NFC smart display. Combine different models and colors freely in the same order.
               </p>
 
-              {/* iPhone Model Selection on the page */}
+              {/* Multi-Unit Switcher Tabs (Desktop) */}
+              {units.length > 1 && (
+                <div className="w-full mb-3.5 p-3 rounded-2xl bg-[#FAF5FF] border border-[#E9D5FF]">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-[#9333EA] flex items-center gap-1.5">
+                      <Layers className="w-3.5 h-3.5" />
+                      <span>Seu Pacote de {units.length} Capas:</span>
+                    </span>
+                    <span className="text-[11px] font-bold text-neutral-500">
+                      Clique para configurar cada uma:
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
+                    {units.map((u, i) => {
+                      const isActive = i === activeUnitIndex;
+                      const isUAvail = isVariantInStoreCatalog(u.model, u.color);
+                      return (
+                        <button
+                          key={u.id || i}
+                          type="button"
+                          onClick={() => onActiveUnitIndexChange(i)}
+                          className={`px-3 py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
+                            isActive
+                              ? 'bg-white text-[#9333EA] shadow-xs ring-2 ring-[#9333EA]'
+                              : 'bg-white/70 text-neutral-700 hover:bg-white hover:text-neutral-950 border border-neutral-200'
+                          }`}
+                        >
+                          <span
+                            className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0"
+                            style={{ backgroundColor: getColorHex(u.color) }}
+                          />
+                          <span className="truncate max-w-[130px]">
+                            #{i + 1}: {u.model} ({u.color})
+                          </span>
+                          {!isUAvail && (
+                            <span className="text-[9px] font-bold text-amber-700 bg-amber-100 px-1 py-0.2 rounded">
+                              Esgotado
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* iPhone Model Selection for Active Unit */}
               <div className="w-full mb-3 flex items-center justify-between gap-3 p-2.5 rounded-xl bg-neutral-50 border border-neutral-200">
                 <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wider whitespace-nowrap">
-                  Modelo do iPhone:
+                  {units.length > 1 ? `Modelo da Capa #${activeUnitIndex + 1}:` : 'Modelo do iPhone:'}
                 </span>
                 <select
-                  value={currentModel}
+                  value={currentUnit.model}
                   onChange={(e) => handleModelChange(e.target.value)}
                   className="w-full max-w-[220px] py-1 px-2.5 text-xs font-bold text-neutral-900 bg-white border border-neutral-300 rounded-lg shadow-2xs focus:outline-none focus:border-[#9333EA] cursor-pointer"
                 >
                   {IPHONE_MODELS.map((m) => {
-                    const isModelAvailable = isVariantInStoreCatalog(m, currentImage.name);
+                    const isModelAvailable = isVariantInStoreCatalog(m, currentUnit.color);
                     return (
                       <option key={m} value={m}>
                         {m}{!isModelAvailable ? ' · (Esgotado)' : ''}
@@ -558,18 +591,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </select>
               </div>
 
-              {/* Compact Color Selection (Smaller than prices to keep customer focus on purchase, located above pricing options) */}
+              {/* Compact Color Selection for Active Unit */}
               <div className="w-full mb-3">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-                    Media / Color:
+                    {units.length > 1 ? `Cor da Capa #${activeUnitIndex + 1}:` : 'Media / Color:'}
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-black text-[#9333EA] uppercase tracking-wider">
-                      {isPlayingVideo ? 'Video' : currentImage.name}
+                      {isPlayingVideo ? 'Video' : currentUnit.color}
                     </span>
                     {!isPlayingVideo && (
-                      isSelectionAvailable ? (
+                      isActiveUnitAvailable ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                           <span>Em estoque</span>
@@ -583,8 +616,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     )}
                   </div>
                 </div>
+
                 <div className="flex flex-wrap items-center gap-2">
-                  {/* Video pill (loops by default) */}
                   <button
                     type="button"
                     onClick={handleVideoClick}
@@ -598,10 +631,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <span>Video</span>
                   </button>
 
-                  {/* Color options (clicking any color stops the video immediately) */}
                   {PRODUCT_IMAGES.map((img, idx) => {
-                    const isSelected = !isPlayingVideo && activeImageIdx === idx;
-                    const isColorAvailable = isVariantInStoreCatalog(currentModel, img.name);
+                    const isSelected = !isPlayingVideo && currentUnit.color.toLowerCase() === img.name.toLowerCase();
+                    const isColorAvailable = isVariantInStoreCatalog(currentUnit.model, img.name);
                     return (
                       <button
                         key={img.id}
@@ -614,7 +646,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                             ? 'bg-white border border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50'
                             : 'bg-neutral-50 border border-neutral-200 text-neutral-400 hover:bg-neutral-100 opacity-80'
                         }`}
-                        title={isColorAvailable ? `${img.name} - Em estoque` : `${img.name} - Esgotado para ${currentModel}`}
+                        title={isColorAvailable ? `${img.name} - Em estoque` : `${img.name} - Esgotado para ${currentUnit.model}`}
                       >
                         <div className="w-3.5 h-4.5 rounded overflow-hidden bg-neutral-100 shrink-0 flex items-center justify-center">
                           <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
@@ -634,28 +666,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Direct CTA Button (GET YOUR KOSNORA) */}
               <button
                 type="button"
-                disabled={!isSelectionAvailable}
-                onClick={() => {
-                  if (!isSelectionAvailable) return;
-                  const selectedTier = tiers.find((t) => t.id === selectedTierId) || tiers[0];
-                  const chosenColor = PRODUCT_IMAGES[activeImageIdx] || PRODUCT_IMAGES[0];
-                  if (onColorChange) {
-                    onColorChange(chosenColor.name);
-                  }
-                  if (onSelectTierAndBuy) {
-                    onSelectTierAndBuy(selectedTier, chosenColor.id);
-                  } else {
-                    onCtaClick(chosenColor.id);
-                  }
-                }}
+                disabled={hasOutOfStock}
+                onClick={onCtaClick}
                 className={`w-full py-4.5 px-8 font-black text-sm tracking-widest rounded-xl shadow-md transition-all flex items-center justify-center gap-2.5 uppercase mb-5 ${
-                  isSelectionAvailable
+                  !hasOutOfStock
                     ? 'bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white hover:shadow-lg transform hover:scale-[1.01] active:scale-95 cursor-pointer'
                     : 'bg-neutral-200 text-neutral-400 border border-neutral-300 cursor-not-allowed opacity-80'
                 }`}
               >
-                <span>{isSelectionAvailable ? 'GET YOUR KOSNORA' : 'COMBINAÇÃO ESGOTADA'}</span>
-                {isSelectionAvailable && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
+                <span>
+                  {hasOutOfStock
+                    ? `COMBINAÇÃO ESGOTADA (Capa #${outOfStockList[0].index + 1})`
+                    : `GET YOUR KOSNORA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
+                </span>
+                {!hasOutOfStock && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
               </button>
 
               {/* Title for purchasing options */}
@@ -664,28 +688,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   Bundles & Pricing:
                 </span>
                 <span className="text-xs font-semibold text-neutral-500">
-                  Click on an option below to buy
+                  Selecione seu pacote (combine variantes diferentes livremente)
                 </span>
               </div>
 
-              {/* 3 Values Options (Side-by-side on desktop: 1 for $79.90, 2 for 139.90, and 3 for 194.90 - Zero Border Clipping) */}
+              {/* 3 Values Options Desktop Grid */}
               <div className="grid grid-cols-3 gap-3.5 pt-4 pb-2 px-1 mb-5">
                 {tiers.map((tier) => {
-                  const isSelected = selectedTierId === tier.id;
+                  const isSelected = selectedTier.id === tier.id;
                   const isDouble = tier.quantity === 2;
                   const isTriple = tier.quantity === 3;
 
                   return (
                     <div
                       key={tier.id}
-                      onClick={() => handleTierClick(tier)}
+                      onClick={() => onSelectTier(tier)}
                       className={`rounded-2xl p-4 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg ${
                         isSelected
                           ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20 -translate-y-0.5'
                           : 'border-neutral-200 hover:border-neutral-300'
                       }`}
                     >
-                      {/* Top Badges */}
                       {isDouble && (
                         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
                           Most Popular
@@ -698,7 +721,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       )}
 
                       <div>
-                        {/* Header */}
                         <div className="flex items-center justify-between mb-1.5 mt-0.5">
                           <span className="text-xs font-black text-neutral-950 uppercase tracking-tight">
                             {tier.quantity === 1 ? '1 Case' : `${tier.quantity} Cases`}
@@ -712,7 +734,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           </span>
                         </div>
 
-                        {/* Price */}
                         <div className="text-left mb-2">
                           <div className="flex items-baseline gap-1">
                             <span className="text-2xl font-black text-neutral-950">
@@ -733,15 +754,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           )}
                         </div>
 
-                        {/* Feature bullets */}
                         <ul className="space-y-1 text-[11px] font-medium text-neutral-700 text-left mb-3">
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x KOSNORA Case</span>
+                            <span>{tier.quantity}x KOSNORA Smart Case</span>
                           </li>
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Raised Protective Bezels</span>
+                            <span>Misture modelos e cores livres</span>
                           </li>
                           <li className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
@@ -750,24 +770,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </ul>
                       </div>
 
-                      {/* Buy Button inside card */}
                       <button
                         type="button"
-                        disabled={!isSelectionAvailable}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleTierClick(tier);
+                          onSelectTier(tier);
+                          onCtaClick();
                         }}
-                        className={`w-full py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all ${
-                          !isSelectionAvailable
-                            ? 'bg-neutral-200 text-neutral-400 border border-neutral-300 cursor-not-allowed'
-                            : isSelected
-                            ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110 cursor-pointer'
-                            : 'bg-neutral-900 text-white hover:bg-neutral-800 cursor-pointer'
+                        className={`w-full py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110'
+                            : 'bg-neutral-900 text-white hover:bg-neutral-800'
                         }`}
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>{isSelectionAvailable ? 'Buy Now' : 'Esgotado'}</span>
+                        <span>Selecionar</span>
                       </button>
                     </div>
                   );

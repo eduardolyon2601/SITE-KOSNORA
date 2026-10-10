@@ -39,3 +39,12 @@ export type CartCalculation = {
   discountLabel: string | null;
   currency: string;
 };
+
+export type CartItemUnit = {
+  id: string; // Unique unit ID (e.g. 'unit-1', 'unit-2')
+  model: string;
+  color: string;
+  variantId?: string;
+  isAvailable?: boolean;
+};
+
