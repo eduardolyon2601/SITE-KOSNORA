@@ -5,6 +5,8 @@
  * and redirecting the customer directly into the real Shopify checkout.
  */
 
+import { isVariantInStoreCatalog } from '../data/storeInventory';
+
 declare global {
   interface Window {
     Shopify?: {
@@ -125,6 +127,27 @@ export async function loadShopifyProduct(): Promise<any | null> {
 
   try {
     const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
+    const candidateHandles = [
+      window.KOSNORA_STORE?.productHandle,
+      'case-kosnora-digital',
+      'ink-nfc-phone-case-for-iphone-17-16-15-14-pro-max-12-diy-picture-smart-screen-phone-cases-four-colors-image-screen-battery-free',
+      'kosnora-case',
+      'kosnora',
+    ].filter(Boolean) as string[];
+
+    for (const handle of candidateHandles) {
+      try {
+        const pRes = await fetch(`${root}products/${handle}.js`);
+        if (pRes.ok) {
+          const pData = await pRes.json();
+          if (pData?.variants?.length > 0) {
+            window.KOSNORA_PRODUCT = pData;
+            return pData;
+          }
+        }
+      } catch {}
+    }
+
     const res = await fetch(`${root}products.json?limit=25`);
     if (res.ok) {
       const data = await res.json();
@@ -139,7 +162,7 @@ export async function loadShopifyProduct(): Promise<any | null> {
       }
     }
   } catch (err) {
-    console.warn('[KOSNORA] products.json lookup:', err);
+    console.warn('[KOSNORA] product lookup:', err);
   }
 
   return null;
@@ -155,6 +178,20 @@ export async function resolveShopifyVariant(
   color?: string
 ): Promise<{ id: string; title?: string; available?: boolean; matchedVariant?: any } | null> {
   if (typeof window === 'undefined') return null;
+
+  // 0. Primary Inventory Verification:
+  // If the selected Model + Color is NOT registered as available in store inventory,
+  // it is out of stock / not available for sale.
+  if (model && color) {
+    const isAvailableInCatalog = isVariantInStoreCatalog(model, color);
+    if (!isAvailableInCatalog) {
+      return {
+        id: '',
+        title: `${model} / ${color}`,
+        available: false,
+      };
+    }
+  }
 
   const product = await loadShopifyProduct();
   if (product?.variants?.length > 0) {

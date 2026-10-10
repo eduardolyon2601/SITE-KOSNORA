@@ -294,7 +294,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <button
               type="button"
               onClick={handleProceedToCheckout}
-              disabled={isSubmitting || (resolvedVariant && resolvedVariant.available === false)}
+              disabled={Boolean(isSubmitting || (resolvedVariant && resolvedVariant.available === false))}
               className="w-full py-4 px-6 bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 active:scale-98 text-white font-black text-xs sm:text-sm tracking-wider uppercase rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (

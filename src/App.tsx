@@ -6,6 +6,7 @@ import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { getPricingTiers, PRODUCT_IMAGES } from './data/productData';
+import { isVariantInStoreCatalog } from './data/storeInventory';
 import { PricingTier } from './types';
 
 export default function App() {
@@ -17,13 +18,21 @@ export default function App() {
   const [selectedModel, setSelectedModel] = useState('iPhone 16 Pro Max');
 
   const handleOpenCart = (tier?: PricingTier, imageId?: string) => {
+    let targetColor = selectedColor;
+    if (imageId) {
+      const match = PRODUCT_IMAGES.find((img) => img.id === imageId);
+      if (match) {
+        targetColor = match.name;
+        setSelectedColor(match.name);
+      }
+    }
+    // Prevent opening cart if combination is out of stock
+    if (!isVariantInStoreCatalog(selectedModel, targetColor)) {
+      return;
+    }
     if (tier) {
       setSelectedTier(tier);
       setCartQuantity(tier.quantity);
-    }
-    if (imageId) {
-      const match = PRODUCT_IMAGES.find((img) => img.id === imageId);
-      if (match) setSelectedColor(match.name);
     }
     setIsCartOpen(true);
   };

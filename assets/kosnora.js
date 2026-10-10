@@ -76,6 +76,10 @@ function initHeroGallery() {
         btn.style.background = '#FAF5FF';
         const activeSpans = btn.querySelectorAll('span');
         activeSpans.forEach(s => { s.style.color = '#9333EA'; });
+
+        if (!isVideo && name) {
+          window.dispatchEvent(new CustomEvent('kosnora:colorchange', { detail: { name, src } }));
+        }
       });
     });
   }
@@ -124,6 +128,10 @@ function initHeroGallery() {
         btn.style.borderColor = '#9333EA';
         btn.style.background = '#9333EA';
         btn.style.color = '#FFF';
+
+        if (!isVideo && name) {
+          window.dispatchEvent(new CustomEvent('kosnora:colorchange', { detail: { name, src } }));
+        }
       });
     });
   }
@@ -415,6 +423,147 @@ function initDrawer() {
     return false;
   }
 
+  // Official Shopify variants registered in store
+  const STORE_INVENTORY = [
+    { color: 'orange', model: '17pro' },
+    { color: 'orange', model: '17' },
+    { color: 'orange', model: '17promax' },
+    { color: 'pink', model: '15promax' },
+    { color: 'pink', model: '14pro' },
+    { color: 'pink', model: '15pro' },
+    { color: 'pink', model: '13' },
+    { color: 'pink', model: '14' },
+    { color: 'pink', model: '13promax' },
+    { color: 'pink', model: '14promax' },
+    { color: 'pink', model: '16promax' },
+    { color: 'pink', model: '13pro' },
+    { color: 'pink', model: '16pro' },
+    { color: 'pink', model: '15' },
+    { color: 'white', model: '16promax' },
+    { color: 'white', model: '13pro' },
+    { color: 'white', model: '17pro' },
+    { color: 'white', model: '16pro' },
+    { color: 'white', model: '17' },
+    { color: 'white', model: '15' },
+    { color: 'white', model: '17promax' },
+    { color: 'white', model: '15promax' },
+    { color: 'white', model: '14pro' },
+    { color: 'white', model: '15pro' },
+    { color: 'white', model: '13' },
+    { color: 'white', model: '14' },
+    { color: 'white', model: '13promax' },
+    { color: 'white', model: '14promax' },
+    { color: 'grey', model: '15promax' },
+    { color: 'grey', model: '14pro' },
+    { color: 'grey', model: '15pro' },
+    { color: 'grey', model: '13' },
+    { color: 'grey', model: '14' },
+    { color: 'grey', model: '13promax' },
+    { color: 'grey', model: '14promax' },
+    { color: 'grey', model: '16promax' },
+    { color: 'grey', model: '13pro' },
+    { color: 'grey', model: '17pro' },
+    { color: 'grey', model: '16pro' },
+    { color: 'grey', model: '17' },
+    { color: 'grey', model: '15' },
+    { color: 'grey', model: '17promax' },
+    { color: 'black', model: '16promax' },
+    { color: 'black', model: '12pro' },
+    { color: 'black', model: '13pro' },
+    { color: 'black', model: '17pro' },
+    { color: 'black', model: '12' },
+    { color: 'black', model: '16pro' },
+    { color: 'black', model: '17' },
+    { color: 'black', model: '15' },
+    { color: 'black', model: '17promax' },
+    { color: 'black', model: '15promax' },
+    { color: 'black', model: '14pro' },
+    { color: 'black', model: '15pro' },
+    { color: 'black', model: '13' },
+    { color: 'black', model: '14' },
+    { color: 'black', model: '13promax' },
+    { color: 'black', model: '14promax' }
+  ];
+
+  // 22 explicitly identified out-of-stock combinations from official inventory export
+  const OUT_OF_STOCK_COMBINATIONS = [
+    // Orange (13)
+    { color: 'orange', model: '16promax' },
+    { color: 'orange', model: '12pro' },
+    { color: 'orange', model: '13pro' },
+    { color: 'orange', model: '12' },
+    { color: 'orange', model: '16pro' },
+    { color: 'orange', model: '15' },
+    { color: 'orange', model: '15promax' },
+    { color: 'orange', model: '14pro' },
+    { color: 'orange', model: '15pro' },
+    { color: 'orange', model: '13' },
+    { color: 'orange', model: '14' },
+    { color: 'orange', model: '13promax' },
+    { color: 'orange', model: '14promax' },
+
+    // White (2)
+    { color: 'white', model: '12pro' },
+    { color: 'white', model: '12' },
+
+    // Pink (5)
+    { color: 'pink', model: '12pro' },
+    { color: 'pink', model: '17pro' },
+    { color: 'pink', model: '12' },
+    { color: 'pink', model: '17' },
+    { color: 'pink', model: '17promax' },
+
+    // Grey (2)
+    { color: 'grey', model: '12pro' },
+    { color: 'grey', model: '12' }
+  ];
+
+  function normalizeModelCode(model) {
+    return (model || '')
+      .toLowerCase()
+      .replace(/^iphone\s*/i, '')
+      .replace(/\s+/g, '')
+      .trim();
+  }
+
+  function normalizeColorCode(color) {
+    const c = (color || '').toLowerCase().trim();
+    if (['gray', 'grey', 'cinza', 'titanium', 'grafite'].includes(c)) return 'grey';
+    if (['black', 'preto', 'dark', 'midnight'].includes(c)) return 'black';
+    if (['pink', 'rosa', 'rose'].includes(c)) return 'pink';
+    if (['white', 'branco', 'silver', 'prata'].includes(c)) return 'white';
+    if (['orange', 'laranja', 'sunset'].includes(c)) return 'orange';
+    return c;
+  }
+
+  function isCombinationInStoreInventory(model, color) {
+    const normColor = normalizeColorCode(color);
+    const normModel = normalizeModelCode(model);
+
+    // 1. Explicit out-of-stock verification
+    if (OUT_OF_STOCK_COMBINATIONS.some(item => item.color === normColor && item.model === normModel)) {
+      return false;
+    }
+
+    // 2. Real-time Shopify product availability verification
+    if (activeProduct && Array.isArray(activeProduct.variants) && activeProduct.variants.length > 0) {
+      const liveMatched = activeProduct.variants.find(v => {
+        const opts = [v.option1, v.option2, v.option3].filter(Boolean);
+        return opts.some(o => isColorMatch(o, color)) && opts.some(o => isModelMatch(o, model));
+      }) || activeProduct.variants.find(v => {
+        const title = (v.title || '').toLowerCase();
+        return isColorMatch(title, color) && isModelMatch(title, model);
+      });
+
+      if (liveMatched && liveMatched.available === false) {
+        return false;
+      }
+    }
+
+    // 3. Fallback to registered catalog
+    return STORE_INVENTORY.some(item => item.color === normColor && item.model === normModel);
+  }
+
   async function loadActiveProduct() {
     if (activeProduct && activeProduct.variants && activeProduct.variants.length > 0) {
       return activeProduct;
@@ -451,6 +600,27 @@ function initDrawer() {
     }
 
     const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
+    const candidateHandles = [
+      window.KOSNORA_STORE && window.KOSNORA_STORE.productHandle,
+      'case-kosnora-digital',
+      'ink-nfc-phone-case-for-iphone-17-16-15-14-pro-max-12-diy-picture-smart-screen-phone-cases-four-colors-image-screen-battery-free',
+      'kosnora-case',
+      'kosnora'
+    ].filter(Boolean);
+
+    for (const handle of candidateHandles) {
+      try {
+        const pRes = await fetch(root + 'products/' + handle + '.js');
+        if (pRes.ok) {
+          const pData = await pRes.json();
+          if (pData && Array.isArray(pData.variants) && pData.variants.length > 0) {
+            activeProduct = pData;
+            return activeProduct;
+          }
+        }
+      } catch (e) {}
+    }
+
     try {
       const res = await fetch(root + 'products.json?limit=25');
       if (res.ok) {
@@ -474,6 +644,11 @@ function initDrawer() {
   }
 
   function findVariantForOptions(modelName, colorName) {
+    // Check real store inventory first
+    if (!isCombinationInStoreInventory(modelName, colorName)) {
+      return { id: '', available: false, title: `${modelName} / ${colorName}` };
+    }
+
     if (!activeProduct || !activeProduct.variants || activeProduct.variants.length === 0) {
       const domId = varInput?.value;
       const storeId = window.KOSNORA_STORE && window.KOSNORA_STORE.variantId;
@@ -618,16 +793,96 @@ function initDrawer() {
     });
   }
 
+  function updateLandingPageStockUI() {
+    const isAvailable = isCombinationInStoreInventory(currentModel, currentColor);
+
+    // 1. Update landing page primary CTA buttons
+    const heroCtaBtns = document.querySelectorAll('.kosnora-btn-primary[data-open-drawer]');
+    heroCtaBtns.forEach(btn => {
+      if (!isAvailable) {
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+        btn.style.opacity = '0.65';
+        btn.style.cursor = 'not-allowed';
+        btn.style.background = '#E5E7EB';
+        btn.style.color = '#6B7280';
+        btn.innerHTML = '<span>COMBINAÇÃO ESGOTADA</span>';
+      } else {
+        btn.disabled = false;
+        btn.removeAttribute('aria-disabled');
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.style.background = 'linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%)';
+        btn.style.color = '#FFF';
+        btn.innerHTML = '<span>GET YOUR KOSNORA</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left:6px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+      }
+    });
+
+    // 2. Update landing page tier card buy buttons
+    const tierBuyBtns = document.querySelectorAll('.kosnora-tier-buy-btn');
+    tierBuyBtns.forEach(btn => {
+      if (!isAvailable) {
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+        btn.textContent = 'Esgotado';
+      } else {
+        btn.disabled = false;
+        btn.removeAttribute('aria-disabled');
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.textContent = 'Buy Now';
+      }
+    });
+
+    // 3. Update model select dropdown options with stock indicators
+    const selects = [
+      document.getElementById('hero-desktop-model-select'),
+      document.getElementById('hero-mobile-model-select')
+    ];
+    selects.forEach(sel => {
+      if (!sel) return;
+      Array.from(sel.options).forEach(opt => {
+        const rawModel = opt.value;
+        const optAvail = isCombinationInStoreInventory(rawModel, currentColor);
+        opt.textContent = optAvail ? rawModel : `${rawModel} · (Esgotado)`;
+      });
+    });
+
+    // 4. Update color thumbnails with status indication
+    const allThumbs = document.querySelectorAll('[data-gallery-desktop], [data-gallery-mobile]');
+    allThumbs.forEach(thumb => {
+      const colorName = thumb.getAttribute('data-name');
+      if (!colorName || colorName === 'Video') return;
+      const colAvail = isCombinationInStoreInventory(currentModel, colorName);
+      if (!colAvail) {
+        thumb.title = `${colorName} - Esgotado para ${currentModel}`;
+        if (!thumb.classList.contains('active-thumb')) {
+          thumb.style.opacity = '0.7';
+        }
+      } else {
+        thumb.title = `${colorName} - Em estoque`;
+        if (!thumb.classList.contains('active-thumb')) {
+          thumb.style.opacity = '1';
+        }
+      }
+    });
+  }
+
   // Open Drawer Listeners
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
-      // Set quantity from tier if specified (e.g. data-qty="2")
-      if (btn.hasAttribute('data-qty')) {
-        const reqQty = parseInt(btn.getAttribute('data-qty'), 10);
-        if (reqQty >= 1) currentQty = reqQty;
+      // Capture selected model from the landing page
+      const desktopModelSelect = document.getElementById('hero-desktop-model-select');
+      const mobileModelSelect = document.getElementById('hero-mobile-model-select');
+      const chosenModel = (desktopModelSelect && desktopModelSelect.value) ||
+                          (mobileModelSelect && mobileModelSelect.value);
+      if (chosenModel) {
+        currentModel = chosenModel;
       }
 
       // Capture selected color from the landing page
@@ -639,20 +894,24 @@ function initDrawer() {
         currentColor = chosenColor;
       }
 
+      // Guard: Do NOT open drawer if combination is out of stock!
+      const isAvailable = isCombinationInStoreInventory(currentModel, currentColor);
+      if (!isAvailable) {
+        updateLandingPageStockUI();
+        return;
+      }
+
+      // Set quantity from tier if specified (e.g. data-qty="2")
+      if (btn.hasAttribute('data-qty')) {
+        const reqQty = parseInt(btn.getAttribute('data-qty'), 10);
+        if (reqQty >= 1) currentQty = reqQty;
+      }
+
       // Match product thumbnail with chosen color
       const colorSrc = (activeDesktopThumb && activeDesktopThumb.getAttribute('data-src')) ||
                        (activeMobileThumb && activeMobileThumb.getAttribute('data-src'));
       if (colorSrc && productImg) {
         productImg.src = colorSrc;
-      }
-
-      // Capture selected model from the landing page
-      const desktopModelSelect = document.getElementById('hero-desktop-model-select');
-      const mobileModelSelect = document.getElementById('hero-mobile-model-select');
-      const chosenModel = (desktopModelSelect && desktopModelSelect.value) ||
-                          (mobileModelSelect && mobileModelSelect.value);
-      if (chosenModel) {
-        currentModel = chosenModel;
       }
 
       // Update read-only pill labels (Preserving customer choices!)
@@ -687,6 +946,7 @@ function initDrawer() {
       currentModel = desktopModelSelect.value;
       if (mobileModelSelect) mobileModelSelect.value = currentModel;
       if (summaryModel) summaryModel.textContent = currentModel;
+      updateLandingPageStockUI();
       syncVariantSelection();
     });
   }
@@ -695,12 +955,24 @@ function initDrawer() {
       currentModel = mobileModelSelect.value;
       if (desktopModelSelect) desktopModelSelect.value = currentModel;
       if (summaryModel) summaryModel.textContent = currentModel;
+      updateLandingPageStockUI();
       syncVariantSelection();
     });
   }
 
-  // Pre-load active product
+  // Listen to color changes from hero gallery
+  window.addEventListener('kosnora:colorchange', (e) => {
+    if (e.detail && e.detail.name && e.detail.name !== 'Video') {
+      currentColor = e.detail.name;
+      if (summaryColor) summaryColor.textContent = currentColor;
+      updateLandingPageStockUI();
+      syncVariantSelection();
+    }
+  });
+
+  // Pre-load active product and sync initial landing page UI
   loadActiveProduct().then(() => {
+    updateLandingPageStockUI();
     syncVariantSelection();
   });
 
