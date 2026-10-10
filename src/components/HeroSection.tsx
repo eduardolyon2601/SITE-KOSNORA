@@ -13,6 +13,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectTierAndBuy,
 }) => {
   const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(true);
   const tiers = getPricingTiers();
   const [selectedTierId, setSelectedTierId] = useState<string>('single');
 
@@ -23,6 +24,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     } else {
       onCtaClick(PRODUCT_IMAGES[activeImageIdx]?.id);
     }
+  };
+
+  const handleColorClick = (idx: number) => {
+    // STOP VIDEO WHEN CUSTOMER CLICKS ON COLORS
+    setIsPlayingVideo(false);
+    setActiveImageIdx(idx);
+  };
+
+  const handleVideoClick = () => {
+    setIsPlayingVideo(true);
   };
 
   const currentImage = PRODUCT_IMAGES[activeImageIdx];
@@ -49,39 +60,74 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </span>
           </div>
 
-          {/* First Photo of the Header (Framed without cutting - object-contain) */}
+          {/* Mobile Media: Looping Video by default, switches to photo on color click */}
           <div className="relative w-full max-w-[340px] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 flex items-center justify-center">
-            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-neutral-100/60 flex items-center justify-center">
-              <img
-                src={currentImage.url}
-                alt={`KOSNORA - ${currentImage.name}`}
-                className="w-full h-full object-contain block select-none transition-all duration-300"
-              />
-              <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
-                <span>{currentImage.name}</span>
-              </div>
+            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
+              {isPlayingVideo ? (
+                <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
+                  <iframe
+                    src="https://player.vimeo.com/video/1234575864?h=86322bd9-a325-437a-a838-9ae5a0653601&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full scale-150 origin-center border-0 pointer-events-none"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title="KOSNORA Video"
+                  />
+                  <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 pointer-events-none shadow-sm z-20">
+                    <span className="w-2 h-2 rounded-full bg-[#9333EA] animate-pulse inline-block" />
+                    <span>Video</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <img
+                    src={currentImage.url}
+                    alt={`KOSNORA - ${currentImage.name}`}
+                    className="w-full h-full object-contain block select-none transition-all duration-300 bg-neutral-50"
+                  />
+                  <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20">
+                    <span>{currentImage.name}</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
-          {/* Miniature Photo Previews */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-            {PRODUCT_IMAGES.map((img, idx) => (
-              <button
-                key={img.id}
-                type="button"
-                onClick={() => setActiveImageIdx(idx)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  activeImageIdx === idx
-                    ? 'bg-[#9333EA] text-white shadow-md scale-105 ring-2 ring-[#9333EA]/30'
-                    : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-50'
-                }`}
-              >
-                <div className="w-5 h-6 rounded overflow-hidden bg-neutral-100 border border-black/10 shrink-0 flex items-center justify-center">
-                  <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
-                </div>
-                <span>{img.name}</span>
-              </button>
-            ))}
+          {/* Compact Mobile Media & Color Thumbnails (Pills smaller than prices) */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3.5 max-w-sm">
+            {/* Video Option */}
+            <button
+              type="button"
+              onClick={handleVideoClick}
+              className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+                isPlayingVideo
+                  ? 'bg-[#9333EA] text-white shadow-xs scale-102 ring-1 ring-[#9333EA]/30'
+                  : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-50'
+              }`}
+            >
+              <span>▶ Video</span>
+            </button>
+
+            {/* Colors (clicking any color stops the video immediately) */}
+            {PRODUCT_IMAGES.map((img, idx) => {
+              const isSelected = !isPlayingVideo && activeImageIdx === idx;
+              return (
+                <button
+                  key={img.id}
+                  type="button"
+                  onClick={() => handleColorClick(idx)}
+                  className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+                    isSelected
+                      ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30'
+                      : 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
+                  }`}
+                >
+                  <div className="w-3 h-4 rounded overflow-hidden bg-neutral-100 border border-black/10 shrink-0 flex items-center justify-center">
+                    <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
+                  </div>
+                  <span>{img.name}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Direct CTA Button (Placed Below the First Photo) */}
@@ -247,52 +293,35 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             
             {/* LEFT COLUMN: Product & photos on the left of the page */}
             <div className="col-span-5 flex flex-col items-center">
-              {/* Product Hero Image Gallery - Framed without cropping (object-contain) */}
+              {/* Product Hero Media Gallery (Vimeo Video loop by default, stops when color is clicked) */}
               <div className="relative w-full aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-3 flex items-center justify-center group">
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-neutral-100/60 flex items-center justify-center">
-                  <img
-                    src={currentImage.url}
-                    alt={`KOSNORA - ${currentImage.name}`}
-                    className="w-full h-full object-contain block select-none transition-all duration-300"
-                  />
-                  <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
-                    <span>{currentImage.name}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Thumbnails Swatches with mini framed photo previews */}
-              <div className="w-full mt-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-neutral-500 uppercase">
-                    Select Color / Finish:
-                  </span>
-                  <span className="text-xs font-black text-[#9333EA] uppercase">
-                    {currentImage.name}
-                  </span>
-                </div>
-                <div className="grid grid-cols-5 gap-2">
-                  {PRODUCT_IMAGES.map((img, idx) => (
-                    <button
-                      key={img.id}
-                      type="button"
-                      onClick={() => setActiveImageIdx(idx)}
-                      className={`p-1.5 rounded-xl transition-all cursor-pointer flex flex-col items-center gap-1.5 text-center ${
-                        activeImageIdx === idx
-                          ? 'bg-[#FAF5FF] border-2 border-[#9333EA] shadow-sm ring-2 ring-[#9333EA]/20'
-                          : 'bg-white border border-neutral-200 hover:border-neutral-300'
-                      }`}
-                    >
-                      <div className="w-full aspect-[3/4] rounded-lg overflow-hidden bg-neutral-100 flex items-center justify-center">
-                        <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
+                  {isPlayingVideo ? (
+                    <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
+                      <iframe
+                        src="https://player.vimeo.com/video/1234575864?h=86322bd9-a325-437a-a838-9ae5a0653601&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full scale-150 origin-center border-0 pointer-events-none"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowFullScreen
+                        title="KOSNORA Video"
+                      />
+                      <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 pointer-events-none shadow-sm z-20">
+                        <span className="w-2 h-2 rounded-full bg-[#9333EA] animate-pulse inline-block" />
+                        <span>Video</span>
                       </div>
-                      <span className={`text-[10px] font-bold uppercase truncate max-w-full ${
-                        activeImageIdx === idx ? 'text-[#9333EA]' : 'text-neutral-700'
-                      }`}>
-                        {img.name}
-                      </span>
-                    </button>
-                  ))}
+                    </div>
+                  ) : (
+                    <>
+                      <img
+                        src={currentImage.url}
+                        alt={`KOSNORA - ${currentImage.name}`}
+                        className="w-full h-full object-contain block select-none transition-all duration-300 bg-neutral-50"
+                      />
+                      <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20">
+                        <span>{currentImage.name}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -328,9 +357,58 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <h1 className="text-3xl xl:text-4xl font-black uppercase tracking-tight text-neutral-950 mb-2">
                 KOSNORA Case
               </h1>
-              <p className="text-sm font-semibold text-neutral-600 mb-5 leading-relaxed">
+              <p className="text-sm font-semibold text-neutral-600 mb-4 leading-relaxed">
                 Refined minimalist design, reinforced impact protection, and a smooth tactile finish. Pick your favorite color and enjoy our progressive bundle discounts.
               </p>
+
+              {/* Compact Color Selection (Smaller than prices to keep customer focus on purchase, located above pricing options) */}
+              <div className="w-full mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+                    Media / Color:
+                  </span>
+                  <span className="text-[11px] font-black text-[#9333EA] uppercase tracking-wider">
+                    {isPlayingVideo ? 'Video' : currentImage.name}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Video pill (loops by default) */}
+                  <button
+                    type="button"
+                    onClick={handleVideoClick}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                      isPlayingVideo
+                        ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30'
+                        : 'bg-white border border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50'
+                    }`}
+                  >
+                    <span className="text-[10px] text-[#9333EA]">▶</span>
+                    <span>Video</span>
+                  </button>
+
+                  {/* Color options (clicking any color stops the video immediately) */}
+                  {PRODUCT_IMAGES.map((img, idx) => {
+                    const isSelected = !isPlayingVideo && activeImageIdx === idx;
+                    return (
+                      <button
+                        key={img.id}
+                        type="button"
+                        onClick={() => handleColorClick(idx)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30'
+                            : 'bg-white border border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50'
+                        }`}
+                      >
+                        <div className="w-3.5 h-4.5 rounded overflow-hidden bg-neutral-100 shrink-0 flex items-center justify-center">
+                          <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
+                        </div>
+                        <span>{img.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               {/* Direct CTA Button (GET YOUR KOSNORA) */}
               <button

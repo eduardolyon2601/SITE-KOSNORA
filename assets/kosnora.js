@@ -11,49 +11,106 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
 });
 
-// 1. Phone Case Product Photo Gallery
+// 1. Phone Case Product Photo & Looping Video Gallery (Shopify-Compatible)
 function initHeroGallery() {
+  function pauseVimeo(iframe) {
+    if (!iframe) return;
+    try {
+      iframe.contentWindow.postMessage('{"method":"pause"}', '*');
+    } catch (e) {}
+  }
+
+  function playVimeo(iframe) {
+    if (!iframe) return;
+    try {
+      iframe.contentWindow.postMessage('{"method":"play"}', '*');
+    } catch (e) {}
+  }
+
   // Desktop
+  const desktopVideo = document.getElementById('kosnora-desktop-video');
+  const desktopVimeoIframe = document.getElementById('kosnora-vimeo-desktop');
   const desktopImg = document.getElementById('kosnora-desktop-img');
   const desktopBadge = document.getElementById('desktop-color-badge');
   const desktopLabel = document.getElementById('active-desktop-label');
   const desktopThumbs = document.querySelectorAll('[data-gallery-desktop]');
 
-  if (desktopThumbs.length && desktopImg) {
+  if (desktopThumbs.length) {
     desktopThumbs.forEach(btn => {
       btn.addEventListener('click', () => {
         const src = btn.getAttribute('data-src');
         const name = btn.getAttribute('data-name');
-        if (src) desktopImg.src = src;
-        if (desktopBadge && name) desktopBadge.textContent = name;
-        if (desktopLabel && name) desktopLabel.textContent = name;
+        const isVideo = !src || name === 'Video';
+
+        if (isVideo) {
+          // Show Video and resume loop
+          if (desktopVideo) desktopVideo.style.display = 'block';
+          if (desktopImg) desktopImg.style.display = 'none';
+          if (desktopBadge) desktopBadge.style.display = 'none';
+          if (desktopLabel) desktopLabel.textContent = 'Video';
+          playVimeo(desktopVimeoIframe);
+        } else {
+          // Customer clicked a color: STOP VIDEO LOOP IMMEDIATELY & show photo
+          pauseVimeo(desktopVimeoIframe);
+          if (desktopVideo) desktopVideo.style.display = 'none';
+          if (desktopImg) {
+            desktopImg.src = src;
+            desktopImg.style.display = 'block';
+          }
+          if (desktopBadge) {
+            desktopBadge.textContent = name;
+            desktopBadge.style.display = 'block';
+          }
+          if (desktopLabel) desktopLabel.textContent = name;
+        }
 
         desktopThumbs.forEach(b => {
           b.style.borderColor = '#E5E7EB';
           b.style.background = '#FFF';
-          const span = b.querySelector('span');
-          if (span) span.style.color = '#374151';
+          const spans = b.querySelectorAll('span');
+          spans.forEach(s => { s.style.color = '#374151'; });
         });
         btn.style.borderColor = '#9333EA';
         btn.style.background = '#FAF5FF';
-        const activeSpan = btn.querySelector('span');
-        if (activeSpan) activeSpan.style.color = '#9333EA';
+        const activeSpans = btn.querySelectorAll('span');
+        activeSpans.forEach(s => { s.style.color = '#9333EA'; });
       });
     });
   }
 
   // Mobile
+  const mobileVideo = document.getElementById('kosnora-mobile-video');
+  const mobileVimeoIframe = document.getElementById('kosnora-vimeo-mobile');
   const mobileImg = document.getElementById('kosnora-mobile-img');
   const mobileBadge = document.getElementById('mobile-color-badge');
   const mobileThumbs = document.querySelectorAll('[data-gallery-mobile]');
 
-  if (mobileThumbs.length && mobileImg) {
+  if (mobileThumbs.length) {
     mobileThumbs.forEach(btn => {
       btn.addEventListener('click', () => {
         const src = btn.getAttribute('data-src');
         const name = btn.getAttribute('data-name');
-        if (src) mobileImg.src = src;
-        if (mobileBadge && name) mobileBadge.textContent = name;
+        const isVideo = !src || name === 'Video';
+
+        if (isVideo) {
+          // Show Video and resume loop
+          if (mobileVideo) mobileVideo.style.display = 'block';
+          if (mobileImg) mobileImg.style.display = 'none';
+          if (mobileBadge) mobileBadge.style.display = 'none';
+          playVimeo(mobileVimeoIframe);
+        } else {
+          // Customer clicked a color: STOP VIDEO LOOP IMMEDIATELY & show photo
+          pauseVimeo(mobileVimeoIframe);
+          if (mobileVideo) mobileVideo.style.display = 'none';
+          if (mobileImg) {
+            mobileImg.src = src;
+            mobileImg.style.display = 'block';
+          }
+          if (mobileBadge) {
+            mobileBadge.textContent = name;
+            mobileBadge.style.display = 'block';
+          }
+        }
 
         mobileThumbs.forEach(b => {
           b.style.borderColor = '#E5E7EB';

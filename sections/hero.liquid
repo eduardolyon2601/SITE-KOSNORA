@@ -5,54 +5,32 @@
     <div class="kosnora-desktop-hero" style="display: none;">
       <div style="display: grid; grid-template-columns: 5fr 7fr; gap: 3rem; align-items: start;">
         
-        <!-- Left: Product Photos Gallery -->
+        <!-- Left: Product Photos & Video Showcase Gallery -->
         <div style="display: flex; flex-direction: column; align-items: center;">
           <div style="width: 100%; aspect-ratio: 645/800; border-radius: 1.5rem; overflow: hidden; background: #FFF; border: 1px solid #E5E7EB; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); padding: 0.75rem; display: flex; align-items: center; justify-content: center; position: relative;">
-            <div style="width: 100%; height: 100%; border-radius: 1rem; overflow: hidden; background: #F9FAFB; display: flex; align-items: center; justify-content: center; position: relative;">
-              <img id="kosnora-desktop-img" src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Case" style="width: 100%; height: 100%; object-fit: contain; display: block;">
-              <div id="desktop-color-badge" style="position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em;">
+            <div style="width: 100%; height: 100%; border-radius: 1rem; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; position: relative;">
+              <!-- 1. Vimeo Video (Loops by default, framed with zero side borders) -->
+              <div id="kosnora-desktop-video" style="position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <iframe
+                  id="kosnora-vimeo-desktop"
+                  src="https://player.vimeo.com/video/1234575864?h=86322bd9-a325-437a-a838-9ae5a0653601&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
+                  style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%) scale(1.5); transform-origin: center center; border: 0; pointer-events: none;"
+                  frameborder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                  title="KOSNORA Video"
+                ></iframe>
+                <div id="desktop-video-badge" style="position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; pointer-events: none; z-index: 10;">
+                  <span style="width: 7px; height: 7px; border-radius: 50%; background: #9333EA; display: inline-block;"></span>
+                  <span>Video</span>
+                </div>
+              </div>
+
+              <!-- 2. Static Product Image (Shown when customer clicks on a color) -->
+              <img id="kosnora-desktop-img" src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Case" style="width: 100%; height: 100%; object-fit: contain; display: none; background: #F9FAFB;">
+              <div id="desktop-color-badge" style="display: none; position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; z-index: 3;">
                 Gray
               </div>
-            </div>
-          </div>
-
-          <!-- 5 Photo Thumbnails -->
-          <div style="width: 100%; margin-top: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-              <span style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase;">Select Color / Finish:</span>
-              <span id="active-desktop-label" style="font-size: 11px; font-weight: 900; color: #9333EA; text-transform: uppercase;">Gray</span>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;">
-              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" class="active-thumb" style="padding: 0.35rem; border-radius: 0.75rem; border: 2px solid #9333EA; background: #FAF5FF; cursor: pointer; text-align: center;">
-                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
-                  <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="Gray" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #9333EA;">Gray</span>
-              </button>
-              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" data-name="Black" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
-                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
-                  <img src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" alt="Black" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">Black</span>
-              </button>
-              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" data-name="Pink" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
-                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
-                  <img src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" alt="Pink" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">Pink</span>
-              </button>
-              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" data-name="White" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
-                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
-                  <img src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" alt="White" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">White</span>
-              </button>
-              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" data-name="Orange" style="padding: 0.35rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; cursor: pointer; text-align: center;">
-                <div style="aspect-ratio: 3/4; border-radius: 0.5rem; overflow: hidden; background: #F3F4F6;">
-                  <img src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" alt="Orange" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; display: block; margin-top: 0.25rem; color: #374151;">Orange</span>
-              </button>
             </div>
           </div>
 
@@ -63,7 +41,7 @@
           </div>
         </div>
 
-        <!-- Right: Headline, CTA, and 3 Values Options -->
+        <!-- Right: Headline, Color Options (Above Pricing), CTA, and 3 Values Options -->
         <div style="display: flex; flex-direction: column;">
           <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: #FAF5FF; border: 1px solid #E9D5FF; color: #7E22CE; font-size: 11px; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; align-self: flex-start; margin-bottom: 0.75rem;">
             <span>★★★★★ 140+ HAPPY CUSTOMERS</span>
@@ -75,6 +53,53 @@
           <p style="font-size: 0.875rem; font-weight: 600; color: #4B5563; margin: 0 0 1.25rem 0; line-height: 1.6;">
             Refined minimalist design, reinforced impact protection, and a smooth tactile finish. Pick your favorite color and enjoy our progressive bundle discounts.
           </p>
+
+          <!-- Media / Color Options (Compact & Discreet - Video by default, stops when color is clicked) -->
+          <div style="width: 100%; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;">Media / Color:</span>
+              <span id="active-desktop-label" style="font-size: 11px; font-weight: 900; color: #9333EA; text-transform: uppercase; letter-spacing: 0.05em;">Video</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Video Button (Default Active) -->
+              <button type="button" data-gallery-desktop data-name="Video" class="active-thumb" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #FAF5FF; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
+                <span style="font-size: 10px; color: #9333EA;">▶</span>
+                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #9333EA; letter-spacing: 0.04em;">Video</span>
+              </button>
+
+              <!-- Color options -->
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
+                <div style="width: 14px; height: 18px; border-radius: 3px; overflow: hidden; background: #F3F4F6; flex-shrink: 0;">
+                  <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="Gray" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #374151; letter-spacing: 0.04em;">Gray</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" data-name="Black" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
+                <div style="width: 14px; height: 18px; border-radius: 3px; overflow: hidden; background: #F3F4F6; flex-shrink: 0;">
+                  <img src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" alt="Black" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #374151; letter-spacing: 0.04em;">Black</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" data-name="Pink" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
+                <div style="width: 14px; height: 18px; border-radius: 3px; overflow: hidden; background: #F3F4F6; flex-shrink: 0;">
+                  <img src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" alt="Pink" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #374151; letter-spacing: 0.04em;">Pink</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" data-name="White" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
+                <div style="width: 14px; height: 18px; border-radius: 3px; overflow: hidden; background: #F3F4F6; flex-shrink: 0;">
+                  <img src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" alt="White" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #374151; letter-spacing: 0.04em;">White</span>
+              </button>
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" data-name="Orange" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
+                <div style="width: 14px; height: 18px; border-radius: 3px; overflow: hidden; background: #F3F4F6; flex-shrink: 0;">
+                  <img src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" alt="Orange" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #374151; letter-spacing: 0.04em;">Orange</span>
+              </button>
+            </div>
+          </div>
 
           <!-- Direct CTA Button -->
           <button type="button" data-open-drawer class="kosnora-btn-primary" style="background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35); padding: 1.15rem 2.5rem; font-size: 0.875rem; border-radius: 12px; border: none; color: #FFF; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.25rem; width: 100%;">
@@ -184,44 +209,65 @@
         <span>★★★★★ 140+ HAPPY CUSTOMERS</span>
       </div>
 
-      <!-- Main Photo -->
+      <!-- Main Media (Vimeo loop by default, switches to photo on color click) -->
       <div style="width: 100%; max-width: 340px; aspect-ratio: 645/800; border-radius: 1.5rem; overflow: hidden; background: #FFF; border: 1px solid #E5E7EB; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); padding: 0.5rem; display: flex; align-items: center; justify-content: center; position: relative;">
-        <div style="width: 100%; height: 100%; border-radius: 1rem; overflow: hidden; background: #F9FAFB; display: flex; align-items: center; justify-content: center; position: relative;">
-          <img id="kosnora-mobile-img" src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Case" style="width: 100%; height: 100%; object-fit: contain; display: block;">
-          <div id="mobile-color-badge" style="position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase;">
+        <div style="width: 100%; height: 100%; border-radius: 1rem; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; position: relative;">
+          <!-- 1. Vimeo Video (Loops by default, framed with zero side borders) -->
+          <div id="kosnora-mobile-video" style="position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <iframe
+              id="kosnora-vimeo-mobile"
+              src="https://player.vimeo.com/video/1234575864?h=86322bd9-a325-437a-a838-9ae5a0653601&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
+              style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%) scale(1.5); transform-origin: center center; border: 0; pointer-events: none;"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              title="KOSNORA Video"
+            ></iframe>
+            <div id="mobile-video-badge" style="position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 5px; pointer-events: none; z-index: 10;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: #9333EA; display: inline-block;"></span>
+              <span>Video</span>
+            </div>
+          </div>
+
+          <!-- 2. Static Product Image (Shown when color is clicked) -->
+          <img id="kosnora-mobile-img" src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Case" style="width: 100%; height: 100%; object-fit: contain; display: none; background: #F9FAFB;">
+          <div id="mobile-color-badge" style="display: none; position: absolute; bottom: 0.75rem; left: 0.75rem; padding: 0.35rem 0.75rem; border-radius: 0.75rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; z-index: 3;">
             Gray
           </div>
         </div>
       </div>
 
-      <!-- Thumbnails -->
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
-        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" class="active-thumb" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 2px solid #9333EA; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
-          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+      <!-- Mobile Media / Color Thumbnails (Compact pills with Video default) -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin-top: 1rem;">
+        <button type="button" data-gallery-mobile data-name="Video" class="active-thumb" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #9333EA; color: #FFF; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <span>▶ Video</span>
+        </button>
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <div style="width: 12px; height: 15px; border-radius: 2px; overflow: hidden; background: #F3F4F6;">
             <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <span>Gray</span>
         </button>
-        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" data-name="Black" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
-          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" data-name="Black" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <div style="width: 12px; height: 15px; border-radius: 2px; overflow: hidden; background: #F3F4F6;">
             <img src="https://i.postimg.cc/CMqq8J51/Whats-App-Image-2026-10-07-at-00-11-55.jpg" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <span>Black</span>
         </button>
-        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" data-name="Pink" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
-          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" data-name="Pink" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <div style="width: 12px; height: 15px; border-radius: 2px; overflow: hidden; background: #F3F4F6;">
             <img src="https://i.postimg.cc/pVFFjkrr/Whats-App-Image-2026-10-09-at-02-44-27.jpg" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <span>Pink</span>
         </button>
-        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" data-name="White" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
-          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" data-name="White" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <div style="width: 12px; height: 15px; border-radius: 2px; overflow: hidden; background: #F3F4F6;">
             <img src="https://i.postimg.cc/kGKRdML9/Whats-App-Image-2026-10-09-at-02-47-31.jpg" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <span>White</span>
         </button>
-        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" data-name="Orange" style="padding: 0.35rem 0.65rem; border-radius: 0.75rem; border: 1px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.35rem;">
-          <div style="width: 18px; height: 22px; border-radius: 4px; overflow: hidden; background: #FFF;">
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" data-name="Orange" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <div style="width: 12px; height: 15px; border-radius: 2px; overflow: hidden; background: #F3F4F6;">
             <img src="https://i.postimg.cc/66vvZzqT/Whats-App-Image-2026-10-09-at-02-52-19.jpg" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
           <span>Orange</span>
