@@ -17,17 +17,6 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
     { label: 'FAQ', href: '#faq' },
   ];
 
-  const promoItems = [
-    'FIRST PURCHASE OFFER',
-    'SAVE MORE WHEN YOU BUNDLE',
-    'FREE WORLDWIDE SHIPPING',
-    'KOSNORA SMART CASE',
-    'FIRST PURCHASE OFFER',
-    'SAVE MORE WHEN YOU BUNDLE',
-    'FREE WORLDWIDE SHIPPING',
-    'KOSNORA SMART CASE',
-  ];
-
   // Close dropdown menu if user clicks outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,38 +43,7 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md shadow-xs transition-colors">
-      {/* 1. KOSNORA Infinite Promotional Marquee (Electric Purple, Continuous Seamless Movement) */}
-      <div
-        onClick={onShopClick}
-        className="w-full bg-[#7928CA] bg-gradient-to-r from-[#6D28D9] via-[#7928CA] to-[#6D28D9] text-white overflow-hidden py-2 sm:py-2.5 text-[10px] sm:text-[11px] font-bold tracking-[0.12em] uppercase border-b border-black/10 select-none cursor-pointer hover:brightness-105 transition-all shadow-xs"
-        role="region"
-        aria-label="Promotions Announcement"
-        title="Click to view offers"
-      >
-        <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
-          {/* Loop 1 */}
-          <div className="flex items-center shrink-0">
-            {promoItems.map((text, idx) => (
-              <span key={`loop1-${idx}`} className="inline-flex items-center font-['Montserrat',sans-serif] px-3 sm:px-5">
-                <span>{text}</span>
-                <span className="text-white/60 ml-3 sm:ml-5 text-[8px]">•</span>
-              </span>
-            ))}
-          </div>
-
-          {/* Loop 2 (seamless duplication for infinite continuous motion without blank gaps or jumps) */}
-          <div className="flex items-center shrink-0" aria-hidden="true">
-            {promoItems.map((text, idx) => (
-              <span key={`loop2-${idx}`} className="inline-flex items-center font-['Montserrat',sans-serif] px-3 sm:px-5">
-                <span>{text}</span>
-                <span className="text-white/60 ml-3 sm:ml-5 text-[8px]">•</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Navigation Bar */}
+      {/* Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 grid grid-cols-3 items-center">
         {/* LEFT COLUMN: Three Horizontal Lines (Pure Underlines, No Border/Box) */}
         <div className="flex items-center justify-start relative" ref={menuRef}>

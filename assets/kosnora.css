@@ -341,15 +341,6 @@ body {
   background: #CCCCCC;
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-33.333%); }
-}
-
-.animate-marquee {
-  animation: marquee 24s linear infinite;
-}
-
 /* Grid Utilities */
 .kosnora-grid-2 {
   display: grid;
@@ -475,111 +466,160 @@ body {
 }
 
 /* ==========================================================================
-   KOSNORA OPTIMIZED INFINITE MARQUEE LINE (100% SHOPIFY COMPATIBLE)
-   - Zero layout shift (CLS: 0.0)
-   - Hardware accelerated 60fps GPU transforms (translate3d)
-   - Isolated BEM namespace (no clash with Shopify themes or apps)
-   - Electric Purple brand background (#7928CA / #6D28D9)
-   - 100% Montserrat typography
-   - Seamless infinite loop, no blank gaps, no jumps
-   - Hover pause & prefers-reduced-motion for accessibility & readability
+   KOSNORA OPTIMIZED 3 PRICING TIERS (100% SHOPIFY COMPATIBLE - ZERO BORDER CLIPPING)
+   - Guaranteed full border visibility (top, bottom, left, right)
+   - Safe badge clearance with overflow: visible
+   - Native box-sizing: border-box enforcement
+   - Responsive layout: clean stack on mobile, 3-column grid on desktop
+   - Instant visual feedback and direct drawer trigger
    ========================================================================== */
-.kosnora-marquee-bar {
-  width: 100%;
-  background: #7928CA;
-  background: linear-gradient(90deg, #6D28D9 0%, #7928CA 50%, #6D28D9 100%);
-  color: #FFFFFF;
-  overflow: hidden;
-  padding: 8px 0;
-  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  user-select: none;
-  -webkit-user-select: none;
-  contain: layout paint;
+.kosnora-pricing-section {
   position: relative;
-  z-index: 51;
-  line-height: 1;
-  transition: filter 0.2s ease;
+  overflow: visible !important;
+  background: #FFFFFF;
 }
 
-.kosnora-marquee-bar:hover {
-  filter: brightness(1.08);
+.kosnora-tier-grid-desktop {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+  padding-top: 16px; /* Essential: prevents top badges and top border from ever being clipped */
+  padding-bottom: 8px;
+  padding-left: 2px;
+  padding-right: 2px;
+  box-sizing: border-box !important;
+  overflow: visible !important;
 }
 
-.kosnora-marquee-track {
+.kosnora-tier-card {
+  box-sizing: border-box !important;
+  border: 2px solid #E5E7EB;
+  border-radius: 1rem;
+  padding: 1.15rem 1rem;
+  background: #FFFFFF;
+  cursor: pointer;
   display: flex;
-  width: max-content;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: kosnoraMarquee 35s linear infinite;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  perspective: 1000px;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: visible !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-.kosnora-marquee-bar:hover .kosnora-marquee-track {
-  animation-play-state: paused;
+.kosnora-tier-card:hover {
+  border-color: #C084FC;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(147, 51, 234, 0.12);
 }
 
-.kosnora-marquee-group {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
+.kosnora-tier-card.is-popular {
+  border-color: #9333EA !important;
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.15) !important;
+}
+
+.kosnora-tier-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #9333EA;
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
   white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(147, 51, 234, 0.35);
+  z-index: 5;
+  pointer-events: none;
 }
 
-.kosnora-marquee-item {
-  display: inline-flex;
+.kosnora-tier-badge.best-value {
+  background: linear-gradient(135deg, #9333EA 0%, #6B21A8 100%);
+}
+
+/* Mobile Pricing Stack - Zero Clipping, full responsive border visibility */
+.kosnora-tier-stack-mobile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-top: 1.25rem;
+  padding-top: 14px;
+  padding-bottom: 8px;
+  padding-left: 2px;
+  padding-right: 2px;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+.kosnora-mobile-tier-item {
+  width: 100%;
+  box-sizing: border-box !important;
+  border: 2px solid #E5E7EB;
+  border-radius: 1rem;
+  padding: 1.15rem 1rem;
+  background: #FFFFFF;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: visible !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.kosnora-mobile-tier-item:active,
+.kosnora-mobile-tier-item:hover {
+  border-color: #9333EA;
+}
+
+.kosnora-mobile-tier-item.is-popular {
+  border-color: #9333EA !important;
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.16) !important;
+}
+
+.kosnora-tier-buy-btn {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
   align-items: center;
-  gap: 0;
-  padding: 0 1.25rem;
-  font-family: inherit;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.kosnora-tier-buy-btn.btn-dark {
+  background: #111111;
   color: #FFFFFF;
 }
 
-.kosnora-marquee-bullet {
-  color: rgba(255, 255, 255, 0.65);
-  margin-left: 1.25rem;
-  font-size: 8px;
-  vertical-align: middle;
+.kosnora-tier-buy-btn.btn-dark:hover {
+  background: #222222;
 }
 
-@keyframes kosnoraMarquee {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
+.kosnora-tier-buy-btn.btn-purple {
+  background: #9333EA;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .kosnora-marquee-track {
-    animation: none;
-    transform: none;
-    justify-content: center;
-    width: 100%;
-  }
+.kosnora-tier-buy-btn.btn-purple:hover {
+  background: #7E22CE;
 }
 
-@media (max-width: 640px) {
-  .kosnora-marquee-bar {
-    padding: 7px 0;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-  }
-  .kosnora-marquee-item {
-    padding: 0 0.85rem;
-  }
-  .kosnora-marquee-bullet {
-    margin-left: 0.85rem;
-  }
-}
 
 
 

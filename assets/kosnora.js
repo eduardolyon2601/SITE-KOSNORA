@@ -296,6 +296,7 @@ function initDrawer() {
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       if (btn.hasAttribute('data-qty')) {
         const reqQty = parseInt(btn.getAttribute('data-qty'), 10);
         if ([1, 2, 3].includes(reqQty)) {

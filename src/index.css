@@ -36,19 +36,3 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #CCCCCC;
 }
-
-@keyframes marquee {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
-}
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 42s linear infinite;
-  will-change: transform;
-  backface-visibility: hidden;
-}
-.animate-marquee:hover,
-div:hover > .animate-marquee {
-  animation-play-state: paused;
-}

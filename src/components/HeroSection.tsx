@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { ArrowRight, Star, ShieldCheck, Check, ChevronLeft, ChevronRight, ShoppingBag, Truck } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, Star, ShieldCheck, Check, ShoppingBag, Truck } from 'lucide-react';
 import { PricingTier } from '../types';
 import { getPricingTiers, PRODUCT_IMAGES } from '../data/productData';
 
@@ -15,17 +15,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const tiers = getPricingTiers();
   const [selectedTierId, setSelectedTierId] = useState<string>('single');
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-  const scrollCarousel = (direction: 'left' | 'right') => {
-    if (carouselRef.current) {
-      const scrollAmount = 260;
-      carouselRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
 
   const handleTierClick = (tier: PricingTier) => {
     setSelectedTierId(tier.id);
@@ -39,7 +28,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const currentImage = PRODUCT_IMAGES[activeImageIdx];
 
   return (
-    <section id="pricing" className="bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative overflow-hidden">
+    <section id="pricing" className="bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative overflow-visible">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* ============================================================ */}
@@ -119,34 +108,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
-            {/* Horizontal Carousel of Purchasing Options (1 for $79.90, 2 for 139.90, and 3 for 194.90) */}
+            {/* Zero-Clipping Responsive Purchasing Options (1 for $79.90, 2 for 139.90, and 3 for 194.90) */}
             <div className="w-full max-w-4xl relative mt-1">
-              {/* Carousel navigation buttons for tablet */}
-              <div className="hidden sm:flex items-center justify-between absolute -top-10 right-0 gap-1.5 z-10">
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel('left')}
-                  aria-label="Previous"
-                  className="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollCarousel('right')}
-                  aria-label="Next"
-                  className="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-neutral-700 flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Scrollable Container (side-by-side carousel, not stacked) */}
-              <div
-                ref={carouselRef}
-                className="flex items-stretch gap-3 sm:gap-4 overflow-x-auto pb-4 pt-3 px-2 sm:px-4 no-scrollbar snap-x snap-mandatory scroll-smooth"
-                style={{ scrollbarWidth: 'thin' }}
-              >
+              {/* Responsive Container (Clean full-width stack on mobile, 3-col on tablet - Zero border clipping) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4 pb-2 px-1">
                 {tiers.map((tier) => {
                   const isSelected = selectedTierId === tier.id;
                   const isDouble = tier.quantity === 2;
@@ -156,7 +121,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <div
                       key={tier.id}
                       onClick={() => handleTierClick(tier)}
-                      className={`min-w-[240px] sm:min-w-[270px] max-w-[290px] flex-1 shrink-0 snap-center rounded-2xl p-4 sm:p-5 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg ${
+                      className={`w-full rounded-2xl p-4 sm:p-5 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg ${
                         isSelected
                           ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20 -translate-y-0.5'
                           : 'border-neutral-200 hover:border-neutral-300'
@@ -164,12 +129,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     >
                       {/* Top Badge for special bundles */}
                       {isDouble && (
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap z-10">
                           Most Popular · 2 Cases
                         </div>
                       )}
                       {isTriple && (
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap z-10">
                           Best Value · 3 Cases
                         </div>
                       )}
@@ -255,11 +220,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </div>
                   );
                 })}
-              </div>
-
-              {/* Scroll Indicator hint for mobile */}
-              <div className="sm:hidden flex items-center justify-center gap-1.5 text-[11px] font-semibold text-neutral-400 mt-1">
-                <span>← Swipe horizontally to see all options →</span>
               </div>
             </div>
 
@@ -399,8 +359,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </span>
               </div>
 
-              {/* 3 Values Options (Side-by-side on desktop: 1 for $79.90, 2 for 139.90, and 3 for 194.90) */}
-              <div className="grid grid-cols-3 gap-3 mb-5">
+              {/* 3 Values Options (Side-by-side on desktop: 1 for $79.90, 2 for 139.90, and 3 for 194.90 - Zero Border Clipping) */}
+              <div className="grid grid-cols-3 gap-3.5 pt-4 pb-2 px-1 mb-5">
                 {tiers.map((tier) => {
                   const isSelected = selectedTierId === tier.id;
                   const isDouble = tier.quantity === 2;

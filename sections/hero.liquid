@@ -1,4 +1,4 @@
-<section id="pricing" class="section-light kosnora-py" style="position: relative; overflow: hidden; background: #FFFFFF; color: #111827; border-bottom: 1px solid #E5E7EB; padding-top: 2rem; padding-bottom: 3.5rem;">
+<section id="pricing" class="section-light kosnora-py kosnora-pricing-section" style="position: relative; overflow: visible; background: #FFFFFF; color: #111827; border-bottom: 1px solid #E5E7EB; padding-top: 2rem; padding-bottom: 3.5rem;">
   <div class="kosnora-container" style="max-width: 1200px; margin: 0 auto; padding: 0 1rem; position: relative; z-index: 2;">
     
     <!-- DESKTOP VIEW (Side-by-side: Product & Photos on Left, Values on Right) -->
@@ -83,80 +83,83 @@
           </button>
 
           <!-- Title for purchasing options -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-            <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111827;">Bundles & Pricing:</span>
-            <span style="font-size: 11px; font-weight: 600; color: #6B7280;">Click on an option below to buy</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111827; letter-spacing: 0.05em;">Bundles & Pricing:</span>
+            <span style="font-size: 11px; font-weight: 600; color: #6B7280;">Click any option below to select</span>
           </div>
 
-          <!-- 3 Values Options Grid (1 for $79.90, 2 for 139.90, and 3 for 194.90) -->
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <!-- 3 Values Options Grid (Desktop: 1 for $79.90, 2 for 139.90, and 3 for 194.90 - Zero Border Clipping) -->
+          <div class="kosnora-tier-grid-desktop">
             <!-- 1 for $79.90 -->
-            <div data-tier-select="1" style="border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+            <div data-tier-select="1" data-open-drawer data-qty="1" class="kosnora-tier-card">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                  <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">1 Case</span>
-                  <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">Single</span>
+                  <span style="font-size: 13px; font-weight: 900; text-transform: uppercase; color: #111111;">1 Case</span>
+                  <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 7px; border-radius: 9999px; color: #4B5563;">Single</span>
                 </div>
                 <div style="margin-bottom: 0.5rem;">
-                  <span style="font-size: 1.5rem; font-weight: 900; color: #111;">$79.90</span>
-                  <span style="display: block; font-size: 10px; font-weight: 700; color: #6B7280;">1 for $79.90</span>
+                  <span style="font-size: 1.5rem; font-weight: 900; color: #111111;">$79.90</span>
+                  <span style="display: block; font-size: 11px; font-weight: 700; color: #6B7280; margin-top: 2px;">1 for $79.90</span>
                 </div>
-                <ul style="list-style: none; padding: 0; margin: 0 0 0.75rem 0; font-size: 10px; color: #4B5563; display: flex; flex-direction: column; gap: 0.25rem;">
+                <ul style="list-style: none; padding: 0; margin: 0 0 0.85rem 0; font-size: 11px; color: #4B5563; display: flex; flex-direction: column; gap: 0.35rem;">
                   <li>✓ 1x KOSNORA Case</li>
                   <li>✓ Raised Protective Bezels</li>
-                </ul>
-              </div>
-              <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
-                Buy Now
-              </button>
-            </div>
-
-            <!-- 2 for 139.90 -->
-            <div data-tier-select="2" style="border: 2px solid #9333EA; border-radius: 1rem; padding: 1rem; background: #FFF; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);">
-              <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #9333EA; color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
-                Most Popular
-              </div>
-              <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; margin-top: 4px;">
-                  <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">2 Cases</span>
-                  <span style="font-size: 9px; font-weight: 800; background: #FAF5FF; color: #9333EA; padding: 2px 6px; border-radius: 9999px;">2x Pack</span>
-                </div>
-                <div style="margin-bottom: 0.5rem;">
-                  <span style="font-size: 1.5rem; font-weight: 900; color: #111;">$139.90</span>
-                  <span style="display: block; font-size: 10px; font-weight: 700; color: #6B7280;">2 for $139.90</span>
-                  <span style="display: block; font-size: 9px; font-weight: 700; color: #9333EA;">($69.95/ea)</span>
-                </div>
-                <ul style="list-style: none; padding: 0; margin: 0 0 0.75rem 0; font-size: 10px; color: #4B5563; display: flex; flex-direction: column; gap: 0.25rem;">
-                  <li>✓ 2x KOSNORA Cases</li>
-                  <li>✓ Raised Protective Bezels</li>
-                </ul>
-              </div>
-              <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
-                Buy Now
-              </button>
-            </div>
-
-            <!-- 3 for 194.90 -->
-            <div data-tier-select="3" style="border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-              <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #9333EA, #6B21A8); color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
-                Best Value
-              </div>
-              <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; margin-top: 4px;">
-                  <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">3 Cases</span>
-                  <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">3x Pack</span>
-                </div>
-                <div style="margin-bottom: 0.5rem;">
-                  <span style="font-size: 1.5rem; font-weight: 900; color: #111;">$194.90</span>
-                  <span style="display: block; font-size: 10px; font-weight: 700; color: #6B7280;">3 for $194.90</span>
-                  <span style="display: block; font-size: 9px; font-weight: 700; color: #9333EA;">($64.97/ea)</span>
-                </div>
-                <ul style="list-style: none; padding: 0; margin: 0 0 0.75rem 0; font-size: 10px; color: #4B5563; display: flex; flex-direction: column; gap: 0.25rem;">
-                  <li>✓ 3x KOSNORA Cases</li>
                   <li>✓ 30-Day Guarantee</li>
                 </ul>
               </div>
-              <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
+              <button type="button" data-open-drawer data-qty="1" class="kosnora-tier-buy-btn btn-dark">
+                Buy Now
+              </button>
+            </div>
+
+            <!-- 2 for 139.90 (Most Popular) -->
+            <div data-tier-select="2" data-open-drawer data-qty="2" class="kosnora-tier-card is-popular">
+              <div class="kosnora-tier-badge">
+                Most Popular
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; margin-top: 2px;">
+                  <span style="font-size: 13px; font-weight: 900; text-transform: uppercase; color: #111111;">2 Cases</span>
+                  <span style="font-size: 9px; font-weight: 800; background: #FAF5FF; color: #9333EA; padding: 2px 7px; border-radius: 9999px;">Save $19.90</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.5rem; font-weight: 900; color: #111111;">$139.90</span>
+                  <span style="display: block; font-size: 11px; font-weight: 700; color: #6B7280; margin-top: 2px;">2 for $139.90</span>
+                  <span style="display: block; font-size: 10px; font-weight: 800; color: #9333EA; margin-top: 1px;">($69.95/ea)</span>
+                </div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 0.85rem 0; font-size: 11px; color: #4B5563; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <li>✓ 2x KOSNORA Cases</li>
+                  <li>✓ Raised Protective Bezels</li>
+                  <li>✓ 30-Day Guarantee</li>
+                </ul>
+              </div>
+              <button type="button" data-open-drawer data-qty="2" class="kosnora-tier-buy-btn btn-purple">
+                Buy Now
+              </button>
+            </div>
+
+            <!-- 3 for 194.90 (Best Value) -->
+            <div data-tier-select="3" data-open-drawer data-qty="3" class="kosnora-tier-card">
+              <div class="kosnora-tier-badge best-value">
+                Best Value
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; margin-top: 2px;">
+                  <span style="font-size: 13px; font-weight: 900; text-transform: uppercase; color: #111111;">3 Cases</span>
+                  <span style="font-size: 9px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 7px; border-radius: 9999px;">Save $44.80</span>
+                </div>
+                <div style="margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.5rem; font-weight: 900; color: #111111;">$194.90</span>
+                  <span style="display: block; font-size: 11px; font-weight: 700; color: #6B7280; margin-top: 2px;">3 for $194.90</span>
+                  <span style="display: block; font-size: 10px; font-weight: 800; color: #9333EA; margin-top: 1px;">($64.97/ea)</span>
+                </div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 0.85rem 0; font-size: 11px; color: #4B5563; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <li>✓ 3x KOSNORA Cases</li>
+                  <li>✓ Raised Protective Bezels</li>
+                  <li>✓ 30-Day Guarantee</li>
+                </ul>
+              </div>
+              <button type="button" data-open-drawer data-qty="3" class="kosnora-tier-buy-btn btn-dark">
                 Buy Now
               </button>
             </div>
@@ -232,80 +235,85 @@
           {% render 'icon-arrow-right' %}
         </button>
         <span style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase;">
-          Choose your bundle below to purchase
+          Select your bundle below to purchase:
         </span>
       </div>
 
-      <!-- Horizontal Carousel of Values -->
-      <div style="width: 100%; overflow-x: auto; margin-top: 1rem; padding-bottom: 0.75rem; display: flex; gap: 0.75rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+      <!-- Optimized Mobile Pricing Options (Zero Border Clipping, 100% Responsive) -->
+      <div class="kosnora-tier-stack-mobile">
         <!-- 1 for $79.90 -->
-        <div style="min-width: 230px; flex: 1; border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; scroll-snap-align: center; text-align: left; display: flex; flex-direction: column; justify-content: space-between;">
+        <div data-tier-select="1" data-open-drawer data-qty="1" class="kosnora-mobile-tier-item">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-              <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">1 Case</span>
-              <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">Single</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-size: 14px; font-weight: 900; text-transform: uppercase; color: #111111;">1 Case</span>
+              <span style="font-size: 10px; font-weight: 800; background: #F3F4F6; padding: 2px 8px; border-radius: 9999px; color: #4B5563;">Single Case</span>
             </div>
-            <div style="font-size: 1.5rem; font-weight: 900; color: #111;">$79.90</div>
-            <span style="font-size: 10px; font-weight: 600; color: #6B7280; display: block; margin-bottom: 0.5rem;">1 for $79.90</span>
-            <ul style="list-style: none; padding: 0; margin: 0 0 0.5rem 0; font-size: 10px; color: #4B5563;">
-              <li>✓ 1x KOSNORA Case</li>
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 0.5rem;">
+              <span style="font-size: 1.6rem; font-weight: 900; color: #111111;">$79.90</span>
+              <span style="font-size: 11px; font-weight: 700; color: #6B7280;">1 for $79.90</span>
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0 0 0.85rem 0; font-size: 11px; color: #4B5563; display: flex; flex-direction: column; gap: 0.35rem;">
+              <li>✓ 1x KOSNORA Smart Case</li>
               <li>✓ Raised Protective Bezels</li>
+              <li>✓ 30-Day Money-Back Guarantee</li>
             </ul>
           </div>
-          <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
-            Buy Now
+          <button type="button" data-open-drawer data-qty="1" class="kosnora-tier-buy-btn btn-dark">
+            Buy 1 Case · $79.90
           </button>
         </div>
 
-        <!-- 2 for 139.90 -->
-        <div style="min-width: 230px; flex: 1; border: 2px solid #9333EA; border-radius: 1rem; padding: 1rem; background: #FFF; scroll-snap-align: center; text-align: left; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);">
-          <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #9333EA; color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
+        <!-- 2 for 139.90 (Most Popular) -->
+        <div data-tier-select="2" data-open-drawer data-qty="2" class="kosnora-mobile-tier-item is-popular">
+          <div class="kosnora-tier-badge">
             Most Popular
           </div>
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; margin-top: 4px;">
-              <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">2 Cases</span>
-              <span style="font-size: 9px; font-weight: 800; background: #FAF5FF; color: #9333EA; padding: 2px 6px; border-radius: 9999px;">2x Pack</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; margin-top: 4px;">
+              <span style="font-size: 14px; font-weight: 900; text-transform: uppercase; color: #111111;">2 Cases</span>
+              <span style="font-size: 10px; font-weight: 800; background: #FAF5FF; color: #9333EA; padding: 2px 8px; border-radius: 9999px;">Save $19.90</span>
             </div>
-            <div style="font-size: 1.5rem; font-weight: 900; color: #111;">$139.90</div>
-            <span style="font-size: 10px; font-weight: 600; color: #6B7280; display: block;">2 for $139.90</span>
-            <span style="font-size: 9px; font-weight: 700; color: #9333EA; display: block; margin-bottom: 0.5rem;">($69.95/ea)</span>
-            <ul style="list-style: none; padding: 0; margin: 0 0 0.5rem 0; font-size: 10px; color: #4B5563;">
-              <li>✓ 2x KOSNORA Cases</li>
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 0.5rem;">
+              <span style="font-size: 1.6rem; font-weight: 900; color: #111111;">$139.90</span>
+              <span style="font-size: 11px; font-weight: 700; color: #6B7280;">2 for $139.90</span>
+              <span style="font-size: 11px; font-weight: 800; color: #9333EA;">($69.95/ea)</span>
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0 0 0.85rem 0; font-size: 11px; color: #4B5563; display: flex; flex-direction: column; gap: 0.35rem;">
+              <li>✓ 2x KOSNORA Smart Cases</li>
               <li>✓ Raised Protective Bezels</li>
+              <li>✓ 30-Day Money-Back Guarantee</li>
             </ul>
           </div>
-          <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
-            Buy Now
+          <button type="button" data-open-drawer data-qty="2" class="kosnora-tier-buy-btn btn-purple">
+            Buy 2 Cases · $139.90 (Save $19.90)
           </button>
         </div>
 
-        <!-- 3 for 194.90 -->
-        <div style="min-width: 230px; flex: 1; border: 2px solid #E5E7EB; border-radius: 1rem; padding: 1rem; background: #FFF; scroll-snap-align: center; text-align: left; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-          <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #9333EA, #6B21A8); color: #FFF; font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">
+        <!-- 3 for 194.90 (Best Value) -->
+        <div data-tier-select="3" data-open-drawer data-qty="3" class="kosnora-mobile-tier-item">
+          <div class="kosnora-tier-badge best-value">
             Best Value
           </div>
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; margin-top: 4px;">
-              <span style="font-size: 12px; font-weight: 900; text-transform: uppercase; color: #111;">3 Cases</span>
-              <span style="font-size: 9px; font-weight: 800; background: #F3F4F6; padding: 2px 6px; border-radius: 9999px; color: #4B5563;">3x Pack</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; margin-top: 4px;">
+              <span style="font-size: 14px; font-weight: 900; text-transform: uppercase; color: #111111;">3 Cases</span>
+              <span style="font-size: 10px; font-weight: 800; background: #ECFDF5; color: #059669; padding: 2px 8px; border-radius: 9999px;">Save $44.80</span>
             </div>
-            <div style="font-size: 1.5rem; font-weight: 900; color: #111;">$194.90</div>
-            <span style="font-size: 10px; font-weight: 600; color: #6B7280; display: block;">3 for $194.90</span>
-            <span style="font-size: 9px; font-weight: 700; color: #9333EA; display: block; margin-bottom: 0.5rem;">($64.97/ea)</span>
-            <ul style="list-style: none; padding: 0; margin: 0 0 0.5rem 0; font-size: 10px; color: #4B5563;">
-              <li>✓ 3x KOSNORA Cases</li>
-              <li>✓ 30-Day Guarantee</li>
+            <div style="display: align-items: baseline; gap: 8px; margin-bottom: 0.5rem;">
+              <span style="font-size: 1.6rem; font-weight: 900; color: #111111;">$194.90</span>
+              <span style="font-size: 11px; font-weight: 700; color: #6B7280;">3 for $194.90</span>
+              <span style="font-size: 11px; font-weight: 800; color: #9333EA;">($64.97/ea)</span>
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0 0 0.85rem 0; font-size: 11px; color: #4B5563; display: flex; flex-direction: column; gap: 0.35rem;">
+              <li>✓ 3x KOSNORA Smart Cases</li>
+              <li>✓ Raised Protective Bezels</li>
+              <li>✓ 30-Day Money-Back Guarantee</li>
             </ul>
           </div>
-          <button type="button" data-open-drawer style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: #111; color: #FFF; font-size: 11px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer;">
-            Buy Now
+          <button type="button" data-open-drawer data-qty="3" class="kosnora-tier-buy-btn btn-dark">
+            Buy 3 Cases · $194.90 (Save $44.80)
           </button>
         </div>
-      </div>
-
-      <div style="margin-top: 0.5rem; font-size: 10px; color: #9CA3AF;">
-        ← Swipe horizontally to see all options →
       </div>
 
       <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem; font-size: 11px; font-weight: 600; color: #6B7280;">
