@@ -1,14 +1,21 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero",
       "settings": {
-        "kicker": "PREMIUM PHONE CASE",
-        "headline_1": "KOSNORA",
-        "headline_2": "CASE",
+        "product": "ink-nfc-phone-case-for-iphone-17-16-15-14-pro-max-12-diy-picture-smart-screen-phone-cases-four-colors-image-screen-battery-free",
+        "headline": "KOSNORA Case",
         "subheadline": "Refined minimalist design, reinforced impact protection, and a smooth tactile finish.",
-        "cta_text": "GET YOUR KOSNORA",
-        "microcopy": "Starting at $79.90 · Free Shipping"
+        "cta_text": "GET YOUR KOSNORA"
       }
     },
     "why_kosnora": {
