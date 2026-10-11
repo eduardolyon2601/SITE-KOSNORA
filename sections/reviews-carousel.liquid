@@ -1,0 +1,454 @@
+<section id="reviews" class="kosnora-reviews-section" style="background: #FCFCFD; padding: 4.5rem 0; border-bottom: 1px solid #E5E5E5; color: #111111; position: relative; overflow: hidden;">
+  <!-- Ambient subtle purple gradient -->
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 320px; background: rgba(147, 51, 234, 0.04); filter: blur(100px); pointer-events: none; border-radius: 9999px;"></div>
+
+  <div class="kosnora-container" style="max-width: 1280px; margin: 0 auto; padding: 0 1rem; position: relative; z-index: 2;">
+    <!-- Section Header -->
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem; margin-bottom: 2.5rem;">
+      <div style="max-width: 650px;">
+        <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: #FAF5FF; border: 1px solid #E9D5FF; color: #9333EA; font-size: 11px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem;">
+          <span style="font-size: 13px;">♥</span>
+          <span>{{ section.settings.badge | default: 'REAL CUSTOMER STORIES' }}</span>
+        </div>
+
+        <h2 style="font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; margin: 0 0 0.5rem; color: #111111; line-height: 1.15;">
+          {{ section.settings.headline | default: 'Loved by Our Customers' }}
+        </h2>
+
+        <p style="font-size: clamp(0.9375rem, 2vw, 1.125rem); color: #555555; font-style: italic; font-weight: 500; margin: 0;">
+          &ldquo;{{ section.settings.subheadline | default: 'Your favorite memories, right on your phone.' }}&rdquo;
+        </p>
+      </div>
+
+      <!-- Rating Indicator & Controls -->
+      <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; background: #FFFFFF; border: 1px solid #E5E5E5; padding: 0.625rem 1rem; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+          <div style="color: #F59E0B; display: flex; gap: 2px; font-size: 14px;">
+            ★★★★★
+          </div>
+          <div style="font-size: 12px;">
+            <strong style="color: #111111; font-weight: 900;">4.9 / 5.0</strong>
+            <span style="color: #6B7280; margin-left: 4px;">· 1,200+ US Reviews</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button
+            type="button"
+            id="reviews-prev-btn-{{ section.id }}"
+            aria-label="Previous review"
+            style="width: 40px; height: 40px; border-radius: 50%; background: #FFFFFF; border: 1px solid #E5E5E5; color: #374151; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.borderColor='#9333EA'; this.style.color='#9333EA'"
+            onmouseout="this.style.borderColor='#E5E5E5'; this.style.color='#374151'"
+          >
+            &#8592;
+          </button>
+          <button
+            type="button"
+            id="reviews-next-btn-{{ section.id }}"
+            aria-label="Next review"
+            style="width: 40px; height: 40px; border-radius: 50%; background: #FFFFFF; border: 1px solid #E5E5E5; color: #374151; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.borderColor='#9333EA'; this.style.color='#9333EA'"
+            onmouseout="this.style.borderColor='#E5E5E5'; this.style.color='#374151'"
+          >
+            &#8594;
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carousel Track Container -->
+  <div
+    id="reviews-track-wrap-{{ section.id }}"
+    class="kosnora-reviews-viewport"
+    style="width: 100%; overflow: hidden; position: relative;"
+  >
+    <div
+      id="reviews-track-{{ section.id }}"
+      class="kosnora-reviews-track"
+      style="display: flex; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; padding: 0.75rem 1.5rem 1.5rem; scrollbar-width: none; -ms-overflow-style: none;"
+    >
+      {% comment %} Default 5 Reviews or Blocks from theme customizer {% endcomment %}
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% render 'review-card', block: block %}
+        {% endfor %}
+      {% else %}
+        <!-- CUSTOMER 1: WATER RESISTANCE -->
+        <article class="kosnora-review-card" style="flex: 0 0 330px; max-width: 330px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 24px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="position: relative;">
+                  <img
+                    src="https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
+                    alt="Sarah M."
+                    style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #E9D5FF;"
+                    loading="lazy"
+                  >
+                  <span style="position: absolute; bottom: -2px; right: -2px; width: 16px; height: 16px; background: #9333EA; border-radius: 50%; border: 2px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #FFF; font-weight: 900;">✓</span>
+                </div>
+                <div>
+                  <h3 style="font-size: 0.9375rem; font-weight: 900; margin: 0; color: #111111;">Sarah M.</h3>
+                  <div style="font-size: 11px; font-weight: 600; color: #6B7280;">Miami, FL</div>
+                  <div style="font-size: 10px; font-weight: 800; color: #059669;">Verified Buyer</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 500; color: #9CA3AF;">2 days ago</span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <div style="color: #F59E0B; font-size: 13px; letter-spacing: 2px;">★★★★★</div>
+              <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF5FF; color: #9333EA; border: 1px solid #E9D5FF; padding: 2px 8px; border-radius: 9999px;">
+                WATER RESISTANCE
+              </span>
+            </div>
+
+            <div style="position: relative; border-radius: 16px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 1rem;">
+              <img
+                src="https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg"
+                alt="Sarah's KOSNORA Smart Case"
+                style="width: 100%; height: 240px; object-fit: contain; padding: 8px; display: block;"
+                loading="lazy"
+              >
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; color: #374151; display: flex; justify-content: space-between;">
+                <span>KOSNORA Smart Case · Gray</span>
+                <span style="color: #9333EA; font-weight: 900;">Photo Screen</span>
+              </div>
+            </div>
+
+            <h4 style="font-size: 0.9375rem; font-weight: 900; margin: 0 0 0.5rem; color: #111111; line-height: 1.3;">
+              Total Peace of Mind Near Water
+            </h4>
+
+            <p style="font-size: 0.8125rem; color: #4B5563; font-weight: 500; line-height: 1.55; margin: 0;">
+              &ldquo;I love this phone case! Changing the picture is incredibly fast, and it's so easy to use. The water-resistance gives me total peace of mind whenever I'm outdoors or by the pool. High quality, feels rugged yet slim!&rdquo;
+            </p>
+          </div>
+
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #9CA3AF;">
+            <span>NFC Smart Screen</span>
+            <span style="color: #9333EA;">KOSNORA Original</span>
+          </div>
+        </article>
+
+        <!-- CUSTOMER 2: ZERO BATTERY DRAIN -->
+        <article class="kosnora-review-card" style="flex: 0 0 330px; max-width: 330px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 24px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="position: relative;">
+                  <img
+                    src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
+                    alt="Marcus V."
+                    style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #E9D5FF;"
+                    loading="lazy"
+                  >
+                  <span style="position: absolute; bottom: -2px; right: -2px; width: 16px; height: 16px; background: #9333EA; border-radius: 50%; border: 2px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #FFF; font-weight: 900;">✓</span>
+                </div>
+                <div>
+                  <h3 style="font-size: 0.9375rem; font-weight: 900; margin: 0; color: #111111;">Marcus V.</h3>
+                  <div style="font-size: 11px; font-weight: 600; color: #6B7280;">Austin, TX</div>
+                  <div style="font-size: 10px; font-weight: 800; color: #059669;">Verified Buyer</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 500; color: #9CA3AF;">5 days ago</span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <div style="color: #F59E0B; font-size: 13px; letter-spacing: 2px;">★★★★★</div>
+              <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF5FF; color: #9333EA; border: 1px solid #E9D5FF; padding: 2px 8px; border-radius: 9999px;">
+                ZERO BATTERY DRAIN
+              </span>
+            </div>
+
+            <div style="position: relative; border-radius: 16px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 1rem;">
+              <img
+                src="https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg"
+                alt="Marcus's KOSNORA Smart Case"
+                style="width: 100%; height: 240px; object-fit: contain; padding: 8px; display: block;"
+                loading="lazy"
+              >
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; color: #374151; display: flex; justify-content: space-between;">
+                <span>KOSNORA Smart Case · Black</span>
+                <span style="color: #9333EA; font-weight: 900;">Photo Screen</span>
+              </div>
+            </div>
+
+            <h4 style="font-size: 0.9375rem; font-weight: 900; margin: 0 0 0.5rem; color: #111111; line-height: 1.3;">
+              Crisp E-Ink Screen, No Battery Usage
+            </h4>
+
+            <p style="font-size: 0.8125rem; color: #4B5563; font-weight: 500; line-height: 1.55; margin: 0;">
+              &ldquo;The smart ink screen is ridiculously clear! Having my favorite photos right on the back of my phone with zero battery usage is pure magic. Everyone keeps asking where I got it. Hands down my best purchase.&rdquo;
+            </p>
+          </div>
+
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #9CA3AF;">
+            <span>NFC Smart Screen</span>
+            <span style="color: #9333EA;">KOSNORA Original</span>
+          </div>
+        </article>
+
+        <!-- CUSTOMER 3: DROP PROTECTION -->
+        <article class="kosnora-review-card" style="flex: 0 0 330px; max-width: 330px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 24px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="position: relative;">
+                  <img
+                    src="https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg"
+                    alt="Olivia C."
+                    style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #E9D5FF;"
+                    loading="lazy"
+                  >
+                  <span style="position: absolute; bottom: -2px; right: -2px; width: 16px; height: 16px; background: #9333EA; border-radius: 50%; border: 2px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #FFF; font-weight: 900;">✓</span>
+                </div>
+                <div>
+                  <h3 style="font-size: 0.9375rem; font-weight: 900; margin: 0; color: #111111;">Olivia C.</h3>
+                  <div style="font-size: 11px; font-weight: 600; color: #6B7280;">Seattle, WA</div>
+                  <div style="font-size: 10px; font-weight: 800; color: #059669;">Verified Buyer</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 500; color: #9CA3AF;">1 week ago</span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <div style="color: #F59E0B; font-size: 13px; letter-spacing: 2px;">★★★★★</div>
+              <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF5FF; color: #9333EA; border: 1px solid #E9D5FF; padding: 2px 8px; border-radius: 9999px;">
+                DROP PROTECTION
+              </span>
+            </div>
+
+            <div style="position: relative; border-radius: 16px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 1rem;">
+              <img
+                src="https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg"
+                alt="Olivia's KOSNORA Smart Case"
+                style="width: 100%; height: 240px; object-fit: contain; padding: 8px; display: block;"
+                loading="lazy"
+              >
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; color: #374151; display: flex; justify-content: space-between;">
+                <span>KOSNORA Smart Case · White</span>
+                <span style="color: #9333EA; font-weight: 900;">Photo Screen</span>
+              </div>
+            </div>
+
+            <h4 style="font-size: 0.9375rem; font-weight: 900; margin: 0 0 0.5rem; color: #111111; line-height: 1.3;">
+              Saved My Phone From Concrete
+            </h4>
+
+            <p style="font-size: 0.8125rem; color: #4B5563; font-weight: 500; line-height: 1.55; margin: 0;">
+              &ldquo;Accidentally dropped my phone on concrete on day two and the reinforced shock bezels completely saved both my screen and camera lenses. Top-notch build quality and the silky grip feels amazing.&rdquo;
+            </p>
+          </div>
+
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #9CA3AF;">
+            <span>NFC Smart Screen</span>
+            <span style="color: #9333EA;">KOSNORA Original</span>
+          </div>
+        </article>
+
+        <!-- CUSTOMER 4: EFFORTLESS NFC SYNC -->
+        <article class="kosnora-review-card" style="flex: 0 0 330px; max-width: 330px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 24px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="position: relative;">
+                  <img
+                    src="https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg"
+                    alt="Tyler B."
+                    style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #E9D5FF;"
+                    loading="lazy"
+                  >
+                  <span style="position: absolute; bottom: -2px; right: -2px; width: 16px; height: 16px; background: #9333EA; border-radius: 50%; border: 2px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #FFF; font-weight: 900;">✓</span>
+                </div>
+                <div>
+                  <h3 style="font-size: 0.9375rem; font-weight: 900; margin: 0; color: #111111;">Tyler B.</h3>
+                  <div style="font-size: 11px; font-weight: 600; color: #6B7280;">Denver, CO</div>
+                  <div style="font-size: 10px; font-weight: 800; color: #059669;">Verified Buyer</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 500; color: #9CA3AF;">2 weeks ago</span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <div style="color: #F59E0B; font-size: 13px; letter-spacing: 2px;">★★★★★</div>
+              <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF5FF; color: #9333EA; border: 1px solid #E9D5FF; padding: 2px 8px; border-radius: 9999px;">
+                EFFORTLESS NFC SYNC
+              </span>
+            </div>
+
+            <div style="position: relative; border-radius: 16px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 1rem;">
+              <img
+                src="https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg"
+                alt="Tyler's KOSNORA Smart Case"
+                style="width: 100%; height: 240px; object-fit: contain; padding: 8px; display: block;"
+                loading="lazy"
+              >
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; color: #374151; display: flex; justify-content: space-between;">
+                <span>KOSNORA Smart Case · Orange</span>
+                <span style="color: #9333EA; font-weight: 900;">Photo Screen</span>
+              </div>
+            </div>
+
+            <h4 style="font-size: 0.9375rem; font-weight: 900; margin: 0 0 0.5rem; color: #111111; line-height: 1.3;">
+              Syncs via NFC in Just 3 Seconds
+            </h4>
+
+            <p style="font-size: 0.8125rem; color: #4B5563; font-weight: 500; line-height: 1.55; margin: 0;">
+              &ldquo;The NFC sync is seamless. Selected my favorite trip photo in the app, tapped the back of my phone, and it loaded immediately. No cords, no Bluetooth lag, pure convenience. Futuristic technology!&rdquo;
+            </p>
+          </div>
+
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #9CA3AF;">
+            <span>NFC Smart Screen</span>
+            <span style="color: #9333EA;">KOSNORA Original</span>
+          </div>
+        </article>
+
+        <!-- CUSTOMER 5: BUNDLE VALUE -->
+        <article class="kosnora-review-card" style="flex: 0 0 330px; max-width: 330px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 24px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="position: relative;">
+                  <img
+                    src="https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg"
+                    alt="Emily & Chris D."
+                    style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #E9D5FF;"
+                    loading="lazy"
+                  >
+                  <span style="position: absolute; bottom: -2px; right: -2px; width: 16px; height: 16px; background: #9333EA; border-radius: 50%; border: 2px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #FFF; font-weight: 900;">✓</span>
+                </div>
+                <div>
+                  <h3 style="font-size: 0.9375rem; font-weight: 900; margin: 0; color: #111111;">Emily & Chris D.</h3>
+                  <div style="font-size: 11px; font-weight: 600; color: #6B7280;">San Diego, CA</div>
+                  <div style="font-size: 10px; font-weight: 800; color: #059669;">Verified Buyer</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 500; color: #9CA3AF;">3 weeks ago</span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <div style="color: #F59E0B; font-size: 13px; letter-spacing: 2px;">★★★★★</div>
+              <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; background: #FAF5FF; color: #9333EA; border: 1px solid #E9D5FF; padding: 2px 8px; border-radius: 9999px;">
+                BUNDLE VALUE
+              </span>
+            </div>
+
+            <div style="position: relative; border-radius: 16px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 1rem;">
+              <img
+                src="https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg"
+                alt="Emily & Chris's KOSNORA Smart Case"
+                style="width: 100%; height: 240px; object-fit: contain; padding: 8px; display: block;"
+                loading="lazy"
+              >
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; color: #374151; display: flex; justify-content: space-between;">
+                <span>KOSNORA Multi-Case Bundle</span>
+                <span style="color: #9333EA; font-weight: 900;">Photo Screen</span>
+              </div>
+            </div>
+
+            <h4 style="font-size: 0.9375rem; font-weight: 900; margin: 0 0 0.5rem; color: #111111; line-height: 1.3;">
+              Best iPhone Purchase for Our Family
+            </h4>
+
+            <p style="font-size: 0.8125rem; color: #4B5563; font-weight: 500; line-height: 1.55; margin: 0;">
+              &ldquo;Ordered the bundle so my partner and I could match our photos. Switching covers and updating pictures for special moments and date nights is so fun. Build quality is exceptional!&rdquo;
+            </p>
+          </div>
+
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #9CA3AF;">
+            <span>NFC Smart Screen</span>
+            <span style="color: #9333EA;">KOSNORA Original</span>
+          </div>
+        </article>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    function initReviewsSection(section) {
+      const track = section.querySelector('.kosnora-reviews-track');
+      const prevBtn = section.querySelector('[id^="reviews-prev-btn"]');
+      const nextBtn = section.querySelector('[id^="reviews-next-btn"]');
+      if (!track) return;
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          track.scrollBy({ left: -350, behavior: 'smooth' });
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          track.scrollBy({ left: 350, behavior: 'smooth' });
+        });
+      }
+
+      // Smooth auto-scroll loop
+      let isPaused = false;
+      section.addEventListener('mouseenter', () => { isPaused = true; });
+      section.addEventListener('mouseleave', () => { isPaused = false; });
+      section.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
+      section.addEventListener('touchend', () => { isPaused = false; }, { passive: true });
+
+      let autoScrollTimer = setInterval(() => {
+        if (!isPaused && track) {
+          if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            track.scrollBy({ left: 1, behavior: 'auto' });
+          }
+        }
+      }, 30);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.kosnora-reviews-section').forEach(initReviewsSection);
+      });
+    } else {
+      document.querySelectorAll('.kosnora-reviews-section').forEach(initReviewsSection);
+    }
+
+    document.addEventListener('shopify:section:load', (e) => {
+      const s = e.target.querySelector('.kosnora-reviews-section');
+      if (s) initReviewsSection(s);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Customer Reviews Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge Label",
+      "default": "REAL CUSTOMER STORIES"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Loved by Our Customers"
+    },
+    {
+      "type": "text",
+      "id": "subheadline",
+      "label": "Subheadline",
+      "default": "Your favorite memories, right on your phone."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer Reviews Carousel"
+    }
+  ]
+}
+{% endschema %}

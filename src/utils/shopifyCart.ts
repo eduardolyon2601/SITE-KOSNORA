@@ -72,7 +72,7 @@ export async function addVariantsToShopifyCart(
   const root = window.Shopify?.routes?.root || window.KOSNORA_STORE?.root || '/';
 
   if (!Array.isArray(selectedUnits) || selectedUnits.length === 0) {
-    throw new Error('Selecione pelo menos uma unidade.');
+    throw new Error('Please select at least one case.');
   }
 
   const items = selectedUnits.map((unit, idx) => {

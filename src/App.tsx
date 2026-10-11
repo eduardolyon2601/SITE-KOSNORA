@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
-import { WhyKosnoraSection } from './components/WhyKosnoraSection';
+import { ReviewsCarousel } from './components/ReviewsCarousel';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
@@ -133,8 +133,8 @@ export default function App() {
           onCtaClick={() => setIsCartOpen(true)}
         />
 
-        {/* 2. KEY BENEFITS */}
-        <WhyKosnoraSection />
+        {/* 2. REVIEWS (Customer Reviews Carousel) */}
+        <ReviewsCarousel />
 
         {/* 3. FAQ */}
         <FaqSection />

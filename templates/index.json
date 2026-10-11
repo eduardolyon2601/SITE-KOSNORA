@@ -4,13 +4,14 @@
       "type": "kosnora-multi-variant-bundle",
       "settings": {
         "headline": "KOSNORA Case",
-        "subheadline": "Design minimalista refinado, proteção de impacto reforçada e display inteligente NFC sem bateria. Combine modelos e cores livremente no mesmo pedido com descontos progressivos."
+        "subheadline": "Refined minimalist design, reinforced impact protection, and a smart battery-free NFC display. Mix and match phone models and colors freely with progressive bundle discounts."
       }
     },
-    "why_kosnora": {
-      "type": "why-kosnora",
+    "reviews_carousel": {
+      "type": "reviews-carousel",
       "settings": {
-        "headline": "WHY KOSNORA"
+        "headline": "Loved by Our Customers",
+        "subheadline": "Your favorite memories, right on your phone."
       }
     },
     "faq": {
@@ -22,7 +23,7 @@
   },
   "order": [
     "bundle",
-    "why_kosnora",
+    "reviews_carousel",
     "faq"
   ]
 }

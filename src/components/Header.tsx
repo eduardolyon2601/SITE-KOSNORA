@@ -13,7 +13,7 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
 
   const navLinks = [
     { label: 'SHOP', href: '#pricing' },
-    { label: 'WHY KOSNORA', href: '#benefits' },
+    { label: 'REVIEWS', href: '#reviews' },
     { label: 'FAQ', href: '#faq' },
   ];
 
