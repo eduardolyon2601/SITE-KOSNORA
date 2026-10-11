@@ -37,6 +37,8 @@ declare global {
   }
 }
 
+export const MAX_ORDER_CAPAS = 4;
+
 export interface CheckoutPayload {
   quantity: number;
   model: string;
@@ -434,11 +436,12 @@ export async function syncShopifyMultiUnitCart(payload: MultiUnitCheckoutPayload
 
   const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
 
-  // 1. Resolve variant ID for every single unit
+  // 1. Resolve variant ID for every single unit (enforcing maximum 4 units per order)
+  const clampedUnits = (payload.units || []).slice(0, MAX_ORDER_CAPAS);
   const resolvedItems: Array<{ id: number; quantity: number; properties: Record<string, string> }> = [];
 
-  for (let i = 0; i < payload.units.length; i++) {
-    const unit = payload.units[i];
+  for (let i = 0; i < clampedUnits.length; i++) {
+    const unit = clampedUnits[i];
     let vId = unit.variantId;
     if (!vId) {
       const res = await resolveShopifyVariant(unit.model, unit.color);

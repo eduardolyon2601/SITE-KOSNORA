@@ -6,7 +6,7 @@ import { WhyKosnoraSection } from './components/WhyKosnoraSection';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
-import { getPricingTiers } from './data/productData';
+import { getPricingTiers, MAX_ORDER_CAPAS } from './data/productData';
 import { PricingTier, CartItemUnit } from './types';
 
 export default function App() {
@@ -63,6 +63,9 @@ export default function App() {
 
   const handleAddUnit = () => {
     setCartUnits((prev) => {
+      if (prev.length >= MAX_ORDER_CAPAS) {
+        return prev; // Maximum limit reached
+      }
       const next = [...prev];
       const idx = next.length;
       const defaultModels = ['iPhone 16 Pro Max', 'iPhone 15 Pro Max', 'iPhone 14 Pro', 'iPhone 13 Pro'];

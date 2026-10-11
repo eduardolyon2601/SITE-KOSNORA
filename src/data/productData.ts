@@ -92,19 +92,21 @@ export function getPricingTiers(): PricingTier[] {
   return PRICING_TIERS;
 }
 
+export const MAX_ORDER_CAPAS = 4;
+
 /**
  * Calculates progressive volume pricing according to official KOSNORA rules:
  * - 1 Unit: R$ 79,90 (unit: R$ 79,90, discount: R$ 0,00)
  * - 2 Units: R$ 139,90 (unit: R$ 69,95, discount: R$ 19,90 - 2x 79.90 = 159.80)
  * - 3 Units: R$ 194,90 (unit: R$ 64,97, discount: R$ 44,80 - 3x 79.90 = 239.70)
- * - 4+ Units: Volume pricing based on best unit rate R$ 64,97
+ * - 4 Units (LIMITE MÁXIMO): R$ 259,88 (unit: R$ 64,97, discount: R$ 59,72 - 4x 79.90 = 319.60)
  */
 export function calculateCartPricing(quantity: number, currency = 'R$'): CartCalculation {
-  const qty = Math.max(1, Math.round(quantity || 1));
+  const clampedQty = Math.min(MAX_ORDER_CAPAS, Math.max(1, Math.round(quantity || 1)));
   const basePricePerUnit = 79.90;
-  const subtotal = Number((qty * basePricePerUnit).toFixed(2));
+  const subtotal = Number((clampedQty * basePricePerUnit).toFixed(2));
 
-  if (qty === 1) {
+  if (clampedQty === 1) {
     return {
       quantity: 1,
       unitPrice: basePricePerUnit,
@@ -116,7 +118,7 @@ export function calculateCartPricing(quantity: number, currency = 'R$'): CartCal
     };
   }
 
-  if (qty === 2) {
+  if (clampedQty === 2) {
     const total = 139.90;
     const unitPrice = 69.95;
     const discount = Number((subtotal - total).toFixed(2)); // 19.90
@@ -131,7 +133,7 @@ export function calculateCartPricing(quantity: number, currency = 'R$'): CartCal
     };
   }
 
-  if (qty === 3) {
+  if (clampedQty === 3) {
     const total = 194.90;
     const unitPrice = 64.97;
     const discount = Number((subtotal - total).toFixed(2)); // 44.80
@@ -146,17 +148,17 @@ export function calculateCartPricing(quantity: number, currency = 'R$'): CartCal
     };
   }
 
-  // 4 or more units: Maintain best bundle unit rate (R$ 64,97 / unit)
+  // Exact 4 units (Limite máximo de 4 capinhas por pedido)
   const unitPrice = 64.97;
-  const total = Number((qty * unitPrice).toFixed(2));
-  const discount = Number((subtotal - total).toFixed(2));
+  const total = Number((4 * unitPrice).toFixed(2)); // 259.88
+  const discount = Number((subtotal - total).toFixed(2)); // 59.72
   return {
-    quantity: qty,
+    quantity: 4,
     unitPrice,
     subtotal,
     discount,
     total,
-    discountLabel: `Oferta Volume ${qty} Cases (Melhor Valor)`,
+    discountLabel: 'Super Combo 4 Cases (Limite Máximo · Economize R$ 59,72)',
     currency,
   };
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2, Plus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock, AlertCircle, Sparkles } from 'lucide-react';
-import { calculateCartPricing, formatCurrency, PRODUCT_IMAGES, PRODUCT_NAME, IPHONE_MODELS } from '../data/productData';
+import { calculateCartPricing, formatCurrency, PRODUCT_IMAGES, PRODUCT_NAME, IPHONE_MODELS, MAX_ORDER_CAPAS } from '../data/productData';
 import { isVariantInStoreCatalog } from '../data/storeInventory';
 import { redirectMultiUnitCheckout } from '../utils/shopifyCart';
 import { CartItemUnit } from '../types';
@@ -148,20 +148,40 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span>Desconto BUNDLE2 Ativado! Economia de R$ 19,90</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={onAddUnit}
-                  className="px-2 py-1 rounded-md bg-emerald-700 text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
-                >
-                  + Levar 3 (Melhor Valor)
-                </button>
+                {totalQuantity < MAX_ORDER_CAPAS && (
+                  <button
+                    type="button"
+                    onClick={onAddUnit}
+                    className="px-2 py-1 rounded-md bg-emerald-700 text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
+                  >
+                    + Levar 3 (Melhor Valor)
+                  </button>
+                )}
               </div>
             )}
 
-            {totalQuantity >= 3 && (
-              <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-50 to-[#FAF5FF] border border-emerald-200 flex items-center gap-2 text-xs text-emerald-900 font-bold">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-                <span>Super Pacote Ativado! Maior desconto por unidade aplicado (R$ 64,97 cada)</span>
+            {totalQuantity === 3 && (
+              <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-50 to-[#FAF5FF] border border-emerald-200 flex items-center justify-between text-xs text-emerald-900 font-bold">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                  <span>Super Pacote 3 Capas! Economia de R$ 44,80 (R$ 64,97 cada)</span>
+                </div>
+                {totalQuantity < MAX_ORDER_CAPAS && (
+                  <button
+                    type="button"
+                    onClick={onAddUnit}
+                    className="px-2 py-1 rounded-md bg-[#9333EA] text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
+                  >
+                    + Levar 4 (Máx.)
+                  </button>
+                )}
+              </div>
+            )}
+
+            {totalQuantity >= MAX_ORDER_CAPAS && (
+              <div className="p-3 rounded-xl bg-gradient-to-r from-[#FAF5FF] to-neutral-50 border border-[#E9D5FF] flex items-center gap-2 text-xs text-[#6B21A8] font-bold">
+                <span className="w-2 h-2 rounded-full bg-[#9333EA] shrink-0" />
+                <span>Limite Máximo de 4 Capas Atingido por Pedido · Melhor tarifa aplicada (R$ 64,97 cada)</span>
               </div>
             )}
 
@@ -301,15 +321,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               })}
             </div>
 
-            {/* Add Another Case Button */}
-            <button
-              type="button"
-              onClick={onAddUnit}
-              className="w-full py-2.5 px-3 rounded-xl border border-dashed border-[#9333EA]/60 hover:border-[#9333EA] bg-[#FAF5FF]/50 hover:bg-[#FAF5FF] text-[#9333EA] text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs"
-            >
-              <Plus className="w-4 h-4 stroke-[2.5]" />
-              <span>Adicionar Outra Capa (Escolha Outro Modelo / Cor)</span>
-            </button>
+            {/* Add Another Case Button (Restricted to maximum 4 cases) */}
+            {totalQuantity < MAX_ORDER_CAPAS ? (
+              <button
+                type="button"
+                onClick={onAddUnit}
+                className="w-full py-2.5 px-3 rounded-xl border border-dashed border-[#9333EA]/60 hover:border-[#9333EA] bg-[#FAF5FF]/50 hover:bg-[#FAF5FF] text-[#9333EA] text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs"
+              >
+                <Plus className="w-4 h-4 stroke-[2.5]" />
+                <span>Adicionar Outra Capa ({totalQuantity + 1} de {MAX_ORDER_CAPAS})</span>
+              </button>
+            ) : (
+              <div className="w-full py-2 px-3 rounded-xl border border-neutral-200 bg-neutral-50 text-neutral-500 text-xs font-bold text-center flex items-center justify-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-neutral-400" />
+                <span>Limite máximo de {MAX_ORDER_CAPAS} capinhas atingido para este pedido</span>
+              </div>
+            )}
 
             {/* Financial Summary & Instant Pricing Recalculation */}
             <div className="rounded-2xl border border-neutral-200 bg-white p-4.5 space-y-2.5 shadow-2xs">
