@@ -101,15 +101,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   style={{ backgroundColor: getColorHex(u.color) }}
                 />
                 <span className="text-xs font-black uppercase tracking-wider text-neutral-900 group-hover:text-[#9333EA] transition-colors truncate">
-                  Capa #{i + 1}
+                  Case #{i + 1}
                 </span>
                 {isSelectedUnit ? (
                   <span className="text-[10px] font-bold text-[#9333EA] bg-white px-2 py-0.5 rounded-full border border-[#E9D5FF] shrink-0">
-                    Visualizando
+                    Viewing
                   </span>
                 ) : (
                   <span className="text-[10px] font-medium text-neutral-400 group-hover:text-neutral-600 shrink-0">
-                    (clique para ver)
+                    (click to view)
                   </span>
                 )}
               </button>
@@ -118,12 +118,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {isUnitAvailable ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                    <span>Em estoque</span>
+                    <span>In Stock</span>
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold text-amber-800 bg-amber-50 border border-amber-300">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
-                    <span>Esgotado</span>
+                    <span>Out of stock</span>
                   </span>
                 )}
               </div>
@@ -133,7 +133,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="w-full mb-2.5 min-w-0">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-                  Modelo do iPhone:
+                  iPhone Model:
                 </span>
               </div>
               <select
@@ -145,7 +145,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   const isModelAvailable = isVariantInStoreCatalog(m, u.color);
                   return (
                     <option key={m} value={m}>
-                      {m}{!isModelAvailable ? ' · (Esgotado)' : ''}
+                      {m}{!isModelAvailable ? ' · (Out of stock)' : ''}
                     </option>
                   );
                 })}
@@ -156,10 +156,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="w-full min-w-0">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
-                  Cor da Capa #{i + 1}:
+                  Case #{i + 1} Color:
                 </span>
                 <span className="text-[11px] font-black text-[#9333EA] uppercase tracking-wider truncate ml-2">
-                  {isUnitVideoActive ? 'Vídeo' : u.color}
+                  {isUnitVideoActive ? 'Video' : u.color}
                 </span>
               </div>
 
@@ -177,7 +177,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-50'
                     }`}
                   >
-                    <span>▶ Vídeo</span>
+                    <span>▶ Video</span>
                   </button>
                 )}
 
@@ -201,7 +201,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
                           : 'bg-neutral-50 border border-neutral-200 text-neutral-400 hover:bg-neutral-100 opacity-75'
                       }`}
-                      title={isColorAvailable ? `${img.name} - Em estoque` : `${img.name} - Esgotado para ${u.model}`}
+                      title={isColorAvailable ? `${img.name} - In stock` : `${img.name} - Out of stock for ${u.model}`}
                     >
                       <div className="w-3 h-4 rounded overflow-hidden bg-neutral-100 border border-black/10 shrink-0 flex items-center justify-center">
                         <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
@@ -209,7 +209,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       <span>{img.name}</span>
                       {!isColorAvailable && (
                         <span className="text-[8px] font-bold text-amber-700 bg-amber-100 px-1 py-0.2 rounded leading-none">
-                          Esgotado
+                          Out of stock
                         </span>
                       )}
                     </button>
@@ -243,19 +243,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="h-6 flex items-center justify-center -mt-1 mb-1">
           {isDouble ? (
             <div className="px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-              Mais Vendido · Economize R$ 19,90
+              Best Seller · Save $19.90
             </div>
           ) : isTriple ? (
             <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-              Melhor Oferta · Economize R$ 44,80
+              Best Value · Save $44.80
             </div>
           ) : isQuadruple ? (
             <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-              Pacote Máximo · Economize R$ 59,72
+              Max Bundle · Save $59.72
             </div>
           ) : (
             <div className="px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
-              Opção Individual
+              Single Case
             </div>
           )}
         </div>
@@ -264,14 +264,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs sm:text-sm font-black text-neutral-950 uppercase tracking-tight">
-                {tier.quantity === 1 ? '1 Capa' : `${tier.quantity} Capas`}
+                {tier.quantity === 1 ? '1 Case' : `${tier.quantity} Cases`}
               </span>
               <span
                 className={`text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
                   isSelected ? 'bg-[#FAF5FF] text-[#9333EA]' : 'bg-neutral-100 text-neutral-600'
                 }`}
               >
-                {tier.quantity === 1 ? 'Individual' : `${tier.quantity}x Pacote`}
+                {tier.quantity === 1 ? 'Standard' : `${tier.quantity}x Bundle`}
               </span>
             </div>
 
@@ -282,7 +282,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </span>
                 {tier.quantity > 1 && (
                   <span className="text-[10px] sm:text-[11px] font-bold text-neutral-500">
-                    ({formatCurrency(tier.unitPrice)}/un)
+                    ({formatCurrency(tier.unitPrice)}/ea)
                   </span>
                 )}
               </div>
@@ -290,14 +290,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {tier.quantity > 1 ? (
                   <span className="text-[10px] font-bold text-emerald-600 block">
                     {tier.quantity === 2
-                      ? 'Economize R$ 19,90 no pacote'
+                      ? 'Save $19.90 on bundle'
                       : tier.quantity === 3
-                      ? 'Economize R$ 44,80 no pacote'
-                      : 'Economize R$ 59,72 no pacote'}
+                      ? 'Save $44.80 on bundle'
+                      : 'Save $59.72 on bundle'}
                   </span>
                 ) : (
                   <span className="text-[10px] font-medium text-neutral-400 block">
-                    Preço padrão KOSNORA
+                    Standard KOSNORA pricing
                   </span>
                 )}
               </div>
@@ -306,15 +306,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <ul className="space-y-1 text-[11px] font-medium text-neutral-700 text-left mb-3">
               <li className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                <span>{tier.quantity}x Capa Inteligente KOSNORA</span>
+                <span>{tier.quantity}x KOSNORA Smart Case</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                <span>Escolha modelos e cores livres</span>
+                <span>Mix & match any models and colors</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                <span>Garantia de 30 Dias</span>
+                <span>30-Day Money-Back Guarantee</span>
               </li>
             </ul>
           </div>
@@ -333,7 +333,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             }`}
           >
             <ShoppingBag className="w-3.5 h-3.5" />
-            <span>{isSelected ? 'Selecionado' : 'Selecionar'}</span>
+            <span>{isSelected ? 'Selected' : 'Select Bundle'}</span>
           </button>
         </div>
       </div>
@@ -418,7 +418,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     className="w-full h-full object-contain block select-none transition-all duration-300 bg-neutral-50"
                   />
                   <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20 flex items-center gap-1.5">
-                    {units.length > 1 && <span className="text-[#E9D5FF] font-bold">Capa #{activeUnitIndex + 1}:</span>}
+                    {units.length > 1 && <span className="text-[#E9D5FF] font-bold">Case #{activeUnitIndex + 1}:</span>}
                     <span>{currentImage.name}</span>
                   </div>
                 </>
@@ -430,10 +430,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="w-full max-w-md mx-auto mt-4 mb-1 text-left px-1 flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-wider text-neutral-900 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-[#9333EA]" />
-              <span>{units.length > 1 ? `Configuração das suas ${units.length} Capas:` : 'Configuração da Capa:'}</span>
+              <span>{units.length > 1 ? `Customizing your ${units.length} Cases:` : 'Case Customization:'}</span>
             </span>
             <span className="text-[11px] font-semibold text-neutral-500">
-              {units.length > 1 ? 'Personalize cada uma abaixo' : '1x KOSNORA Smart Case'}
+              {units.length > 1 ? 'Configure each case below' : '1x KOSNORA Smart Case'}
             </span>
           </div>
 
@@ -456,14 +456,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             >
               <span className="truncate">
                 {hasOutOfStock
-                  ? `COMBINAÇÃO ESGOTADA (Capa #${outOfStockList[0].index + 1})`
-                  : `ADICIONAR À SACOLA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
+                  ? `OUT OF STOCK COMBINATION (Case #${outOfStockList[0].index + 1})`
+                  : `ADD TO CART (${units.length} ${units.length === 1 ? 'CASE' : 'CASES'})`}
               </span>
               {!hasOutOfStock && <ArrowRight className="w-4 h-4 stroke-[2.5] shrink-0" />}
             </button>
 
             <div className="flex items-center justify-center gap-2 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mt-2.5">
-              <span>Selecione abaixo para comprar com desconto progressivo</span>
+              <span>Select bundle below to unlock progressive volume discounts</span>
             </div>
           </div>
 
@@ -507,7 +507,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         className="w-full h-full object-contain block select-none transition-all duration-300 bg-neutral-50"
                       />
                       <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-sm z-20 flex items-center gap-1.5">
-                        {units.length > 1 && <span className="text-[#E9D5FF] font-bold">Capa #{activeUnitIndex + 1}:</span>}
+                        {units.length > 1 && <span className="text-[#E9D5FF] font-bold">Case #{activeUnitIndex + 1}:</span>}
                         <span>{currentImage.name}</span>
                       </div>
                     </>
@@ -588,10 +588,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-black uppercase tracking-wider text-neutral-900 flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5 text-[#9333EA]" />
-                  <span>{units.length > 1 ? `Configuração das suas ${units.length} Capas:` : 'Configuração da Capa:'}</span>
+                  <span>{units.length > 1 ? `Customizing your ${units.length} Cases:` : 'Case Customization:'}</span>
                 </span>
                 <span className="text-xs font-semibold text-neutral-500">
-                  {units.length > 1 ? 'Combine modelos e cores livremente' : '1x KOSNORA Smart Case'}
+                  {units.length > 1 ? 'Combine models and colors freely' : '1x KOSNORA Smart Case'}
                 </span>
               </div>
 
@@ -600,7 +600,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {renderCaseItems()}
               </div>
 
-              {/* Direct CTA Button (ADICIONAR À SACOLA) */}
+              {/* Direct CTA Button (ADD TO CART) */}
               <button
                 type="button"
                 disabled={hasOutOfStock}
@@ -613,8 +613,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               >
                 <span className="truncate">
                   {hasOutOfStock
-                    ? `COMBINAÇÃO ESGOTADA (Capa #${outOfStockList[0].index + 1})`
-                    : `ADICIONAR À SACOLA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
+                    ? `OUT OF STOCK COMBINATION (Case #${outOfStockList[0].index + 1})`
+                    : `ADD TO CART (${units.length} ${units.length === 1 ? 'CASE' : 'CASES'})`}
                 </span>
                 {!hasOutOfStock && <ArrowRight className="w-4 h-4 stroke-[2.5] shrink-0" />}
               </button>
@@ -622,10 +622,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Title for purchasing options */}
               <div className="flex items-center justify-between mb-2.5">
                 <span className="text-xs font-black uppercase tracking-wider text-neutral-900">
-                  Pacotes e Preços com Desconto:
+                  Discounted Bundles & Pricing:
                 </span>
                 <span className="text-xs font-semibold text-neutral-500">
-                  Desconto progressivo por quantidade
+                  Progressive quantity discounts
                 </span>
               </div>
 

@@ -143,17 +143,17 @@ export default function App() {
       {/* Footer */}
       <Footer />
 
-      {/* Persistent Floating Cart Button (Quick Sacolinha Access) */}
+      {/* Persistent Floating Cart Button (Quick Cart Access) */}
       <button
         type="button"
         onClick={() => setIsCartOpen(true)}
         className="fixed bottom-5 right-5 z-40 p-3.5 bg-neutral-900 text-white rounded-full shadow-2xl hover:bg-[#9333EA] hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border border-white/20 group"
-        title="Abrir Sacolinha de Compras"
-        aria-label="Ver Sacolinha de Compras"
+        title="View Shopping Cart"
+        aria-label="View Shopping Cart"
       >
         <ShoppingBag className="w-5 h-5 text-white" />
         <span className="hidden sm:inline-block text-xs font-black tracking-wider uppercase pr-1">
-          Sacola
+          Cart
         </span>
         <span className="w-5 h-5 rounded-full bg-[#9333EA] group-hover:bg-white group-hover:text-[#9333EA] text-white text-[10px] font-black flex items-center justify-center transition-colors">
           {cartUnits.length}

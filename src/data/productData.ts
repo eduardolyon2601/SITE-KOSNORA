@@ -138,7 +138,7 @@ export function calculateCartPricing(quantity: number, currency = 'R$'): CartCal
       subtotal,
       discount,
       total,
-      discountLabel: 'Oferta 2 Cases (Economize R$ 19,90)',
+      discountLabel: '2-Case Bundle (Save $19.90)',
       currency,
     };
   }
@@ -153,12 +153,12 @@ export function calculateCartPricing(quantity: number, currency = 'R$'): CartCal
       subtotal,
       discount,
       total,
-      discountLabel: 'Oferta 3 Cases (Economize R$ 44,80)',
+      discountLabel: '3-Case Bundle (Save $44.80)',
       currency,
     };
   }
 
-  // Exact 4 units (Limite máximo de 4 capinhas por pedido)
+  // Exact 4 units (Maximum order limit of 4 cases per order)
   const unitPrice = 64.97;
   const total = Number((4 * unitPrice).toFixed(2)); // 259.88
   const discount = Number((subtotal - total).toFixed(2)); // 59.72
@@ -168,17 +168,17 @@ export function calculateCartPricing(quantity: number, currency = 'R$'): CartCal
     subtotal,
     discount,
     total,
-    discountLabel: 'Super Combo 4 Cases (Limite Máximo · Economize R$ 59,72)',
+    discountLabel: 'Max 4-Case Bundle (Save $59.72)',
     currency,
   };
 }
 
-export function formatCurrency(amount: number, symbol = 'R$'): string {
-  const formatted = amount.toLocaleString('pt-BR', {
+export function formatCurrency(amount: number, symbol = '$'): string {
+  const formatted = amount.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  return `${symbol} ${formatted}`;
+  return `${symbol}${formatted}`;
 }
 
 export const WHATS_INCLUDED = [
@@ -191,22 +191,22 @@ export const WHATS_INCLUDED = [
 export const FAQ_LIST: FaqItem[] = [
   {
     question: 'How do I choose my bundle and complete my purchase?',
-    answer: 'Select your preferred color from the gallery and choose between 1 case ($79.90), 2 cases ($139.90), or 3 cases ($194.90). Then simply click GET YOUR KOSNORA or Buy Now to proceed directly to secure checkout.',
+    answer: 'Select your preferred iPhone model and color, then choose between 1 case ($79.90), 2 cases ($139.90), 3 cases ($194.90), or up to our maximum 4 cases ($259.88). Mix and match any models and colors in your order, then click ADD TO CART to review your bundle savings and proceed through Shopify secure checkout.',
   },
   {
     question: 'Does the case protect both the camera and the screen?',
     answer: 'Yes! The KOSNORA case is engineered with shock-absorbent composite bumpers and raised protective bezels surrounding both your camera array and front display to guard against everyday scratches and drops.',
   },
   {
-    question: 'How long does shipping take?',
-    answer: 'Orders are processed and dispatched rapidly within 24 to 48 business hours. You will receive an end-to-end tracking code to follow your package directly to your doorstep.',
+    question: 'How long does shipping take within the United States?',
+    answer: 'Orders are processed and dispatched within 24 to 48 business hours with fast domestic US shipping. You will receive an end-to-end tracking number to monitor your delivery directly to your door.',
   },
   {
     question: 'What is your guarantee and return policy?',
-    answer: 'We provide an unconditional 30-Day Money-Back Guarantee. If for any reason you are not completely satisfied, our support team will issue a prompt replacement or full refund.',
+    answer: 'We provide an unconditional 30-Day Money-Back Guarantee. If for any reason you are not completely satisfied with the fit or quality, our customer support team will issue a prompt replacement or full refund.',
   },
   {
     question: 'How do I contact customer support?',
-    answer: 'Our dedicated customer service team is available Monday through Friday via email at support@kosnora.com to answer any questions or assist with your order.',
+    answer: 'Our official support team is available Monday through Friday from 9:00 AM to 6:00 PM EST via email at support@kosnora.com or WhatsApp / phone at +1 (970) 996-2930.',
   },
 ];

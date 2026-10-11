@@ -48,7 +48,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   if (!isOpen) return null;
 
   const totalQuantity = Math.max(1, units.length);
-  const pricing = calculateCartPricing(totalQuantity, 'R$');
+  const pricing = calculateCartPricing(totalQuantity, '$');
 
   // Check which units are out of stock
   const outOfStockUnits = units
@@ -63,7 +63,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     if (hasOutOfStockUnit) {
       const firstBad = outOfStockUnits[0];
       setCheckoutError(
-        `A Capa #${firstBad.index + 1} (${firstBad.unit.model} · ${firstBad.unit.color}) está esgotada no momento. Altere para outra opção para prosseguir.`
+        `Case #${firstBad.index + 1} (${firstBad.unit.model} · ${firstBad.unit.color}) is currently out of stock. Please select another combination to proceed.`
       );
       return;
     }
@@ -80,7 +80,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       });
     } catch (err) {
       console.error('[KOSNORA] Multi-unit cart error:', err);
-      setCheckoutError('Ocorreu um erro ao atualizar o carrinho. Por favor, tente novamente.');
+      setCheckoutError('An error occurred updating the cart. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -104,10 +104,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
               <div>
                 <h2 id="cart-title" className="text-sm font-black uppercase tracking-wider text-neutral-900">
-                  Seu Carrinho KOSNORA
+                  Your KOSNORA Cart
                 </h2>
                 <p className="text-[11px] font-semibold text-neutral-500">
-                  {totalQuantity} {totalQuantity === 1 ? 'capa selecionada' : 'capas personalizadas'}
+                  {totalQuantity} {totalQuantity === 1 ? 'case customized' : 'cases customized'}
                 </p>
               </div>
             </div>
@@ -116,7 +116,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               type="button"
               onClick={onClose}
               className="p-2 rounded-lg text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 transition-colors cursor-pointer"
-              aria-label="Fechar carrinho"
+              aria-label="Close cart"
             >
               <X className="w-5 h-5" />
             </button>
@@ -130,14 +130,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="p-3 rounded-xl bg-[#FAF5FF] border border-[#E9D5FF] flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 text-[#9333EA] font-bold">
                   <Sparkles className="w-4 h-4 shrink-0" />
-                  <span>Leve 2 capas por R$ 139,90 e economize R$ 19,90!</span>
+                  <span>Get 2 cases for $139.90 & save $19.90!</span>
                 </div>
                 <button
                   type="button"
                   onClick={onAddUnit}
                   className="px-2.5 py-1 rounded-md bg-[#9333EA] text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
                 >
-                  + Adicionar
+                  + Add Case
                 </button>
               </div>
             )}
@@ -146,7 +146,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 text-emerald-800 font-bold">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Desconto BUNDLE2 Ativado! Economia de R$ 19,90</span>
+                  <span>2-Case Bundle Unlocked! Save $19.90</span>
                 </div>
                 {totalQuantity < MAX_ORDER_CAPAS && (
                   <button
@@ -154,7 +154,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     onClick={onAddUnit}
                     className="px-2 py-1 rounded-md bg-emerald-700 text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
                   >
-                    + Levar 3 (Melhor Valor)
+                    + Add 3rd (Best Value)
                   </button>
                 )}
               </div>
@@ -164,7 +164,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-50 to-[#FAF5FF] border border-emerald-200 flex items-center justify-between text-xs text-emerald-900 font-bold">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-                  <span>Super Pacote 3 Capas! Economia de R$ 44,80 (R$ 64,97 cada)</span>
+                  <span>3-Case Bundle! Save $44.80 ($64.97 each)</span>
                 </div>
                 {totalQuantity < MAX_ORDER_CAPAS && (
                   <button
@@ -172,7 +172,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     onClick={onAddUnit}
                     className="px-2 py-1 rounded-md bg-[#9333EA] text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 cursor-pointer shrink-0 ml-2"
                   >
-                    + Levar 4 (Máx.)
+                    + Add 4th (Max)
                   </button>
                 )}
               </div>
@@ -181,7 +181,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             {totalQuantity >= MAX_ORDER_CAPAS && (
               <div className="p-3 rounded-xl bg-gradient-to-r from-[#FAF5FF] to-neutral-50 border border-[#E9D5FF] flex items-center gap-2 text-xs text-[#6B21A8] font-bold">
                 <span className="w-2 h-2 rounded-full bg-[#9333EA] shrink-0" />
-                <span>Limite Máximo de 4 Capas Atingido por Pedido · Melhor tarifa aplicada (R$ 64,97 cada)</span>
+                <span>Max Limit of 4 Cases Reached per Order · Best pricing applied ($64.97 each)</span>
               </div>
             )}
 
@@ -206,7 +206,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-neutral-100">
                       <div className="flex items-center gap-2">
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#FAF5FF] text-[#9333EA] border border-[#E9D5FF]">
-                          Capa #{idx + 1}
+                          Case #{idx + 1}
                         </span>
                         <span className="text-[11px] font-bold text-neutral-800">
                           {unit.model} · {unit.color}
@@ -218,8 +218,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           type="button"
                           onClick={() => onRemoveUnit(idx)}
                           className="p-1 rounded-md text-neutral-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                          title="Remover esta capa"
-                          aria-label={`Remover Capa #${idx + 1}`}
+                          title="Remove this case"
+                          aria-label={`Remove Case #${idx + 1}`}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -242,7 +242,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         {/* Model Dropdown */}
                         <div>
                           <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-0.5">
-                            Modelo:
+                            Model:
                           </label>
                           <select
                             value={unit.model}
@@ -253,7 +253,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                               const isModelAvailableForColor = isVariantInStoreCatalog(m, unit.color);
                               return (
                                 <option key={m} value={m}>
-                                  {m}{!isModelAvailableForColor ? ' · (Esgotado)' : ''}
+                                  {m}{!isModelAvailableForColor ? ' · (Out of stock)' : ''}
                                 </option>
                               );
                             })}
@@ -263,7 +263,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         {/* Color Buttons */}
                         <div>
                           <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">
-                            Cor:
+                            Color:
                           </label>
                           <div className="flex flex-wrap gap-1">
                             {PRODUCT_IMAGES.map((img) => {
@@ -281,7 +281,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                                       ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
                                       : 'bg-neutral-100 border border-neutral-200 text-neutral-400 opacity-70'
                                   }`}
-                                  title={isColorAvailableForModel ? `${img.name} disponível` : `${img.name} esgotado para ${unit.model}`}
+                                  title={isColorAvailableForModel ? `${img.name} available` : `${img.name} out of stock for ${unit.model}`}
                                 >
                                   <span
                                     className="w-2 h-2 rounded-full border border-black/10 inline-block"
@@ -305,12 +305,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           {isUnitAvailable ? (
                             <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                              <span>Em estoque</span>
+                              <span>In Stock</span>
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 text-[9px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-300">
                               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                              <span>Esgotado nesta combinação</span>
+                              <span>Out of stock in this combination</span>
                             </span>
                           )}
                         </div>
@@ -329,24 +329,24 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 className="w-full py-2.5 px-3 rounded-xl border border-dashed border-[#9333EA]/60 hover:border-[#9333EA] bg-[#FAF5FF]/50 hover:bg-[#FAF5FF] text-[#9333EA] text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs"
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
-                <span>Adicionar Outra Capa ({totalQuantity + 1} de {MAX_ORDER_CAPAS})</span>
+                <span>Add Another Case ({totalQuantity + 1} of {MAX_ORDER_CAPAS})</span>
               </button>
             ) : (
               <div className="w-full py-2 px-3 rounded-xl border border-neutral-200 bg-neutral-50 text-neutral-500 text-xs font-bold text-center flex items-center justify-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-neutral-400" />
-                <span>Limite máximo de {MAX_ORDER_CAPAS} capinhas atingido para este pedido</span>
+                <span>Maximum limit of {MAX_ORDER_CAPAS} cases reached for this order</span>
               </div>
             )}
 
             {/* Financial Summary & Instant Pricing Recalculation */}
             <div className="rounded-2xl border border-neutral-200 bg-white p-4.5 space-y-2.5 shadow-2xs">
               <div className="text-[11px] font-black uppercase tracking-wider text-neutral-500 mb-1">
-                Resumo do Pedido ({totalQuantity} {totalQuantity === 1 ? 'capa' : 'capas'})
+                Order Summary ({totalQuantity} {totalQuantity === 1 ? 'case' : 'cases'})
               </div>
 
               {/* Subtotal */}
               <div className="flex justify-between text-xs font-semibold text-neutral-600">
-                <span>Subtotal ({totalQuantity}x R$ 79,90):</span>
+                <span>Subtotal ({totalQuantity}x $79.90):</span>
                 <span>{formatCurrency(pricing.subtotal)}</span>
               </div>
 
@@ -355,7 +355,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="flex justify-between items-center text-xs font-black text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-200">
                   <span className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span>Desconto por Quantidade:</span>
+                    <span>Bundle Savings:</span>
                   </span>
                   <span>-{formatCurrency(pricing.discount)}</span>
                 </div>
@@ -363,8 +363,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               {/* Shipping Tag */}
               <div className="flex justify-between text-xs font-semibold text-neutral-600">
-                <span>Envio para todo o Brasil:</span>
-                <span className="text-emerald-600 font-bold">Grátis</span>
+                <span>Fast US Shipping:</span>
+                <span className="text-emerald-600 font-bold">FREE</span>
               </div>
 
               {/* Total */}
@@ -373,7 +373,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <span className="text-sm font-black text-neutral-950 uppercase tracking-tight">Total:</span>
                   {pricing.discount > 0 && (
                     <span className="block text-[10px] font-bold text-emerald-600">
-                      Você economiza {formatCurrency(pricing.discount)}
+                      You save {formatCurrency(pricing.discount)}
                     </span>
                   )}
                 </div>
@@ -382,7 +382,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     {formatCurrency(pricing.total)}
                   </span>
                   <span className="block text-[10px] text-neutral-400 font-medium">
-                    (R$ {pricing.unitPrice.toFixed(2)} / capa)
+                    (${pricing.unitPrice.toFixed(2)} / case)
                   </span>
                 </div>
               </div>
@@ -392,11 +392,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="grid grid-cols-2 gap-2 text-center text-[10px] font-bold text-neutral-600">
               <div className="p-2 rounded-xl bg-neutral-50 border border-neutral-200/80 flex items-center justify-center gap-1.5">
                 <Truck className="w-3.5 h-3.5 text-[#9333EA]" />
-                <span>Rastreamento Ponta a Ponta</span>
+                <span>Tracked US Shipping</span>
               </div>
               <div className="p-2 rounded-xl bg-neutral-50 border border-neutral-200/80 flex items-center justify-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#9333EA]" />
-                <span>Garantia de 30 Dias</span>
+                <span>30-Day Guarantee</span>
               </div>
             </div>
           </div>
@@ -413,7 +413,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             {hasOutOfStockUnit && !checkoutError && (
               <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-semibold flex items-center gap-2">
                 <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                <span>Uma ou mais capas estão esgotadas. Ajuste o modelo ou cor para continuar.</span>
+                <span>One or more cases are out of stock. Please adjust model or color to continue.</span>
               </div>
             )}
 
@@ -428,20 +428,20 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               }`}
             >
               {isSubmitting ? (
-                <span>Abrindo seu carrinho...</span>
+                <span>Opening your cart...</span>
               ) : hasOutOfStockUnit ? (
-                <span>AJUSTE AS OPÇÕES ESGOTADAS</span>
+                <span>ADJUST OUT-OF-STOCK ITEMS</span>
               ) : (
                 <>
                   <ShoppingBag className="w-4 h-4" />
-                  <span>CONFERIR NO CARRINHO ({formatCurrency(pricing.total)})</span>
+                  <span>VIEW IN CART ({formatCurrency(pricing.total)})</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </>
               )}
             </button>
 
             <p className="text-[10px] text-center font-medium text-neutral-400">
-              Ambiente 100% seguro · Suas opções e descontos são preservados
+              100% secure · Your custom configuration and bundle savings are preserved
             </p>
           </div>
 

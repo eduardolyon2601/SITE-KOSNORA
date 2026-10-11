@@ -79,17 +79,17 @@ export async function addVariantsToShopifyCart(
     const variantId = Number(unit.variantId);
 
     if (!Number.isSafeInteger(variantId) || variantId <= 0) {
-      throw new Error(`ID de variante inválido para a Capa #${idx + 1} (${unit.model} - ${unit.color}).`);
+      throw new Error(`Invalid variant ID for Case #${idx + 1} (${unit.model} - ${unit.color}).`);
     }
 
     return {
       id: variantId,
       quantity: 1,
       properties: {
-        'Capa': `#${(unit.unitIndex !== undefined ? unit.unitIndex : idx) + 1} de ${unit.totalUnits || selectedUnits.length}`,
+        'Case': `#${(unit.unitIndex !== undefined ? unit.unitIndex : idx) + 1} of ${unit.totalUnits || selectedUnits.length}`,
         'iPhone Model': unit.model,
         'Case Color': unit.color,
-        'Pacote': `${unit.totalUnits || selectedUnits.length} Capas`,
+        'Bundle': `${unit.totalUnits || selectedUnits.length} Cases`,
       },
     };
   });
@@ -107,7 +107,7 @@ export async function addVariantsToShopifyCart(
   const result = await response.json();
 
   if (!response.ok) {
-    throw new Error(result.description || result.message || 'Não foi possível adicionar os produtos ao carrinho.');
+    throw new Error(result.description || result.message || 'Could not add products to cart.');
   }
 
   // 3. Confirm items in real cart
@@ -116,7 +116,7 @@ export async function addVariantsToShopifyCart(
   if (verifyRes.ok) {
     confirmedCart = await verifyRes.json();
     if (!confirmedCart.items || confirmedCart.items.length === 0) {
-      throw new Error('O carrinho não confirmou os itens.');
+      throw new Error('The cart could not confirm the added items.');
     }
   }
 
@@ -500,7 +500,7 @@ export async function addKosnoraItemsToCart(
   const root = window.Shopify?.routes?.root || "/";
 
   if (!Array.isArray(items) || items.length === 0) {
-    throw new Error("Nenhum produto selecionado.");
+    throw new Error("No products selected.");
   }
 
   const validItems = items.map(item => {
@@ -508,11 +508,11 @@ export async function addKosnoraItemsToCart(
     const quantity = Number(item.quantity || 1);
 
     if (!Number.isSafeInteger(id) || id <= 0) {
-      throw new Error("ID de variante inválido.");
+      throw new Error("Invalid variant ID.");
     }
 
     if (!Number.isSafeInteger(quantity) || quantity <= 0) {
-      throw new Error("Quantidade inválida.");
+      throw new Error("Invalid quantity.");
     }
 
     return { id, quantity };
@@ -533,7 +533,7 @@ export async function addKosnoraItemsToCart(
     throw new Error(
       result.description ||
       result.message ||
-      "Não foi possível adicionar os produtos."
+      "Could not add products to cart."
     );
   }
 

@@ -26,27 +26,27 @@ export const Footer: React.FC = () => {
     {
       label: 'Privacy Policy',
       url: '/policies/privacy-policy',
-      content: 'A KOSNORA valoriza a privacidade e segurança total de seus dados. Todas as informações coletadas em nossa loja Shopify são criptografadas e utilizadas estritamente para o processamento de pedidos, entrega e suporte ao cliente.',
+      content: 'KOSNORA values your privacy and data security. All personal and order information collected through our official Shopify store is 256-bit encrypted and utilized exclusively for order fulfillment, delivery, and customer service.',
     },
     {
       label: 'Shipping Policy',
       url: '/policies/shipping-policy',
-      content: 'Envio rápido e seguro para todo o território nacional. Pedidos são despachados em até 24 a 48 horas úteis após confirmação do pagamento, com código de rastreamento completo.',
+      content: 'Fast and reliable shipping across the United States. Orders are processed and dispatched within 24–48 business hours with end-to-end tracking provided immediately upon shipment.',
     },
     {
       label: 'Refund & Return Policy',
       url: '/policies/refund-policy',
-      content: 'Garantia incondicional de 30 dias KOSNORA. Se você não estiver 100% satisfeito com o encaixe ou qualidade da sua capinha, realizamos a troca ou reembolso integral de forma rápida.',
+      content: '30-Day Unconditional Money-Back Guarantee. If you are not 100% satisfied with the fit or quality of your KOSNORA case, our customer care team will arrange an exchange or immediate full refund.',
     },
     {
       label: 'Terms of Service',
       url: '/policies/terms-of-service',
-      content: 'Termos de Serviço oficiais da KOSNORA regidos pelas diretrizes de comércio eletrônico seguro da Shopify e legislação vigente de proteção ao consumidor.',
+      content: 'Official Terms of Service for KOSNORA, governed by standard e-commerce consumer guidelines and Shopify secure merchant protocols.',
     },
     {
       label: 'Contact Information',
-      url: '/pages/contato',
-      content: 'Atendimento oficial KOSNORA:\nE-mail: support@kosnora.com\nHorário de atendimento: Segunda a Sexta, das 09h às 18h.\nWhatsApp de Suporte disponível para clientes.',
+      url: '/pages/contact',
+      content: 'KOSNORA Official Support:\nEmail: support@kosnora.com\nPhone / WhatsApp: +1 (970) 996-2930\nSupport Hours: Monday – Friday, 9:00 AM – 6:00 PM EST.',
     },
   ];
 
@@ -64,17 +64,17 @@ export const Footer: React.FC = () => {
                 Engineered for Everyday Protection
               </p>
               <p className="text-xs text-neutral-500 max-w-sm leading-relaxed">
-                Capinhas inteligentes de alta precisão com acabamento premium e proteção avançada contra impactos para o seu iPhone.
+                Smart precision cases engineered with premium finishes and advanced impact protection for your iPhone.
               </p>
               <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-bold text-emerald-700">
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>Compra 100% Segura</span>
+                  <span>100% Secure Checkout</span>
                 </span>
                 <span className="text-neutral-300">·</span>
                 <span className="flex items-center gap-1.5">
                   <Truck className="w-4 h-4 text-emerald-600" />
-                  <span>Envio para todo o Brasil</span>
+                  <span>Fast US Shipping</span>
                 </span>
               </div>
             </div>
@@ -82,17 +82,17 @@ export const Footer: React.FC = () => {
             {/* Quick Navigation Links */}
             <div className="md:col-span-2 space-y-3">
               <div className="text-[11px] font-black uppercase tracking-wider text-neutral-900">
-                Navegação
+                Navigation
               </div>
               <div className="flex flex-col space-y-2 text-xs font-bold text-neutral-700">
                 <a href="#pricing" className="hover:text-[#9333EA] transition-colors">
-                  Comprar Capinhas
+                  Shop Cases
                 </a>
                 <a href="#benefits" className="hover:text-[#9333EA] transition-colors">
-                  Por Que KOSNORA
+                  Why KOSNORA
                 </a>
                 <a href="#faq" className="hover:text-[#9333EA] transition-colors">
-                  Dúvidas Frequentes
+                  Frequently Asked Questions
                 </a>
               </div>
             </div>
@@ -100,7 +100,7 @@ export const Footer: React.FC = () => {
             {/* Policies Column (Direct Shopify Links + Modal Fallback) */}
             <div className="md:col-span-3 space-y-3">
               <div className="text-[11px] font-black uppercase tracking-wider text-neutral-900">
-                Políticas & Termos
+                Policies & Terms
               </div>
               <div className="flex flex-col space-y-2 text-xs text-neutral-600">
                 {policies.map((p) => (
@@ -125,11 +125,11 @@ export const Footer: React.FC = () => {
             {/* Social & Contact Channels */}
             <div className="md:col-span-2 space-y-3">
               <div className="text-[11px] font-black uppercase tracking-wider text-neutral-900">
-                Canais Oficiais
+                Customer Care
               </div>
               <div className="flex flex-col space-y-2.5 text-xs text-neutral-700">
                 <a
-                  href="https://instagram.com/kosnora"
+                  href="https://www.instagram.com/kosnora.us/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-[#9333EA] transition-colors font-medium"
@@ -139,11 +139,11 @@ export const Footer: React.FC = () => {
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
                     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
                   </svg>
-                  <span>@kosnora</span>
+                  <span>@kosnora.us</span>
                 </a>
 
                 <a
-                  href="https://tiktok.com/@kosnora"
+                  href="https://www.tiktok.com/@kosnora"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 hover:text-[#9333EA] transition-colors font-medium"
@@ -155,17 +155,17 @@ export const Footer: React.FC = () => {
                 </a>
 
                 <a
-                  href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida%20sobre%20a%20capinha%20KOSNORA"
+                  href="https://wa.me/19709962930"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-bold transition-colors pt-1"
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
-                  <span>WhatsApp Suporte</span>
+                  <span>WhatsApp: +1 (970) 996-2930</span>
                 </a>
 
                 <span className="text-[10px] text-neutral-400 block pt-0.5">
-                  Seg–Sex: 09h às 18h
+                  Mon–Fri: 9:00 AM – 6:00 PM EST
                 </span>
               </div>
             </div>
@@ -173,9 +173,9 @@ export const Footer: React.FC = () => {
 
           {/* Bottom Copyright */}
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-neutral-500">
-            <p>© {new Date().getFullYear()} KOSNORA. Todos os direitos reservados.</p>
+            <p>© {new Date().getFullYear()} KOSNORA. All rights reserved.</p>
             <p className="text-[11px] text-neutral-400">
-              iPhone é uma marca registrada da Apple Inc. KOSNORA é uma marca de acessórios independente.
+              iPhone is a registered trademark of Apple Inc. KOSNORA is an independent accessories brand.
             </p>
           </div>
         </div>

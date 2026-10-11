@@ -228,7 +228,7 @@
           removeSpan.style.color = '#9CA3AF';
           removeSpan.style.fontWeight = 'bold';
           removeSpan.style.marginLeft = '4px';
-          removeSpan.title = 'Remover esta capa';
+          removeSpan.title = 'Remove this case';
           removeSpan.addEventListener('click', (e) => {
             e.stopPropagation();
             removeUnit(idx);
@@ -334,7 +334,7 @@
       const pricing = calculateBundlePricing(units.length);
 
       if (summaryLabel) {
-        summaryLabel.textContent = `Subtotal (${units.length} ${units.length === 1 ? 'capa' : 'capas'}):`;
+        summaryLabel.textContent = `Subtotal (${units.length} ${units.length === 1 ? 'case' : 'cases'}):`;
       }
       if (summarySubtotal) {
         summarySubtotal.textContent = formatMoney(pricing.subtotal);
@@ -515,7 +515,7 @@
         if (!res || !res.id || res.available === false) {
           if (errorBox) {
             errorBox.style.display = 'block';
-            errorBox.textContent = `A capa #${i + 1} (${u.model} - ${u.color}) está esgotada no momento.`;
+            errorBox.textContent = `Case #${i + 1} (${u.model} - ${u.color}) is currently out of stock.`;
           }
           return;
         }
@@ -524,7 +524,7 @@
         if (!Number.isSafeInteger(variantId) || variantId <= 0) {
           if (errorBox) {
             errorBox.style.display = 'block';
-            errorBox.textContent = `Opção indisponível para a Capa #${i + 1}. Escolha outra combinação.`;
+            errorBox.textContent = `Option unavailable for Case #${i + 1}. Please choose another combination.`;
           }
           return;
         }
