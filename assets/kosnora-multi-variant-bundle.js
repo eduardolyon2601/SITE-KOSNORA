@@ -74,20 +74,20 @@
       return { total: 79.9, subtotal: 79.9, discount: 0, unitPrice: 79.9, promoTag: 'Single Case' };
     }
     if (quantity === 2) {
-      return { total: 139.9, subtotal: 159.8, discount: 19.9, unitPrice: 69.95, promoTag: '2 Cases (-R$ 19,90)' };
+      return { total: 139.9, subtotal: 159.8, discount: 19.9, unitPrice: 69.95, promoTag: '2 Cases (Save $19.90)' };
     }
     if (quantity === 3) {
-      return { total: 194.9, subtotal: 239.7, discount: 44.8, unitPrice: 64.97, promoTag: '3 Cases (-R$ 44,80)' };
+      return { total: 194.9, subtotal: 239.7, discount: 44.8, unitPrice: 64.97, promoTag: '3 Cases (Save $44.80)' };
     }
     const unitPrice = 64.97;
     const total = 259.88;
     const subtotal = 319.6;
     const discount = 59.72;
-    return { total, subtotal, discount, unitPrice, promoTag: '4 Cases (-R$ 59,72)' };
+    return { total, subtotal, discount, unitPrice, promoTag: '4 Cases (Save $59.72)' };
   }
 
   function formatMoney(amount) {
-    return 'R$ ' + amount.toFixed(2).replace('.', ',');
+    return '$' + (amount || 0).toFixed(2);
   }
 
   /**
@@ -216,7 +216,7 @@
         dot.style.backgroundColor = getColorHex(u.color);
 
         const text = document.createElement('span');
-        text.textContent = `Capa #${idx + 1}: ${u.model} (${u.color})`;
+        text.textContent = `Case #${idx + 1}: ${u.model} (${u.color})`;
 
         btn.appendChild(dot);
         btn.appendChild(text);
@@ -251,10 +251,10 @@
       if (!currentUnit) return;
 
       if (modelLabelText) {
-        modelLabelText.textContent = units.length > 1 ? `Modelo da Capa #${activeUnitIndex + 1}:` : 'Modelo do iPhone:';
+        modelLabelText.textContent = units.length > 1 ? `Case #${activeUnitIndex + 1} Model:` : 'iPhone Model:';
       }
       if (colorLabelText) {
-        colorLabelText.textContent = units.length > 1 ? `Cor da Capa #${activeUnitIndex + 1}:` : 'Cor da Capa:';
+        colorLabelText.textContent = units.length > 1 ? `Case #${activeUnitIndex + 1} Color:` : 'Case Color:';
       }
 
       if (modelSelect) {
@@ -263,12 +263,12 @@
         Array.from(modelSelect.options).forEach(opt => {
           const m = opt.value;
           const isOos = isCombinationOutOfStock(m, currentUnit.color);
-          opt.textContent = isOos ? `${m} · (Esgotado)` : m;
+          opt.textContent = isOos ? `${m} · (Out of stock)` : m;
         });
       }
 
       if (colorNameDisplay) {
-        colorNameDisplay.textContent = currentUnit.isPlayingVideo ? 'Vídeo' : currentUnit.color;
+        colorNameDisplay.textContent = currentUnit.isPlayingVideo ? 'Video' : currentUnit.color;
       }
 
       // Update color pill buttons
@@ -283,7 +283,7 @@
             const isOos = isCombinationOutOfStock(currentUnit.model, colorName);
             pill.classList.toggle('active', isSelected);
             pill.classList.toggle('is-out-of-stock', isOos);
-            pill.title = isOos ? `${colorName} - Esgotado para ${currentUnit.model}` : `${colorName} - Em estoque`;
+            pill.title = isOos ? `${colorName} - Out of stock for ${currentUnit.model}` : `${colorName} - In stock`;
           }
         });
       }
@@ -295,14 +295,14 @@
           stockStatusWrap.innerHTML = `
             <span class="status-in-stock">
               <span class="status-dot"></span>
-              <span>Em estoque · Pronta entrega ${units.length > 1 ? `(Capa #${activeUnitIndex + 1})` : ''}</span>
+              <span>In Stock · Ready to Ship ${units.length > 1 ? `(Case #${activeUnitIndex + 1})` : ''}</span>
             </span>
           `;
         } else {
           stockStatusWrap.innerHTML = `
             <span class="status-out-of-stock">
               <span class="status-dot"></span>
-              <span>Esgotado nesta combinação ${units.length > 1 ? `(Capa #${activeUnitIndex + 1})` : `(${currentUnit.color} / ${currentUnit.model})`}</span>
+              <span>Out of stock for this combination ${units.length > 1 ? `(Case #${activeUnitIndex + 1})` : `(${currentUnit.color} / ${currentUnit.model})`}</span>
             </span>
           `;
         }
@@ -356,7 +356,7 @@
       if (savingsNote) {
         if (pricing.discount > 0) {
           savingsNote.style.display = 'block';
-          savingsNote.textContent = `Economia de ${formatMoney(pricing.discount)}`;
+          savingsNote.textContent = `You save ${formatMoney(pricing.discount)}`;
         } else {
           savingsNote.style.display = 'none';
         }
@@ -373,10 +373,10 @@
         if (hasOos) {
           buyButton.disabled = true;
           const firstOos = outOfStockUnits[0];
-          buyButtonText.textContent = `COMBINAÇÃO ESGOTADA (Capa #${firstOos.index + 1}: ${firstOos.unit.color})`;
+          buyButtonText.textContent = `COMBINATION OUT OF STOCK (Case #${firstOos.index + 1}: ${firstOos.unit.color})`;
         } else {
           buyButton.disabled = false;
-          buyButtonText.textContent = `FINALIZAR COMPRA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'} · ${formatMoney(pricing.total)})`;
+          buyButtonText.textContent = `ADD TO CART (${units.length} ${units.length === 1 ? 'CASE' : 'CASES'} · ${formatMoney(pricing.total)})`;
         }
       }
     }
@@ -533,10 +533,10 @@
           id: variantId,
           quantity: 1,
           properties: {
-            'Capa': `#${i + 1} de ${units.length}`,
+            'Case': `#${i + 1} of ${units.length}`,
             'iPhone Model': u.model,
             'Case Color': u.color,
-            'Pacote': `${units.length} Capas`
+            'Bundle': `${units.length} Cases`
           }
         });
       }
@@ -544,7 +544,7 @@
       if (itemsToAdd.length === 0) {
         if (errorBox) {
           errorBox.style.display = 'block';
-          errorBox.textContent = 'Nenhuma unidade válida para adicionar ao carrinho.';
+          errorBox.textContent = 'No valid units to add to cart.';
         }
         return;
       }
@@ -552,7 +552,7 @@
       // 2. UI Loading state
       buyButton.disabled = true;
       buyButton.style.opacity = '0.8';
-      buyButtonText.textContent = 'Abrindo seu carrinho...';
+      buyButtonText.textContent = 'Opening your cart...';
 
       const cartUrl = `${root}cart`;
 
@@ -570,7 +570,7 @@
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.description || result.message || 'Erro ao adicionar ao carrinho.');
+          throw new Error(result.description || result.message || 'Error adding to cart.');
         }
 
         // 4. Verify cart items from /cart.js to ensure items exist
@@ -578,12 +578,12 @@
         if (cartVerifyRes.ok) {
           const cartState = await cartVerifyRes.json();
           if (!cartState.items || cartState.items.length === 0) {
-            throw new Error('O carrinho não confirmou a inserção dos itens.');
+            throw new Error('Cart did not confirm addition of items.');
           }
         }
 
         // 5. Redirect to official Shopify Cart page
-        buyButtonText.textContent = 'Abrindo seu carrinho...';
+        buyButtonText.textContent = 'Opening your cart...';
         window.location.assign(cartUrl);
       } catch (err) {
         console.warn('[KOSNORA] Cart API fallback:', err);

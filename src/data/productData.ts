@@ -106,12 +106,12 @@ export const MAX_ORDER_CAPAS = 4;
 
 /**
  * Calculates progressive volume pricing according to official KOSNORA rules:
- * - 1 Unit: R$ 79,90 (unit: R$ 79,90, discount: R$ 0,00)
- * - 2 Units: R$ 139,90 (unit: R$ 69,95, discount: R$ 19,90 - 2x 79.90 = 159.80)
- * - 3 Units: R$ 194,90 (unit: R$ 64,97, discount: R$ 44,80 - 3x 79.90 = 239.70)
- * - 4 Units (LIMITE MÁXIMO): R$ 259,88 (unit: R$ 64,97, discount: R$ 59,72 - 4x 79.90 = 319.60)
+ * - 1 Unit: $79.90 (unit: $79.90, discount: $0.00)
+ * - 2 Units: $139.90 (unit: $69.95, discount: $19.90 - 2x 79.90 = 159.80)
+ * - 3 Units: $194.90 (unit: $64.97, discount: $44.80 - 3x 79.90 = 239.70)
+ * - 4 Units (MAXIMUM BUNDLE): $259.88 (unit: $64.97, discount: $59.72 - 4x 79.90 = 319.60)
  */
-export function calculateCartPricing(quantity: number, currency = 'R$'): CartCalculation {
+export function calculateCartPricing(quantity: number, currency = '$'): CartCalculation {
   const clampedQty = Math.min(MAX_ORDER_CAPAS, Math.max(1, Math.round(quantity || 1)));
   const basePricePerUnit = 79.90;
   const subtotal = Number((clampedQty * basePricePerUnit).toFixed(2));

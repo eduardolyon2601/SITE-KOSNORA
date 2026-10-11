@@ -378,7 +378,7 @@ export async function syncShopifyCartItem(payload: CheckoutPayload): Promise<boo
               'iPhone Model': payload.model,
               'Case Color': payload.color,
               'Offer Selection': `${payload.quantity} Case${payload.quantity > 1 ? 's' : ''}`,
-              'Price Structure': `R$ ${payload.unitPrice.toFixed(2)} cada · R$ ${payload.totalPrice.toFixed(2)} total`,
+              'Price Structure': `$${payload.unitPrice.toFixed(2)} each · $${payload.totalPrice.toFixed(2)} total`,
             },
           },
         ],
@@ -460,12 +460,12 @@ export async function syncShopifyMultiUnitCart(payload: MultiUnitCheckoutPayload
       id: Number(vId),
       quantity: 1,
       properties: {
-        'Capa': `#${i + 1} de ${payload.totalQuantity}`,
+        'Case': `#${i + 1} of ${payload.totalQuantity}`,
         'iPhone Model': unit.model,
         'Case Color': unit.color,
-        'Pacote': `${payload.totalQuantity} Capas`,
-        'Preço Unitário': `R$ ${payload.unitPrice.toFixed(2)}`,
-        'Total do Pedido': `R$ ${payload.totalPrice.toFixed(2)}`,
+        'Bundle': `${payload.totalQuantity} Cases`,
+        'Unit Price': `$${payload.unitPrice.toFixed(2)}`,
+        'Order Total': `$${payload.totalPrice.toFixed(2)}`,
       },
     });
   }

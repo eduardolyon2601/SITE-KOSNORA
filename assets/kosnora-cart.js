@@ -1,6 +1,7 @@
 /**
  * KOSNORA - Native Shopify Online Store 2.0 Cart Controller
  * Pure Vanilla JS, zero dependencies. Interacts with Shopify Ajax Cart API (/cart/change.js)
+ * Enforces the strict maximum 4-case limit per order.
  */
 (function () {
   'use strict';
@@ -8,7 +9,28 @@
   function initKosnoraCart() {
     const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
 
+    function getTotalCartQuantity(targetLineKey, targetQuantity) {
+      let total = 0;
+      document.querySelectorAll('.kosnora-cart-qty-input').forEach(input => {
+        const line = input.getAttribute('data-line-key');
+        if (line === targetLineKey) {
+          total += Math.max(0, parseInt(targetQuantity, 10));
+        } else {
+          total += Math.max(0, parseInt(input.value, 10) || 0);
+        }
+      });
+      return total;
+    }
+
     async function changeItemQuantity(lineKey, newQuantity) {
+      const parsedQty = Math.max(0, parseInt(newQuantity, 10));
+      const projectedTotal = getTotalCartQuantity(lineKey, parsedQty);
+
+      if (projectedTotal > 4) {
+        alert('Order limit reached: A maximum of 4 cases per order is allowed.');
+        return;
+      }
+
       const loadingOverlay = document.getElementById('kosnora-cart-loading');
       if (loadingOverlay) loadingOverlay.style.display = 'flex';
 
@@ -21,13 +43,13 @@
           },
           body: JSON.stringify({
             id: lineKey,
-            quantity: Math.max(0, parseInt(newQuantity, 10))
+            quantity: parsedQty
           })
         });
 
         if (!response.ok) {
           const err = await response.json();
-          alert(err.description || err.message || 'Erro ao atualizar o carrinho.');
+          alert(err.description || err.message || 'Unable to update cart quantity.');
           if (loadingOverlay) loadingOverlay.style.display = 'none';
           return;
         }
