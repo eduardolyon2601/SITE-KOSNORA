@@ -9,6 +9,10 @@
     font-family: 'Montserrat', sans-serif !important;
     background-color: #FFFFFF !important;
     color: #111111 !important;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -18,8 +22,46 @@
     font-family: 'Montserrat', sans-serif !important;
     background-color: #FFFFFF !important;
     color: #111111 !important;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
+    box-sizing: border-box;
   }
+}
+
+/* KOSNORA — ESTABILIDADE DO SELETOR DE CAPINHAS */
+.kosnora-product-section {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.kosnora-product-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.kosnora-case-selector {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kosnora-case-item {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Custom subtle light scrollbar */

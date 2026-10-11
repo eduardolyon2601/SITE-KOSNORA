@@ -10,16 +10,55 @@
 
 .kosnora-bundle-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
   align-items: start;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (min-width: 1024px) {
   .kosnora-bundle-grid {
-    grid-template-columns: 5fr 7fr;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: 3.5rem;
   }
+}
+
+/* KOSNORA — ESTABILIDADE DO SELETOR DE CAPINHAS */
+.kosnora-product-section {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.kosnora-product-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.kosnora-case-selector {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kosnora-case-item {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Gallery & Preview */
@@ -226,9 +265,19 @@
 
 .kosnora-tiers-selector {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.5rem;
   margin-bottom: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .kosnora-tiers-selector {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .kosnora-tier-tab {
@@ -295,11 +344,15 @@
 
 .kosnora-units-tabs-bar {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  overflow-x: auto;
   padding-bottom: 0.75rem;
   margin-bottom: 0.75rem;
   border-bottom: 1px solid #E5E7EB;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .kosnora-unit-tab-btn {
@@ -316,7 +369,8 @@
   text-transform: uppercase;
   color: #374151;
   transition: all 0.15s ease;
-  white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .kosnora-unit-tab-btn.active {
@@ -372,7 +426,10 @@
   color: #111827;
   cursor: pointer;
   outline: none;
-  min-width: 220px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .kosnora-model-select:focus {

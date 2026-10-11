@@ -86,6 +86,16 @@ export const PRICING_TIERS: PricingTier[] = [
     bestValue: true,
     tagline: '3x KOSNORA Cases',
   },
+  {
+    id: 'quadruple',
+    quantity: 4,
+    label: '4 CASES',
+    unitPrice: 64.97,
+    totalPrice: 259.88,
+    savingsTotal: 59.72,
+    savingsPerUnit: 14.93,
+    tagline: '4x KOSNORA Cases (Limite Máximo)',
+  },
 ];
 
 export function getPricingTiers(): PricingTier[] {

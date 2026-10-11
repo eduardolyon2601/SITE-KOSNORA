@@ -493,17 +493,18 @@ function initDrawer() {
       };
     }
 
-    // 4 or more
+    // 4 units (limite maximo)
+    const clampedQty = Math.min(4, qty);
     const unitPrice = 64.97;
-    const total = Number((qty * unitPrice).toFixed(2));
+    const total = 259.88;
     const discount = Number((subtotal - total).toFixed(2));
     return {
-      qty,
+      qty: clampedQty,
       unitPrice,
       subtotal,
       discount,
       total,
-      tag: `Oferta Volume (${qty}x)`,
+      tag: 'Pacote Máximo (4x)',
       savingsText: 'Você economiza ' + formatMoney(discount)
     };
   }
@@ -1140,11 +1141,18 @@ function initDrawer() {
           { model: currentModel, color: currentColor },
           { model: currentModel, color: secondColor }
         ];
-      } else if (targetCount >= 3) {
+      } else if (targetCount === 3) {
         drawerUnits = [
           { model: currentModel, color: currentColor },
           { model: currentModel, color: 'Black' },
           { model: currentModel, color: 'White' }
+        ];
+      } else if (targetCount >= 4) {
+        drawerUnits = [
+          { model: currentModel, color: currentColor },
+          { model: currentModel, color: 'Black' },
+          { model: currentModel, color: 'White' },
+          { model: currentModel, color: 'Gray' }
         ];
       } else {
         drawerUnits = [

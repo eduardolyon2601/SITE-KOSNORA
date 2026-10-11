@@ -76,11 +76,14 @@
     if (quantity === 2) {
       return { total: 139.9, subtotal: 159.8, discount: 19.9, unitPrice: 69.95, promoTag: '2 Cases (-R$ 19,90)' };
     }
+    if (quantity === 3) {
+      return { total: 194.9, subtotal: 239.7, discount: 44.8, unitPrice: 64.97, promoTag: '3 Cases (-R$ 44,80)' };
+    }
     const unitPrice = 64.97;
-    const total = 194.9;
-    const subtotal = quantity * 79.9;
-    const discount = subtotal - total;
-    return { total, subtotal, discount, unitPrice, promoTag: `${quantity} Cases (-R$ ${discount.toFixed(2)})` };
+    const total = 259.88;
+    const subtotal = 319.6;
+    const discount = 59.72;
+    return { total, subtotal, discount, unitPrice, promoTag: '4 Cases (-R$ 59,72)' };
   }
 
   function formatMoney(amount) {

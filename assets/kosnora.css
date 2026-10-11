@@ -28,13 +28,55 @@ html {
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 body {
   background-color: var(--color-bg-main);
   color: var(--color-text-main);
   line-height: 1.5;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* KOSNORA — ESTABILIDADE DO SELETOR DE CAPINHAS */
+.kosnora-product-section {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.kosnora-product-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.kosnora-case-selector {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kosnora-case-item {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Container */
@@ -481,7 +523,7 @@ body {
 
 .kosnora-tier-grid-desktop {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.85rem;
   margin-bottom: 1.25rem;
   padding-top: 16px; /* Essential: prevents top badges and top border from ever being clipped */
@@ -490,6 +532,9 @@ body {
   padding-right: 2px;
   box-sizing: border-box !important;
   overflow: visible !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .kosnora-tier-card {

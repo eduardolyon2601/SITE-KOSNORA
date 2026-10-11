@@ -80,8 +80,10 @@ export default function App() {
       const allTiers = getPricingTiers();
       if (next.length === 2) {
         setSelectedTier(allTiers.find((t) => t.quantity === 2) || allTiers[1]);
-      } else if (next.length >= 3) {
+      } else if (next.length === 3) {
         setSelectedTier(allTiers.find((t) => t.quantity === 3) || allTiers[2]);
+      } else if (next.length >= 4) {
+        setSelectedTier(allTiers.find((t) => t.quantity === 4) || allTiers[3]);
       }
 
       return next;
@@ -99,6 +101,8 @@ export default function App() {
         setSelectedTier(allTiers[0]);
       } else if (next.length === 2) {
         setSelectedTier(allTiers.find((t) => t.quantity === 2) || allTiers[1]);
+      } else if (next.length === 3) {
+        setSelectedTier(allTiers.find((t) => t.quantity === 3) || allTiers[2]);
       }
 
       if (activeUnitIndex >= next.length) {
