@@ -3,15 +3,15 @@
     "bundle": {
       "type": "kosnora-multi-variant-bundle",
       "settings": {
-        "headline": "KOSNORA Case",
-        "subheadline": "Refined minimalist design, reinforced impact protection, and a smart battery-free NFC display. Mix and match phone models and colors freely with progressive bundle discounts."
+        "headline": "KOSNORA Case"
       }
     },
     "reviews_carousel": {
       "type": "reviews-carousel",
       "settings": {
         "headline": "Loved by Our Customers",
-        "subheadline": "Your favorite memories, right on your phone."
+        "subheadline": "Your favorite memories, right on your phone.",
+        "overall_rating": "4.7 / 5"
       }
     },
     "faq": {

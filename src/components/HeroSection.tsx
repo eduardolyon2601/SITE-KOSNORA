@@ -352,18 +352,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs">
             <div className="flex -space-x-2 shrink-0">
               <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80"
-                alt="Verified Customer"
+                src="https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
+                alt="Sarah M."
                 className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
               />
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80"
-                alt="Verified Customer"
+                src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
+                alt="Marcus V."
                 className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
               />
               <img
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80"
-                alt="Verified Customer"
+                src="https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg"
+                alt="Olivia C."
                 className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
               />
             </div>
@@ -535,18 +535,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="inline-flex items-center gap-2.5 mb-3 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs self-start">
                 <div className="flex -space-x-2 shrink-0">
                   <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80"
-                    alt="Verified Customer"
+                    src="https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
+                    alt="Sarah M."
                     className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
                   />
                   <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&auto=format&fit=crop&q=80"
-                    alt="Verified Customer"
+                    src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
+                    alt="Marcus V."
                     className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
                   />
                   <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&auto=format&fit=crop&q=80"
-                    alt="Verified Customer"
+                    src="https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg"
+                    alt="Olivia C."
                     className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
                   />
                 </div>
@@ -577,12 +577,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
 
               {/* Product Headline */}
-              <h1 className="text-3xl xl:text-4xl font-black uppercase tracking-tight text-neutral-950 mb-1.5">
+              <h1 className="text-3xl xl:text-4xl font-black uppercase tracking-tight text-neutral-950 mb-3">
                 KOSNORA Case
               </h1>
-              <p className="text-sm font-semibold text-neutral-600 mb-3 leading-relaxed">
-                Refined minimalist design, reinforced impact protection, and battery-free NFC smart display. Combine different models and colors freely in the same order.
-              </p>
 
               {/* Header for Desktop Case Selection */}
               <div className="flex items-center justify-between mb-1">
