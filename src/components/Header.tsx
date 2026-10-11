@@ -121,14 +121,22 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
         {/* RIGHT COLUMN: Only the Cart Bag ("sacolinha"), NO "BUY NOW" */}
         <div className="flex items-center justify-end">
           <button
-            onClick={onShopClick}
-            className="relative p-2.5 rounded-xl bg-white border border-neutral-200 text-neutral-800 hover:text-[#9333EA] hover:border-[#9333EA]/40 hover:bg-neutral-50 transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-2xs"
-            title="Open Cart"
-            aria-label="View Cart"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onShopClick();
+            }}
+            className="relative p-2.5 sm:px-3 sm:py-2.5 rounded-xl bg-white border border-neutral-200 text-neutral-800 hover:text-[#9333EA] hover:border-[#9333EA]/60 hover:bg-neutral-50 transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs group focus:outline-none focus:ring-2 focus:ring-[#9333EA]/40"
+            title="Abrir Sacolinha de Compras"
+            aria-label={`Ver Sacolinha de Compras (${cartCount} ${cartCount === 1 ? 'item' : 'itens'})`}
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-5 h-5 transition-transform group-hover:scale-105 text-neutral-900 group-hover:text-[#9333EA]" />
+            <span className="hidden md:inline-block text-[11px] font-black uppercase tracking-wider text-neutral-700 group-hover:text-[#9333EA]">
+              Sacola
+            </span>
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-[#9333EA] text-white text-[10px] font-black flex items-center justify-center shadow-xs">
+              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#9333EA] text-white text-[10px] font-black flex items-center justify-center shadow-xs ring-2 ring-white">
                 {cartCount}
               </span>
             )}
