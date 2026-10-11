@@ -71,13 +71,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   return (
-    <section id="pricing" className="bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative overflow-visible">
+    <section id="pricing" className="bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative overflow-x-clip">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* ============================================================ */}
         {/* MOBILE VIEW (< lg)                                           */}
         {/* ============================================================ */}
-        <div className="lg:hidden flex flex-col items-center max-w-2xl mx-auto text-center">
+        <div className="lg:hidden flex flex-col items-center max-w-2xl mx-auto text-center w-full">
           {/* Social Proof Star Rating Tag */}
           <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs">
             <div className="flex -space-x-2 shrink-0">
@@ -157,9 +157,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Multi-Unit Switcher for Bundles (Mobile - Below Media, Zero Layout Distortion) */}
-          <div className="w-full max-w-sm mt-3 px-2">
+          <div className="w-full max-w-sm mt-3 px-2 min-h-[44px] flex items-center justify-center">
             {units.length > 1 ? (
-              <div className="p-1.5 bg-neutral-100/90 rounded-2xl flex items-center justify-center gap-1.5 overflow-x-auto">
+              <div className="w-full p-1.5 bg-neutral-100/90 rounded-2xl flex items-center justify-center gap-1.5 overflow-x-auto">
                 {units.map((u, i) => {
                   const isActive = i === activeUnitIndex;
                   const isUAvail = isVariantInStoreCatalog(u.model, u.color);
@@ -184,8 +184,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 })}
               </div>
             ) : (
-              <div className="text-[10px] font-black uppercase tracking-wider text-neutral-400 py-1">
-                Personalizando Capa 1 de 1
+              <div className="w-full p-1.5 bg-neutral-50 border border-neutral-100 rounded-2xl flex items-center justify-center">
+                <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                  Capa 1 de 1 · Personalização Individual
+                </span>
               </div>
             )}
           </div>

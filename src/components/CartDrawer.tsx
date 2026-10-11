@@ -80,7 +80,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       });
     } catch (err) {
       console.error('[KOSNORA] Multi-unit cart error:', err);
-      setCheckoutError('Ocorreu um erro ao processar o carrinho da Shopify. Por favor, tente novamente.');
+      setCheckoutError('Ocorreu um erro ao atualizar o carrinho. Por favor, tente novamente.');
       setIsSubmitting(false);
     }
   };
@@ -401,20 +401,20 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               }`}
             >
               {isSubmitting ? (
-                <span>ADICIONANDO AO CARRINHO SHOPIFY...</span>
+                <span>Abrindo seu carrinho...</span>
               ) : hasOutOfStockUnit ? (
                 <span>AJUSTE AS OPÇÕES ESGOTADAS</span>
               ) : (
                 <>
                   <ShoppingBag className="w-4 h-4" />
-                  <span>CONFERIR NO CARRINHO SHOPIFY ({formatCurrency(pricing.total)})</span>
+                  <span>CONFERIR NO CARRINHO ({formatCurrency(pricing.total)})</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </>
               )}
             </button>
 
             <p className="text-[10px] text-center font-medium text-neutral-400">
-              Ambiente oficial Shopify · Todas as variantes e descontos são preservados
+              Ambiente 100% seguro · Suas opções e descontos são preservados
             </p>
           </div>
 

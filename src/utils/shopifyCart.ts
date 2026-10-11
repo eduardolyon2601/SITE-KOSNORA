@@ -92,10 +92,7 @@ export async function addVariantsToShopifyCart(
     };
   });
 
-  // 1. Clear previous cart lines to ensure clean bundle price structure
-  await fetch(`${root}cart/clear.js`, { method: 'POST' }).catch(() => {});
-
-  // 2. Add all items via official Shopify Ajax Cart API
+  // Cumulative addition via official Shopify Ajax Cart API (never clears existing cart items)
   const response = await fetch(`${root}cart/add.js`, {
     method: 'POST',
     headers: {
@@ -108,7 +105,7 @@ export async function addVariantsToShopifyCart(
   const result = await response.json();
 
   if (!response.ok) {
-    throw new Error(result.description || result.message || 'Não foi possível adicionar os produtos ao carrinho da Shopify.');
+    throw new Error(result.description || result.message || 'Não foi possível adicionar os produtos ao carrinho.');
   }
 
   // 3. Confirm items in real cart
@@ -117,7 +114,7 @@ export async function addVariantsToShopifyCart(
   if (verifyRes.ok) {
     confirmedCart = await verifyRes.json();
     if (!confirmedCart.items || confirmedCart.items.length === 0) {
-      throw new Error('O carrinho da Shopify não confirmou os itens.');
+      throw new Error('O carrinho não confirmou os itens.');
     }
   }
 
@@ -363,9 +360,7 @@ export async function syncShopifyCartItem(payload: CheckoutPayload): Promise<boo
   }
 
   try {
-    // Clear and re-add with exact single line item to guarantee 100% price and bundle integrity
-    await fetch(`${root}cart/clear.js`, { method: 'POST' }).catch(() => {});
-
+    // Add cumulative line item via official Shopify Ajax Cart API (never clears previous items)
     const res = await fetch(`${root}cart/add.js`, {
       method: 'POST',
       headers: {
@@ -475,9 +470,7 @@ export async function syncShopifyMultiUnitCart(payload: MultiUnitCheckoutPayload
   if (resolvedItems.length === 0) return false;
 
   try {
-    // 2. Clear cart and add all customized units
-    await fetch(`${root}cart/clear.js`, { method: 'POST' }).catch(() => {});
-
+    // 2. Add all customized units cumulatively (preserves any existing products in the cart)
     const res = await fetch(`${root}cart/add.js`, {
       method: 'POST',
       headers: {

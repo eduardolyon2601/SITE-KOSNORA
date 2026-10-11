@@ -107,7 +107,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900 font-['Montserrat',sans-serif] flex flex-col selection:bg-[#F3E8FF] selection:text-[#6B21A8]">
+    <div className="min-h-screen bg-white text-neutral-900 font-['Montserrat',sans-serif] flex flex-col selection:bg-[#F3E8FF] selection:text-[#6B21A8] overflow-x-hidden">
       {/* Header with Official KNR Logo */}
       <Header
         onShopClick={() => setIsCartOpen(true)}

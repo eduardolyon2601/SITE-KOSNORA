@@ -512,7 +512,7 @@
         if (!res || !res.id || res.available === false) {
           if (errorBox) {
             errorBox.style.display = 'block';
-            errorBox.textContent = `A capa #${i + 1} (${u.model} - ${u.color}) está esgotada ou não possui variante válida na Shopify.`;
+            errorBox.textContent = `A capa #${i + 1} (${u.model} - ${u.color}) está esgotada no momento.`;
           }
           return;
         }
@@ -521,7 +521,7 @@
         if (!Number.isSafeInteger(variantId) || variantId <= 0) {
           if (errorBox) {
             errorBox.style.display = 'block';
-            errorBox.textContent = `ID de variante inválido para a Capa #${i + 1}. Verifique o cadastro do produto na loja.`;
+            errorBox.textContent = `Opção indisponível para a Capa #${i + 1}. Escolha outra combinação.`;
           }
           return;
         }
@@ -549,15 +549,12 @@
       // 2. UI Loading state
       buyButton.disabled = true;
       buyButton.style.opacity = '0.8';
-      buyButtonText.textContent = 'ADICIONANDO AO CARRINHO SHOPIFY...';
+      buyButtonText.textContent = 'Abrindo seu carrinho...';
 
       const cartUrl = `${root}cart`;
 
       try {
-        // 3. Clear cart first to guarantee bundle integrity
-        await fetch(`${root}cart/clear.js`, { method: 'POST' }).catch(() => {});
-
-        // 4. Send items via official Shopify Ajax Cart API
+        // 3. Add items cumulatively via official Shopify Ajax Cart API (never clears previous items)
         const response = await fetch(`${root}cart/add.js`, {
           method: 'POST',
           headers: {
@@ -570,24 +567,24 @@
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.description || result.message || 'Erro ao comunicar com a Shopify.');
+          throw new Error(result.description || result.message || 'Erro ao adicionar ao carrinho.');
         }
 
-        // 5. Verify cart items from /cart.js to ensure items exist
+        // 4. Verify cart items from /cart.js to ensure items exist
         const cartVerifyRes = await fetch(`${root}cart.js`);
         if (cartVerifyRes.ok) {
           const cartState = await cartVerifyRes.json();
           if (!cartState.items || cartState.items.length === 0) {
-            throw new Error('O carrinho da Shopify não confirmou a inserção dos itens.');
+            throw new Error('O carrinho não confirmou a inserção dos itens.');
           }
         }
 
-        // 6. Redirect to official Shopify Cart page
-        buyButtonText.textContent = 'REDIRECIONANDO PARA O CARRINHO...';
+        // 5. Redirect to official Shopify Cart page
+        buyButtonText.textContent = 'Abrindo seu carrinho...';
         window.location.assign(cartUrl);
       } catch (err) {
-        console.warn('[KOSNORA] Cart API failure, using fallback permalink:', err);
-        // Fallback: Shopify direct multi-variant cart permalink
+        console.warn('[KOSNORA] Cart API fallback:', err);
+        // Fallback: direct multi-variant cart permalink
         const pairs = itemsToAdd.map(it => `${it.id}:1`).join(',');
         const permalink = `${root}cart/${pairs}`;
         window.location.assign(permalink);

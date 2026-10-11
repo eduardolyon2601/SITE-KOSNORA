@@ -586,7 +586,7 @@ function initDrawer() {
     if (ctaTotal) ctaTotal.textContent = formatMoney(pricing.total);
 
     if (proceedBtn && !isSubmittingCheckout) {
-      proceedBtn.innerHTML = `<span>VER CARRINHO SHOPIFY (<span id="drawer-cta-total">${formatMoney(pricing.total)}</span>)</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px;"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>`;
+      proceedBtn.innerHTML = `<span>VER CARRINHO (<span id="drawer-cta-total">${formatMoney(pricing.total)}</span>)</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px;"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>`;
     }
 
     if (propOfferInput) {
@@ -983,7 +983,6 @@ function initDrawer() {
 
       if (items.length > 0) {
         try {
-          await fetch(root + 'cart/clear.js', { method: 'POST' }).catch(() => {});
           await fetch(root + 'cart/add.js', {
             method: 'POST',
             headers: {
@@ -1231,7 +1230,7 @@ function initDrawer() {
         const v = findVariantForOptions(u.model, u.color);
 
         if (!v || !v.id || v.id === '1' || isNaN(Number(v.id))) {
-          showDrawerAlert(`Não foi possível localizar o ID real da variante para a Capa ${i + 1} (${u.model} - ${u.color}). Verifique os produtos na Shopify.`, 'error');
+          showDrawerAlert(`Não foi possível localizar esta combinação para a Capa ${i + 1} (${u.model} - ${u.color}). Selecione outra opção.`, 'error');
           return;
         }
 
@@ -1255,13 +1254,12 @@ function initDrawer() {
       isSubmittingCheckout = true;
       proceedBtn.disabled = true;
       proceedBtn.style.opacity = '0.8';
-      proceedBtn.innerHTML = '<span>ADICIONANDO AO CARRINHO SHOPIFY...</span>';
+      proceedBtn.innerHTML = '<span>Abrindo seu carrinho...</span>';
 
       const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
       const cartUrl = root + 'cart';
 
       try {
-        await fetch(root + 'cart/clear.js', { method: 'POST' }).catch(() => {});
         const cartAddRes = await fetch(root + 'cart/add.js', {
           method: 'POST',
           headers: {
@@ -1272,7 +1270,7 @@ function initDrawer() {
         });
 
         if (cartAddRes.ok) {
-          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CARRINHO...</span>';
+          proceedBtn.innerHTML = '<span>Abrindo seu carrinho...</span>';
           try {
             localStorage.setItem('kosnora_has_purchased', 'true');
           } catch (err) {}
@@ -1281,7 +1279,7 @@ function initDrawer() {
           return;
         } else {
           // Permalink fallback
-          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CARRINHO...</span>';
+          proceedBtn.innerHTML = '<span>Abrindo seu carrinho...</span>';
           const permalinkParts = checkoutItems.map(item => `${item.id}:${item.quantity}`).join(',');
           window.location.assign(`${root}cart/${permalinkParts}`);
           return;
