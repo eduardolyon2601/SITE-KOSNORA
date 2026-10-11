@@ -586,7 +586,7 @@ function initDrawer() {
     if (ctaTotal) ctaTotal.textContent = formatMoney(pricing.total);
 
     if (proceedBtn && !isSubmittingCheckout) {
-      proceedBtn.innerHTML = `<span>CONTINUAR PARA O CHECKOUT (<span id="drawer-cta-total">${formatMoney(pricing.total)}</span>)</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px;"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>`;
+      proceedBtn.innerHTML = `<span>VER CARRINHO SHOPIFY (<span id="drawer-cta-total">${formatMoney(pricing.total)}</span>)</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px;"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>`;
     }
 
     if (propOfferInput) {
@@ -1255,17 +1255,10 @@ function initDrawer() {
       isSubmittingCheckout = true;
       proceedBtn.disabled = true;
       proceedBtn.style.opacity = '0.8';
-      proceedBtn.innerHTML = '<span>PROCESSANDO PEDIDO...</span>';
+      proceedBtn.innerHTML = '<span>ADICIONANDO AO CARRINHO SHOPIFY...</span>';
 
-      const pricing = calculatePricing(drawerUnits.length);
       const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
-      let checkoutUrl = root + 'checkout';
-
-      if (drawerUnits.length === 2) {
-        checkoutUrl += '?discount=BUNDLE2';
-      } else if (drawerUnits.length >= 3) {
-        checkoutUrl += '?discount=BUNDLE3';
-      }
+      const cartUrl = root + 'cart';
 
       try {
         await fetch(root + 'cart/clear.js', { method: 'POST' }).catch(() => {});
@@ -1279,24 +1272,24 @@ function initDrawer() {
         });
 
         if (cartAddRes.ok) {
-          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
+          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CARRINHO...</span>';
           try {
             localStorage.setItem('kosnora_has_purchased', 'true');
           } catch (err) {}
 
-          window.location.href = checkoutUrl;
+          window.location.assign(cartUrl);
           return;
         } else {
           // Permalink fallback
-          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CHECKOUT...</span>';
+          proceedBtn.innerHTML = '<span>REDIRECIONANDO PARA O CARRINHO...</span>';
           const permalinkParts = checkoutItems.map(item => `${item.id}:${item.quantity}`).join(',');
-          window.location.href = `${root}cart/${permalinkParts}?return_to=/checkout`;
+          window.location.assign(`${root}cart/${permalinkParts}`);
           return;
         }
       } catch (err) {
-        console.error('[KOSNORA] Checkout exception:', err);
+        console.error('[KOSNORA] Cart exception:', err);
         const permalinkParts = checkoutItems.map(item => `${item.id}:${item.quantity}`).join(',');
-        window.location.href = `${root}cart/${permalinkParts}?return_to=/checkout`;
+        window.location.assign(`${root}cart/${permalinkParts}`);
       }
     });
   }

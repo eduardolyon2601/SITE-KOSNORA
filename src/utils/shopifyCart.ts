@@ -396,45 +396,38 @@ export async function syncShopifyCartItem(payload: CheckoutPayload): Promise<boo
 }
 
 /**
- * Executes direct checkout by populating the Shopify cart and redirecting to /checkout.
+ * Populates the Shopify cart via Ajax Cart API and redirects to /cart.
  */
 export async function redirectToShopifyCheckout(payload: CheckoutPayload): Promise<void> {
   if (typeof window === 'undefined') return;
 
   const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
-  let checkoutUrl = `${root}checkout`;
-
-  // Attach bundle promo code if configured
-  if (payload.quantity === 2) {
-    checkoutUrl += '?discount=BUNDLE2';
-  } else if (payload.quantity >= 3) {
-    checkoutUrl += '?discount=BUNDLE3';
-  }
+  const cartUrl = `${root}cart`;
 
   const variantId = payload.variantId || (await resolveShopifyVariantId(payload.model, payload.color));
 
   if (!variantId || variantId === '1' || isNaN(Number(variantId))) {
-    console.warn('[KOSNORA] No valid variant ID found. Redirecting to storefront.');
-    window.location.href = checkoutUrl;
+    console.warn('[KOSNORA] No valid variant ID found. Redirecting to cart.');
+    window.location.assign(cartUrl);
     return;
   }
 
   // 1. Sync with Shopify cart
   const synced = await syncShopifyCartItem({ ...payload, variantId });
 
-  // 2. If successfully synced, navigate to real Shopify checkout
+  // 2. If successfully synced, navigate to real Shopify cart page
   if (synced) {
-    window.location.href = checkoutUrl;
+    window.location.assign(cartUrl);
     return;
   }
 
-  // 3. Fallback: Shopify Direct Checkout Permalink /cart/{variant}:{quantity}
+  // 3. Fallback: Shopify Cart Permalink /cart/{variant}:{quantity}
   if (variantId && Number(variantId) > 1) {
-    window.location.href = `${root}cart/${variantId}:${payload.quantity}?return_to=/checkout`;
+    window.location.assign(`${root}cart/${variantId}:${payload.quantity}`);
     return;
   }
 
-  window.location.href = checkoutUrl;
+  window.location.assign(cartUrl);
 }
 
 /**
@@ -502,29 +495,76 @@ export async function syncShopifyMultiUnitCart(payload: MultiUnitCheckoutPayload
 }
 
 /**
- * Redirects to official Shopify Checkout with all distinct unit variants and bundle coupon.
+ * Official Shopify Standard Cart Addition implementation as required:
+ * Uses Ajax Cart API to add items, verifies response, and redirects to /cart.
+ */
+export async function addKosnoraItemsToCart(
+  items: Array<{ variantId: string | number; quantity?: number }>
+): Promise<any> {
+  const root = window.Shopify?.routes?.root || "/";
+
+  if (!Array.isArray(items) || items.length === 0) {
+    throw new Error("Nenhum produto selecionado.");
+  }
+
+  const validItems = items.map(item => {
+    const id = Number(item.variantId);
+    const quantity = Number(item.quantity || 1);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      throw new Error("ID de variante inválido.");
+    }
+
+    if (!Number.isSafeInteger(quantity) || quantity <= 0) {
+      throw new Error("Quantidade inválida.");
+    }
+
+    return { id, quantity };
+  });
+
+  const response = await fetch(`${root}cart/add.js`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({ items: validItems })
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      result.description ||
+      result.message ||
+      "Não foi possível adicionar os produtos."
+    );
+  }
+
+  window.location.assign(`${root}cart`);
+
+  return result;
+}
+
+/**
+ * Redirects to official Shopify Cart page (/cart) with all distinct unit variants.
+ * Strictly enforces that the customer reviews their items and discounts in the official cart
+ * before proceeding to checkout.
  */
 export async function redirectMultiUnitCheckout(payload: MultiUnitCheckoutPayload): Promise<void> {
   if (typeof window === 'undefined') return;
 
   const root = (window.Shopify?.routes?.root) || (window.KOSNORA_STORE?.root) || '/';
-  let checkoutUrl = `${root}checkout`;
-
-  // Attach bundle promo code if configured
-  if (payload.totalQuantity === 2) {
-    checkoutUrl += '?discount=BUNDLE2';
-  } else if (payload.totalQuantity >= 3) {
-    checkoutUrl += '?discount=BUNDLE3';
-  }
+  const cartUrl = `${root}cart`;
 
   // 1. Sync with Shopify Ajax Cart API
   const synced = await syncShopifyMultiUnitCart(payload);
   if (synced) {
-    window.location.href = checkoutUrl;
+    window.location.assign(cartUrl);
     return;
   }
 
-  // 2. Fallback: Shopify direct multi-variant cart permalink: /cart/{id1}:1,{id2}:1?discount=...
+  // 2. Fallback: Shopify direct multi-variant cart permalink: /cart/{id1}:1,{id2}:1
   const permalinkPairs: string[] = [];
   for (const unit of payload.units) {
     const vId = unit.variantId || (await resolveShopifyVariantId(unit.model, unit.color));
@@ -534,16 +574,11 @@ export async function redirectMultiUnitCheckout(payload: MultiUnitCheckoutPayloa
   }
 
   if (permalinkPairs.length > 0) {
-    let permalink = `${root}cart/${permalinkPairs.join(',')}`;
-    if (payload.totalQuantity === 2) {
-      permalink += '?discount=BUNDLE2';
-    } else if (payload.totalQuantity >= 3) {
-      permalink += '?discount=BUNDLE3';
-    }
-    window.location.href = permalink;
+    const permalink = `${root}cart/${permalinkPairs.join(',')}`;
+    window.location.assign(permalink);
     return;
   }
 
-  window.location.href = checkoutUrl;
+  window.location.assign(cartUrl);
 }
 

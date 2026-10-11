@@ -551,12 +551,7 @@
       buyButton.style.opacity = '0.8';
       buyButtonText.textContent = 'ADICIONANDO AO CARRINHO SHOPIFY...';
 
-      let checkoutUrl = `${root}checkout`;
-      if (units.length === 2) {
-        checkoutUrl += '?discount=BUNDLE2';
-      } else if (units.length >= 3) {
-        checkoutUrl += '?discount=BUNDLE3';
-      }
+      const cartUrl = `${root}cart`;
 
       try {
         // 3. Clear cart first to guarantee bundle integrity
@@ -587,19 +582,14 @@
           }
         }
 
-        // 6. Redirect to official Shopify Checkout
-        buyButtonText.textContent = 'REDIRECIONANDO PARA O CHECKOUT...';
-        window.location.assign(checkoutUrl);
+        // 6. Redirect to official Shopify Cart page
+        buyButtonText.textContent = 'REDIRECIONANDO PARA O CARRINHO...';
+        window.location.assign(cartUrl);
       } catch (err) {
         console.warn('[KOSNORA] Cart API failure, using fallback permalink:', err);
         // Fallback: Shopify direct multi-variant cart permalink
         const pairs = itemsToAdd.map(it => `${it.id}:1`).join(',');
-        let permalink = `${root}cart/${pairs}`;
-        if (units.length === 2) {
-          permalink += '?discount=BUNDLE2';
-        } else if (units.length >= 3) {
-          permalink += '?discount=BUNDLE3';
-        }
+        const permalink = `${root}cart/${pairs}`;
         window.location.assign(permalink);
       }
     }

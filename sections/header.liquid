@@ -70,13 +70,13 @@
 
       <!-- RIGHT COLUMN: Only the Cart Bag ("sacolinha"), NO "BUY NOW" -->
       <div class="kosnora-header-right" style="display: flex; align-items: center; justify-content: flex-end;">
-        <button
-          type="button"
+        <a
+          href="{{ routes.cart_url | default: '/cart' }}"
           data-open-drawer
           class="kosnora-cart-bag-btn"
-          aria-label="View Cart"
-          title="Open Cart"
-          style="position: relative; padding: 10px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E5E5E5; color: #111111; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s ease;"
+          aria-label="Ver Carrinho de Compras"
+          title="Abrir Carrinho de Compras"
+          style="position: relative; padding: 10px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E5E5E5; color: #111111; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; transition: all 0.15s ease;"
         >
           <!-- Sacolinha SVG Icon -->
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
@@ -88,9 +88,9 @@
             class="kosnora-cart-badge"
             style="position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; background: #9333EA; color: #FFFFFF; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(147, 51, 234, 0.4);"
           >
-            {{ cart.item_count | default: 1 }}
+            {{ cart.item_count | default: 0 }}
           </span>
-        </button>
+        </a>
       </div>
 
     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Star, ShieldCheck, Check, ShoppingBag, Truck, Layers } from 'lucide-react';
 import { PricingTier, CartItemUnit } from '../types';
-import { getPricingTiers, PRODUCT_IMAGES, IPHONE_MODELS } from '../data/productData';
+import { getPricingTiers, PRODUCT_IMAGES, IPHONE_MODELS, formatCurrency } from '../data/productData';
 import { isVariantInStoreCatalog } from '../data/storeInventory';
 
 interface HeroSectionProps {
@@ -123,41 +123,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </span>
           </div>
 
-          {/* Multi-Unit Switcher for Bundles (Mobile) */}
-          {units.length > 1 && (
-            <div className="w-full max-w-sm mb-3">
-              <div className="text-[10px] font-black uppercase tracking-wider text-[#9333EA] mb-1.5 flex items-center justify-center gap-1.5">
-                <Layers className="w-3.5 h-3.5" />
-                <span>Personalize cada capa do seu pacote:</span>
-              </div>
-              <div className="flex items-center justify-center gap-1.5 p-1 bg-neutral-100/90 rounded-2xl overflow-x-auto">
-                {units.map((u, i) => {
-                  const isActive = i === activeUnitIndex;
-                  const isUAvail = isVariantInStoreCatalog(u.model, u.color);
-                  return (
-                    <button
-                      key={u.id || i}
-                      type="button"
-                      onClick={() => onActiveUnitIndexChange(i)}
-                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
-                        isActive
-                          ? 'bg-white text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30'
-                          : 'text-neutral-600 hover:text-neutral-950 hover:bg-white/50'
-                      }`}
-                    >
-                      <span className="w-2 h-2 rounded-full border border-black/10 shrink-0" style={{ backgroundColor: getColorHex(u.color) }} />
-                      <span>Capa #{i + 1}</span>
-                      {!isUAvail && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" title="Esgotado" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Mobile Media: Looping Video / Photo */}
+          {/* Mobile Media: Looping Video / Photo (Stable Top Position) */}
           <div className="relative w-full max-w-[340px] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 flex items-center justify-center">
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
               {isPlayingVideo ? (
@@ -188,6 +154,40 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </>
               )}
             </div>
+          </div>
+
+          {/* Multi-Unit Switcher for Bundles (Mobile - Below Media, Zero Layout Distortion) */}
+          <div className="w-full max-w-sm mt-3 px-2">
+            {units.length > 1 ? (
+              <div className="p-1.5 bg-neutral-100/90 rounded-2xl flex items-center justify-center gap-1.5 overflow-x-auto">
+                {units.map((u, i) => {
+                  const isActive = i === activeUnitIndex;
+                  const isUAvail = isVariantInStoreCatalog(u.model, u.color);
+                  return (
+                    <button
+                      key={u.id || i}
+                      type="button"
+                      onClick={() => onActiveUnitIndexChange(i)}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
+                        isActive
+                          ? 'bg-white text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30'
+                          : 'text-neutral-600 hover:text-neutral-950 hover:bg-white/50'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full border border-black/10 shrink-0" style={{ backgroundColor: getColorHex(u.color) }} />
+                      <span>Capa #{i + 1}</span>
+                      {!isUAvail && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" title="Esgotado" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-[10px] font-black uppercase tracking-wider text-neutral-400 py-1">
+                Personalizando Capa 1 de 1
+              </div>
+            )}
           </div>
 
           {/* Color Pills for Active Unit */}
@@ -256,50 +256,50 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </select>
           </div>
 
-          {/* Stock Availability Indicator Pill */}
-          <div className="mt-2.5">
+          {/* Stock Availability Indicator Pill (Fixed min-height to prevent jitter) */}
+          <div className="mt-2.5 min-h-[28px] flex items-center justify-center">
             {isActiveUnitAvailable ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                 <span>Em estoque · Pronta entrega {units.length > 1 ? `(Capa #${activeUnitIndex + 1})` : ''}</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                <span>Esgotado nesta combinação {units.length > 1 ? `(Capa #${activeUnitIndex + 1})` : `(${currentUnit.color} / ${currentUnit.model})`}</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                <span>Esgotado nesta variante {units.length > 1 ? `(Capa #${activeUnitIndex + 1})` : ''}</span>
               </span>
             )}
           </div>
 
           {/* Direct CTA Button */}
           <div className="w-full flex flex-col items-center mt-4">
-            <div className="w-full sm:w-auto flex flex-col items-center justify-center gap-3 mb-6">
+            <div className="w-full sm:w-auto flex flex-col items-center justify-center gap-2.5 mb-6">
               <button
                 type="button"
                 disabled={hasOutOfStock}
                 onClick={onCtaClick}
-                className={`w-full sm:w-auto px-10 py-4.5 font-black text-sm tracking-widest rounded-xl shadow-md transition-all flex items-center justify-center gap-2.5 uppercase ${
+                className={`w-full sm:w-auto h-14 px-8 font-black text-sm tracking-widest rounded-xl shadow-md transition-all flex items-center justify-center gap-2.5 uppercase ${
                   !hasOutOfStock
-                    ? 'bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white hover:shadow-lg transform hover:scale-102 active:scale-95 cursor-pointer'
+                    ? 'bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white hover:shadow-lg transform active:scale-95 cursor-pointer'
                     : 'bg-neutral-200 text-neutral-400 border border-neutral-300 cursor-not-allowed opacity-80'
                 }`}
               >
                 <span>
                   {hasOutOfStock
                     ? `COMBINAÇÃO ESGOTADA (Capa #${outOfStockList[0].index + 1})`
-                    : `GET YOUR KOSNORA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
+                    : `ADICIONAR À SACOLA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
                 </span>
                 {!hasOutOfStock && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
               </button>
 
-              <div className="flex items-center justify-center gap-2 text-xs font-bold text-neutral-500 uppercase tracking-wider">
+              <div className="flex items-center justify-center gap-2 text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
                 <span>Clique em um pacote abaixo para comprar com desconto</span>
               </div>
             </div>
 
-            {/* Purchasing Options Tiers (Mobile Stack) */}
+            {/* Purchasing Options Tiers (Mobile Stack - Equal Heights & Stable Alignments) */}
             <div className="w-full max-w-4xl relative mt-1">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4 pb-2 px-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-3 pb-2 px-1">
                 {tiers.map((tier) => {
                   const isSelected = selectedTier.id === tier.id;
                   const isDouble = tier.quantity === 2;
@@ -309,102 +309,109 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <div
                       key={tier.id}
                       onClick={() => onSelectTier(tier)}
-                      className={`w-full rounded-2xl p-4 sm:p-5 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg ${
+                      className={`w-full rounded-2xl p-4 sm:p-5 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg h-full ${
                         isSelected
-                          ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20 -translate-y-0.5'
+                          ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20'
                           : 'border-neutral-200 hover:border-neutral-300'
                       }`}
                     >
-                      {isDouble && (
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap z-10">
-                          Most Popular · 2 Cases
-                        </div>
-                      )}
-                      {isTriple && (
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap z-10">
-                          Best Value · 3 Cases
-                        </div>
-                      )}
-
-                      <div>
-                        <div className="flex items-center justify-between mb-2 mt-1">
-                          <span className="text-sm font-black text-neutral-950 uppercase tracking-tight">
-                            {tier.quantity === 1 ? '1 Case' : `${tier.quantity} Cases`}
-                          </span>
-                          <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
-                            isSelected
-                              ? 'bg-[#FAF5FF] text-[#9333EA]'
-                              : 'bg-neutral-100 text-neutral-600'
-                          }`}>
-                            {tier.quantity === 1 ? 'Single' : `${tier.quantity}x Pack`}
-                          </span>
-                        </div>
-
-                        <div className="text-left mb-2">
-                          <div className="flex items-baseline gap-1">
-                            <span className="text-2xl sm:text-3xl font-black text-neutral-950">
-                              ${tier.totalPrice.toFixed(2)}
-                            </span>
-                            {tier.quantity > 1 && (
-                              <span className="text-[11px] font-bold text-neutral-500">
-                                (${tier.unitPrice.toFixed(2)}/ea)
-                              </span>
-                            )}
+                      {/* Fixed Top Badge Slot */}
+                      <div className="h-6 flex items-center justify-center -mt-1 mb-1">
+                        {isDouble ? (
+                          <div className="px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+                            Mais Vendido · Economize R$ 19,90
                           </div>
-                          <span className="text-[11px] font-semibold text-neutral-500 block">
-                            {tier.quantity === 1
-                              ? '1 for $79.90'
-                              : tier.quantity === 2
-                              ? '2 for $139.90'
-                              : '3 for $194.90'}
-                          </span>
-                          {tier.quantity > 1 && (
-                            <span className="text-[10px] font-bold text-emerald-600 block mt-0.5">
-                              {tier.quantity === 2 ? 'Save $19.90 (Modelos e cores livres!)' : 'Save $44.80 (Modelos e cores livres!)'}
-                            </span>
-                          )}
-                        </div>
-
-                        <ul className="space-y-1.5 text-[11px] font-medium text-neutral-700 text-left mb-4">
-                          <li className="flex items-center gap-1.5">
-                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x KOSNORA Smart Case</span>
-                          </li>
-                          <li className="flex items-center gap-1.5">
-                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Misture modelos e cores à vontade</span>
-                          </li>
-                          <li className="flex items-center gap-1.5">
-                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>30-Day Money-Back Guarantee</span>
-                          </li>
-                        </ul>
+                        ) : isTriple ? (
+                          <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+                            Melhor Oferta · Economize R$ 44,80
+                          </div>
+                        ) : (
+                          <div className="px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
+                            Opção Individual
+                          </div>
+                        )}
                       </div>
 
-                      <div className="pt-3 border-t border-neutral-100 flex items-center justify-between gap-2">
-                        <div className="text-left">
-                          <span className="text-[10px] uppercase font-bold text-neutral-400 block">Total</span>
-                          <span className="text-xs font-black text-neutral-900">
-                            ${tier.totalPrice.toFixed(2)}
-                          </span>
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-black text-neutral-950 uppercase tracking-tight">
+                              {tier.quantity === 1 ? '1 Capa' : `${tier.quantity} Capas`}
+                            </span>
+                            <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                              isSelected
+                                ? 'bg-[#FAF5FF] text-[#9333EA]'
+                                : 'bg-neutral-100 text-neutral-600'
+                            }`}>
+                              {tier.quantity === 1 ? 'Individual' : `${tier.quantity}x Pacote`}
+                            </span>
+                          </div>
+
+                          <div className="text-left mb-2">
+                            <div className="flex items-baseline gap-1.5">
+                              <span className="text-2xl sm:text-3xl font-black text-neutral-950">
+                                {formatCurrency(tier.totalPrice)}
+                              </span>
+                              {tier.quantity > 1 && (
+                                <span className="text-[11px] font-bold text-neutral-500">
+                                  ({formatCurrency(tier.unitPrice)}/un)
+                                </span>
+                              )}
+                            </div>
+                            <div className="min-h-[18px] mt-0.5">
+                              {tier.quantity > 1 ? (
+                                <span className="text-[10px] font-bold text-emerald-600 block">
+                                  {tier.quantity === 2 ? 'Economize R$ 19,90 no pacote' : 'Economize R$ 44,80 no pacote'}
+                                </span>
+                              ) : (
+                                <span className="text-[10px] font-medium text-neutral-400 block">
+                                  Preço padrão KOSNORA
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <ul className="space-y-1.5 text-[11px] font-medium text-neutral-700 text-left mb-4">
+                            <li className="flex items-center gap-1.5">
+                              <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                              <span>{tier.quantity}x Capa Inteligente KOSNORA</span>
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                              <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                              <span>Escolha modelos e cores livres</span>
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                              <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                              <span>Garantia de 30 Dias ou Reembolso</span>
+                            </li>
+                          </ul>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onSelectTier(tier);
-                            onCtaClick();
-                          }}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110'
-                              : 'bg-neutral-900 text-white hover:bg-neutral-800'
-                          }`}
-                        >
-                          <ShoppingBag className="w-3.5 h-3.5" />
-                          <span>Selecionar</span>
-                        </button>
+                        <div className="pt-3 border-t border-neutral-100 flex items-center justify-between gap-2">
+                          <div className="text-left">
+                            <span className="text-[10px] uppercase font-bold text-neutral-400 block">Total</span>
+                            <span className="text-xs font-black text-neutral-900">
+                              {formatCurrency(tier.totalPrice)}
+                            </span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectTier(tier);
+                              onCtaClick();
+                            }}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110'
+                                : 'bg-neutral-900 text-white hover:bg-neutral-800'
+                            }`}
+                          >
+                            <ShoppingBag className="w-3.5 h-3.5" />
+                            <span>{isSelected ? 'Selecionado' : 'Selecionar'}</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );
@@ -420,8 +427,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="hidden lg:block max-w-6xl mx-auto">
           <div className="grid grid-cols-12 gap-8 xl:gap-12 items-start">
             
-            {/* LEFT COLUMN: Media Container */}
-            <div className="col-span-5 flex flex-col items-center">
+            {/* LEFT COLUMN: Media Container (Pinned and Stable) */}
+            <div className="col-span-5 flex flex-col items-center sticky top-24 self-start">
               <div className="relative w-full aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-2xl p-2.5 xl:p-3 flex items-center justify-center">
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
                   {isPlayingVideo ? (
@@ -523,52 +530,50 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 Refined minimalist design, reinforced impact protection, and battery-free NFC smart display. Combine different models and colors freely in the same order.
               </p>
 
-              {/* Multi-Unit Switcher Tabs (Desktop) */}
-              {units.length > 1 && (
-                <div className="w-full mb-3.5 p-3 rounded-2xl bg-[#FAF5FF] border border-[#E9D5FF]">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-black uppercase tracking-wider text-[#9333EA] flex items-center gap-1.5">
-                      <Layers className="w-3.5 h-3.5" />
-                      <span>Seu Pacote de {units.length} Capas:</span>
-                    </span>
-                    <span className="text-[11px] font-bold text-neutral-500">
-                      Clique para configurar cada uma:
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
-                    {units.map((u, i) => {
-                      const isActive = i === activeUnitIndex;
-                      const isUAvail = isVariantInStoreCatalog(u.model, u.color);
-                      return (
-                        <button
-                          key={u.id || i}
-                          type="button"
-                          onClick={() => onActiveUnitIndexChange(i)}
-                          className={`px-3 py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
-                            isActive
-                              ? 'bg-white text-[#9333EA] shadow-xs ring-2 ring-[#9333EA]'
-                              : 'bg-white/70 text-neutral-700 hover:bg-white hover:text-neutral-950 border border-neutral-200'
-                          }`}
-                        >
-                          <span
-                            className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0"
-                            style={{ backgroundColor: getColorHex(u.color) }}
-                          />
-                          <span className="truncate max-w-[130px]">
-                            #{i + 1}: {u.model} ({u.color})
-                          </span>
-                          {!isUAvail && (
-                            <span className="text-[9px] font-bold text-amber-700 bg-amber-100 px-1 py-0.2 rounded">
-                              Esgotado
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* Multi-Unit Switcher Tabs (Desktop - Stable Pre-Reserved Box) */}
+              <div className="w-full mb-3.5 p-3 rounded-2xl bg-[#FAF5FF] border border-[#E9D5FF] min-h-[76px] flex flex-col justify-center">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-black uppercase tracking-wider text-[#9333EA] flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>{units.length > 1 ? `Seu Pacote de ${units.length} Capas:` : 'Configuração da Capa:'}</span>
+                  </span>
+                  <span className="text-[11px] font-bold text-neutral-500">
+                    {units.length > 1 ? 'Selecione para editar cada uma:' : '1x KOSNORA Smart Case'}
+                  </span>
                 </div>
-              )}
+
+                <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
+                  {units.map((u, i) => {
+                    const isActive = i === activeUnitIndex;
+                    const isUAvail = isVariantInStoreCatalog(u.model, u.color);
+                    return (
+                      <button
+                        key={u.id || i}
+                        type="button"
+                        onClick={() => onActiveUnitIndexChange(i)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-white text-[#9333EA] shadow-xs ring-2 ring-[#9333EA]'
+                            : 'bg-white/70 text-neutral-700 hover:bg-white hover:text-neutral-950 border border-neutral-200'
+                        }`}
+                      >
+                        <span
+                          className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0"
+                          style={{ backgroundColor: getColorHex(u.color) }}
+                        />
+                        <span className="truncate max-w-[120px]">
+                          Capa #{i + 1}
+                        </span>
+                        {!isUAvail && (
+                          <span className="text-[9px] font-bold text-amber-700 bg-amber-100 px-1 py-0.2 rounded">
+                            Esgotado
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               {/* iPhone Model Selection for Active Unit */}
               <div className="w-full mb-3 flex items-center justify-between gap-3 p-2.5 rounded-xl bg-neutral-50 border border-neutral-200">
@@ -663,21 +668,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
               </div>
 
-              {/* Direct CTA Button (GET YOUR KOSNORA) */}
+              {/* Direct CTA Button (ADICIONAR À SACOLA) */}
               <button
                 type="button"
                 disabled={hasOutOfStock}
                 onClick={onCtaClick}
-                className={`w-full py-4.5 px-8 font-black text-sm tracking-widest rounded-xl shadow-md transition-all flex items-center justify-center gap-2.5 uppercase mb-5 ${
+                className={`w-full h-14 px-8 font-black text-sm tracking-widest rounded-xl shadow-md transition-all flex items-center justify-center gap-2.5 uppercase mb-5 ${
                   !hasOutOfStock
-                    ? 'bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white hover:shadow-lg transform hover:scale-[1.01] active:scale-95 cursor-pointer'
+                    ? 'bg-gradient-to-r from-[#9333EA] via-[#8015F5] to-[#6B21A8] hover:brightness-110 text-white hover:shadow-lg transform active:scale-95 cursor-pointer'
                     : 'bg-neutral-200 text-neutral-400 border border-neutral-300 cursor-not-allowed opacity-80'
                 }`}
               >
                 <span>
                   {hasOutOfStock
                     ? `COMBINAÇÃO ESGOTADA (Capa #${outOfStockList[0].index + 1})`
-                    : `GET YOUR KOSNORA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
+                    : `ADICIONAR À SACOLA (${units.length} ${units.length === 1 ? 'CAPA' : 'CAPAS'})`}
                 </span>
                 {!hasOutOfStock && <ArrowRight className="w-4 h-4 stroke-[2.5]" />}
               </button>
@@ -685,15 +690,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Title for purchasing options */}
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-black uppercase tracking-wider text-neutral-900">
-                  Bundles & Pricing:
+                  Pacotes e Preços com Desconto:
                 </span>
                 <span className="text-xs font-semibold text-neutral-500">
-                  Selecione seu pacote (combine variantes diferentes livremente)
+                  Combine variantes diferentes livremente no mesmo pedido
                 </span>
               </div>
 
-              {/* 3 Values Options Desktop Grid */}
-              <div className="grid grid-cols-3 gap-3.5 pt-4 pb-2 px-1 mb-5">
+              {/* 3 Values Options Desktop Grid (Equal Heights & Uniform Structure) */}
+              <div className="grid grid-cols-3 gap-3.5 pt-3 pb-2 px-1 mb-5">
                 {tiers.map((tier) => {
                   const isSelected = selectedTier.id === tier.id;
                   const isDouble = tier.quantity === 2;
@@ -703,89 +708,96 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <div
                       key={tier.id}
                       onClick={() => onSelectTier(tier)}
-                      className={`rounded-2xl p-4 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg ${
+                      className={`rounded-2xl p-4 transition-all cursor-pointer flex flex-col justify-between border-2 bg-white relative select-none hover:shadow-lg h-full ${
                         isSelected
-                          ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20 -translate-y-0.5'
+                          ? 'border-[#9333EA] shadow-md ring-2 ring-[#9333EA]/20'
                           : 'border-neutral-200 hover:border-neutral-300'
                       }`}
                     >
-                      {isDouble && (
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-                          Most Popular
-                        </div>
-                      )}
-                      {isTriple && (
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
-                          Best Value
-                        </div>
-                      )}
-
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5 mt-0.5">
-                          <span className="text-xs font-black text-neutral-950 uppercase tracking-tight">
-                            {tier.quantity === 1 ? '1 Case' : `${tier.quantity} Cases`}
-                          </span>
-                          <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full ${
-                            isSelected
-                              ? 'bg-[#FAF5FF] text-[#9333EA]'
-                              : 'bg-neutral-100 text-neutral-600'
-                          }`}>
-                            {tier.quantity === 1 ? '1x' : `${tier.quantity}x`}
-                          </span>
-                        </div>
-
-                        <div className="text-left mb-2">
-                          <div className="flex items-baseline gap-1">
-                            <span className="text-2xl font-black text-neutral-950">
-                              ${tier.totalPrice.toFixed(2)}
-                            </span>
+                      {/* Fixed Top Badge Slot */}
+                      <div className="h-6 flex items-center justify-center -mt-1 mb-1">
+                        {isDouble ? (
+                          <div className="px-2 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+                            Mais Vendido · Economize R$ 19,90
                           </div>
-                          <span className="text-[11px] font-bold text-neutral-600 block mt-0.5">
-                            {tier.quantity === 1
-                              ? '1 for $79.90'
-                              : tier.quantity === 2
-                              ? '2 for $139.90'
-                              : '3 for $194.90'}
-                          </span>
-                          {tier.quantity > 1 && (
-                            <span className="text-[10px] font-semibold text-[#9333EA] block">
-                              (${tier.unitPrice.toFixed(2)}/ea)
-                            </span>
-                          )}
-                        </div>
-
-                        <ul className="space-y-1 text-[11px] font-medium text-neutral-700 text-left mb-3">
-                          <li className="flex items-center gap-1">
-                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>{tier.quantity}x KOSNORA Smart Case</span>
-                          </li>
-                          <li className="flex items-center gap-1">
-                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>Misture modelos e cores livres</span>
-                          </li>
-                          <li className="flex items-center gap-1">
-                            <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
-                            <span>30-Day Guarantee</span>
-                          </li>
-                        </ul>
+                        ) : isTriple ? (
+                          <div className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+                            Melhor Oferta · Economize R$ 44,80
+                          </div>
+                        ) : (
+                          <div className="px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
+                            Opção Individual
+                          </div>
+                        )}
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSelectTier(tier);
-                          onCtaClick();
-                        }}
-                        className={`w-full py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110'
-                            : 'bg-neutral-900 text-white hover:bg-neutral-800'
-                        }`}
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>Selecionar</span>
-                      </button>
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5 mt-0.5">
+                            <span className="text-xs font-black text-neutral-950 uppercase tracking-tight">
+                              {tier.quantity === 1 ? '1 Capa' : `${tier.quantity} Capas`}
+                            </span>
+                            <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full ${
+                              isSelected
+                                ? 'bg-[#FAF5FF] text-[#9333EA]'
+                                : 'bg-neutral-100 text-neutral-600'
+                            }`}>
+                              {tier.quantity === 1 ? '1x' : `${tier.quantity}x`}
+                            </span>
+                          </div>
+
+                          <div className="text-left mb-2">
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-2xl font-black text-neutral-950">
+                                {formatCurrency(tier.totalPrice)}
+                              </span>
+                            </div>
+                            <div className="min-h-[18px] mt-0.5">
+                              {tier.quantity > 1 ? (
+                                <span className="text-[10px] font-bold text-emerald-600 block">
+                                  {tier.quantity === 2 ? 'Economize R$ 19,90' : 'Economize R$ 44,80'}
+                                </span>
+                              ) : (
+                                <span className="text-[10px] font-medium text-neutral-400 block">
+                                  Preço padrão
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <ul className="space-y-1 text-[11px] font-medium text-neutral-700 text-left mb-3">
+                            <li className="flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                              <span>{tier.quantity}x Capa Inteligente KOSNORA</span>
+                            </li>
+                            <li className="flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                              <span>Misture modelos e cores livres</span>
+                            </li>
+                            <li className="flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-[#9333EA] shrink-0 stroke-[2.5]" />
+                              <span>Garantia de 30 Dias</span>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectTier(tier);
+                            onCtaClick();
+                          }}
+                          className={`w-full py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#9333EA] text-white shadow-sm hover:brightness-110'
+                              : 'bg-neutral-900 text-white hover:bg-neutral-800'
+                          }`}
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <span>{isSelected ? 'Selecionado' : 'Selecionar'}</span>
+                        </button>
+                      </div>
                     </div>
                   );
                 })}

@@ -1,37 +1,279 @@
-<section class="section-light kosnora-py" style="background: #FFFFFF; color: #111111;">
-  <div class="kosnora-container" style="max-width: 600px; text-align: center;">
-    <h1 class="kosnora-headline" style="font-size: 2.25rem; color: #111111; margin-bottom: 1.5rem;">
-      Your Cart
-    </h1>
-    {% if cart.item_count > 0 %}
-      <div style="background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 1.25rem; padding: 2rem; margin-bottom: 2rem;">
-        {% for item in cart.items %}
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #E5E5E5;">
-            <div style="text-align: left;">
-              <div style="font-weight: 700; color: #111111;">{{ item.title }}</div>
-              <div style="font-size: 12px; color: #555555;">Qty: {{ item.quantity }}</div>
-            </div>
-            <div style="font-weight: 800; color: #111111;">{{ item.final_line_price | money }}</div>
-          </div>
-        {% endfor %}
-        <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800; color: #111111; margin-top: 1.5rem;">
-          <span>Total:</span>
-          <span>{{ cart.total_price | money }}</span>
-        </div>
+{%- comment -%}
+  KOSNORA - Native Shopify Online Store 2.0 Official Cart Section
+  Fully complies with Shopify Cart Object specifications, shows images, variants,
+  custom properties (Capa, iPhone Model, Case Color), discounts, and standard checkout flow.
+{%- endcomment -%}
+
+<section class="kosnora-cart-section" style="background: #FFFFFF; color: #111827; padding: 2.5rem 1rem 4rem 1rem; min-height: 70vh;">
+  <div class="kosnora-container" style="max-width: 1100px; margin: 0 auto;">
+    
+    <!-- Header -->
+    <div style="border-bottom: 1px solid #E5E7EB; padding-bottom: 1.5rem; margin-bottom: 2rem; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="font-size: 1.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; color: #111827; margin: 0 0 0.25rem 0;">
+          Seu Carrinho de Compras
+        </h1>
+        <p style="font-size: 0.875rem; color: #6B7280; font-weight: 500; margin: 0;">
+          Confira suas capinhas personalizadas antes de prosseguir para o checkout seguro.
+        </p>
       </div>
-      <a href="/checkout" class="kosnora-btn-primary" style="width: 100%; justify-content: center;">
-        <span>CHECKOUT</span>
-        {% render 'icon-arrow-right' %}
+
+      <a href="{{ routes.root_url | default: '/' }}" style="font-size: 0.875rem; font-weight: 800; color: #9333EA; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 4px;">
+        <span>← Continuar Comprando</span>
       </a>
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;" class="kosnora-cart-layout">
+        <form action="{{ routes.cart_url }}" method="post" id="kosnora-cart-form" style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;" class="kosnora-cart-grid-desktop">
+            <!-- Items Column -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              {% for item in cart.items %}
+                <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 1rem; padding: 1.25rem; display: grid; grid-template-columns: 90px 1fr auto; gap: 1.25rem; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03);" class="kosnora-cart-item-card">
+                  
+                  <!-- Item Image -->
+                  <div style="width: 90px; aspect-ratio: 1/1; border-radius: 0.75rem; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; display: flex; align-items: center; justify-content: center; position: relative;">
+                    {% if item.image != blank %}
+                      <img src="{{ item.image | image_url: width: 240 }}" alt="{{ item.title | escape }}" style="width: 100%; height: 100%; object-fit: contain;">
+                    {% else %}
+                      <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="KOSNORA Case" style="width: 100%; height: 100%; object-fit: contain;">
+                    {% endif %}
+                  </div>
+
+                  <!-- Details -->
+                  <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                      <h2 style="font-size: 1rem; font-weight: 800; color: #111827; margin: 0;">
+                        {{ item.product.title | default: 'KOSNORA Case' }}
+                      </h2>
+                      {% if item.variant.title != blank and item.variant.title != 'Default Title' %}
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #6B7280; background: #F3F4F6; padding: 2px 8px; border-radius: 6px;">
+                          {{ item.variant.title }}
+                        </span>
+                      {% endif %}
+                    </div>
+
+                    <!-- Custom Line Item Properties (iPhone Model, Case Color, Capa #) -->
+                    {% if item.properties.size > 0 %}
+                      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
+                        {% for p in item.properties %}
+                          {%- assign first_char = p.first | slice: 0 -%}
+                          {%- if p.last != blank and first_char != '_' -%}
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #4B5563; background: #FAF5FF; border: 1px solid #E9D5FF; padding: 2px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                              <strong style="color: #9333EA;">{{ p.first }}:</strong> {{ p.last }}
+                            </span>
+                          {%- endif -%}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+
+                    <!-- Unit Price & Discounts -->
+                    <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
+                      <span style="font-size: 0.95rem; font-weight: 900; color: #111827;">
+                        {{ item.final_price | money }}
+                      </span>
+                      {% if item.original_price > item.final_price %}
+                        <span style="font-size: 0.8rem; font-weight: 600; color: #9CA3AF; text-decoration: line-through;">
+                          {{ item.original_price | money }}
+                        </span>
+                      {% endif %}
+                    </div>
+
+                    {% if item.line_level_discount_allocations.size > 0 %}
+                      <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 2px;">
+                        {% for discount_allocation in item.line_level_discount_allocations %}
+                          <span style="font-size: 0.75rem; font-weight: 700; color: #059669; display: inline-flex; align-items: center; gap: 4px;">
+                            <span>🏷️</span>
+                            <span>{{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})</span>
+                          </span>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <!-- Quantity Controls & Line Total -->
+                  <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem;">
+                    <div style="display: flex; align-items: center; border: 1px solid #D1D5DB; border-radius: 8px; overflow: hidden; background: #FFFFFF;">
+                      <button
+                        type="button"
+                        data-cart-adjust="decrease"
+                        data-line-key="{{ item.key }}"
+                        data-current-qty="{{ item.quantity }}"
+                        style="width: 32px; height: 32px; border: none; background: #F9FAFB; color: #111827; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;"
+                        aria-label="Diminuir quantidade"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        name="updates[]"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        data-line-key="{{ item.key }}"
+                        class="kosnora-cart-qty-input"
+                        style="width: 40px; height: 32px; border: none; text-align: center; font-size: 0.875rem; font-weight: 800; color: #111827; outline: none;"
+                        aria-label="Quantidade"
+                      >
+                      <button
+                        type="button"
+                        data-cart-adjust="increase"
+                        data-line-key="{{ item.key }}"
+                        data-current-qty="{{ item.quantity }}"
+                        style="width: 32px; height: 32px; border: none; background: #F9FAFB; color: #111827; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center;"
+                        aria-label="Aumentar quantidade"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <div style="font-size: 1.05rem; font-weight: 900; color: #111827;">
+                      {{ item.final_line_price | money }}
+                    </div>
+
+                    <button
+                      type="button"
+                      data-cart-adjust="remove"
+                      data-line-key="{{ item.key }}"
+                      style="background: none; border: none; font-size: 0.75rem; font-weight: 700; color: #EF4444; cursor: pointer; padding: 2px 4px; text-decoration: underline;"
+                    >
+                      Remover
+                    </button>
+                  </div>
+
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Order Summary Card -->
+            <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 1.25rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; box-shadow: 0 4px 15px rgba(0,0,0,0.04); height: fit-content; position: sticky; top: 5.5rem;">
+              <h2 style="font-size: 1.15rem; font-weight: 900; text-transform: uppercase; color: #111827; margin: 0; padding-bottom: 0.75rem; border-bottom: 1px solid #F3F4F6;">
+                Resumo da Compra
+              </h2>
+
+              <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;">
+                <div style="display: flex; justify-content: space-between; color: #4B5563; font-weight: 600;">
+                  <span>Subtotal:</span>
+                  <span style="color: #111827; font-weight: 800;">{{ cart.items_subtotal_price | money }}</span>
+                </div>
+
+                {% if cart.cart_level_discount_applications.size > 0 %}
+                  <div style="display: flex; flex-direction: column; gap: 4px; background: #ECFDF5; padding: 8px 12px; border-radius: 8px; border: 1px solid #A7F3D0;">
+                    {% for discount_application in cart.cart_level_discount_applications %}
+                      <div style="display: flex; justify-content: space-between; color: #059669; font-weight: 800;">
+                        <span>🏷️ {{ discount_application.title }}:</span>
+                        <span>-{{ discount_application.total_allocated_amount | money }}</span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                <div style="display: flex; justify-content: space-between; color: #4B5563; font-weight: 600;">
+                  <span>Envio para todo o Brasil:</span>
+                  <span style="color: #059669; font-weight: 800;">Grátis</span>
+                </div>
+              </div>
+
+              <div style="border-top: 1px solid #E5E7EB; padding-top: 1rem; display: flex; justify-content: space-between; align-items: baseline;">
+                <span style="font-size: 1.1rem; font-weight: 900; text-transform: uppercase; color: #111827;">Total:</span>
+                <span style="font-size: 1.6rem; font-weight: 900; color: #9333EA;">
+                  {{ cart.total_price | money }}
+                </span>
+              </div>
+
+              <!-- Official Shopify Checkout Button -->
+              <button
+                type="submit"
+                name="checkout"
+                style="width: 100%; padding: 1.15rem 1.5rem; border-radius: 12px; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFFFFF; font-size: 0.95rem; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35); transition: opacity 0.2s;"
+                id="kosnora-proceed-checkout-btn"
+              >
+                <span>Finalizar Compra</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+
+              <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem; color: #6B7280; text-align: center; font-weight: 600;">
+                <span>🔒 Checkout Oficial e Seguro Shopify</span>
+                <span>🛡️ Garantia de 30 Dias ou seu Dinheiro de Volta</span>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
     {% else %}
-      <p style="color: #555555; margin-bottom: 2rem;">Your cart is currently empty.</p>
-      <button type="button" data-open-drawer class="kosnora-btn-primary">
-        <span>GET YOUR KOSNORA CASE</span>
-        {% render 'icon-arrow-right' %}
-      </button>
+      <!-- Empty Cart State -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 1.5rem; padding: 4rem 2rem; text-align: center; max-width: 500px; margin: 3rem auto; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <div style="width: 64px; height: 64px; border-radius: 1rem; background: #FAF5FF; color: #9333EA; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+            <path d="M3 6h18"></path>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </div>
+        <h2 style="font-size: 1.5rem; font-weight: 900; text-transform: uppercase; color: #111827; margin: 0 0 0.5rem 0;">
+          Sua sacola está vazia
+        </h2>
+        <p style="font-size: 0.875rem; color: #6B7280; margin: 0 0 2rem 0; font-weight: 500; line-height: 1.5;">
+          Escolha suas capinhas KOSNORA com display inteligente NFC e aproveite nossos descontos progressivos por quantidade!
+        </p>
+        <a
+          href="{{ routes.root_url | default: '/' }}"
+          style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 1rem 2rem; border-radius: 12px; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFFFFF; font-size: 0.875rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.35);"
+        >
+          <span>Escolher Minhas Capinhas</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
     {% endif %}
+
+  </div>
+
+  <!-- Loading Overlay during cart change -->
+  <div id="kosnora-cart-loading" style="display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.7); backdrop-filter: blur(2px); z-index: 999; align-items: center; justify-content: center;">
+    <div style="background: #FFFFFF; padding: 1.5rem 2rem; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); font-size: 0.95rem; font-weight: 800; color: #9333EA; display: flex; align-items: center; gap: 10px;">
+      <span style="display: inline-block; width: 18px; height: 18px; border: 3px solid #E9D5FF; border-top-color: #9333EA; border-radius: 50%; animation: kosnora-spin 0.8s linear infinite;"></span>
+      <span>Atualizando seu carrinho...</span>
+    </div>
   </div>
 </section>
+
+<style>
+  @keyframes kosnora-spin {
+    to { transform: rotate(360deg); }
+  }
+  @media (min-width: 900px) {
+    .kosnora-cart-grid-desktop {
+      grid-template-columns: 7fr 5fr !important;
+    }
+  }
+  @media (max-width: 640px) {
+    .kosnora-cart-item-card {
+      grid-template-columns: 80px 1fr !important;
+      grid-template-rows: auto auto;
+    }
+    .kosnora-cart-item-card > div:last-child {
+      grid-column: 1 / -1;
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      width: 100%;
+      border-top: 1px solid #F3F4F6;
+      padding-top: 0.75rem;
+      margin-top: 0.5rem;
+    }
+  }
+</style>
+
+<script src="{{ 'kosnora-cart.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {

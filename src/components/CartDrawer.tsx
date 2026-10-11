@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Trash2, Plus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock, AlertCircle, Sparkles } from 'lucide-react';
 import { calculateCartPricing, formatCurrency, PRODUCT_IMAGES, PRODUCT_NAME, IPHONE_MODELS } from '../data/productData';
 import { isVariantInStoreCatalog } from '../data/storeInventory';
@@ -24,6 +24,26 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  // Lock body scroll and close on Escape key when drawer is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -59,8 +79,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         totalPrice: pricing.total,
       });
     } catch (err) {
-      console.error('[KOSNORA] Multi-unit checkout error:', err);
-      setCheckoutError('Ocorreu um erro ao processar o checkout da Shopify. Por favor, tente novamente.');
+      console.error('[KOSNORA] Multi-unit cart error:', err);
+      setCheckoutError('Ocorreu um erro ao processar o carrinho da Shopify. Por favor, tente novamente.');
       setIsSubmitting(false);
     }
   };
@@ -69,12 +89,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     <div className="fixed inset-0 z-50 overflow-hidden" aria-labelledby="cart-title" role="dialog" aria-modal="true">
       {/* Dimmed backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 cursor-pointer"
         onClick={onClose}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-        <div className="w-screen max-w-lg bg-white shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-250">
+      <div className="fixed inset-y-0 right-0 max-w-full flex">
+        <div className="w-full sm:w-[480px] max-w-full bg-white shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-250">
           
           {/* Header */}
           <div className="px-5 py-4 border-b border-neutral-200 flex items-center justify-between bg-white sticky top-0 z-20">
@@ -381,13 +401,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               }`}
             >
               {isSubmitting ? (
-                <span>REDIRECIONANDO PARA O CHECKOUT...</span>
+                <span>ADICIONANDO AO CARRINHO SHOPIFY...</span>
               ) : hasOutOfStockUnit ? (
                 <span>AJUSTE AS OPÇÕES ESGOTADAS</span>
               ) : (
                 <>
-                  <Lock className="w-4 h-4" />
-                  <span>CONTINUAR PARA O CHECKOUT ({formatCurrency(pricing.total)})</span>
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>CONFERIR NO CARRINHO SHOPIFY ({formatCurrency(pricing.total)})</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </>
               )}
