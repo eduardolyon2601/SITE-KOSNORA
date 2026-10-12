@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Star, CheckCircle, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, CheckCircle, Heart } from 'lucide-react';
 
 export interface CustomerReview {
   id: string;
@@ -72,60 +72,82 @@ export const REVIEWS_DATA: CustomerReview[] = [
 ];
 
 export const ReviewsCarousel: React.FC = () => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-scroll loop for infinite carousel effect
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+  const renderCard = (review: CustomerReview, isClone: boolean, keyPrefix = '') => (
+    <article
+      key={`${keyPrefix}${review.id}`}
+      className="flex-shrink-0 w-[260px] sm:w-[280px] bg-white border border-neutral-200 hover:border-[#9333EA]/40 rounded-2xl p-3.5 sm:p-4 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between group"
+      aria-hidden={isClone ? true : undefined}
+      tabIndex={isClone ? -1 : undefined}
+    >
+      <div>
+        {/* 1. TOP: AVATAR DO PRODUTO (Compacto: 36px circular com a capinha) */}
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="relative shrink-0">
+              <img
+                src={review.avatarUrl}
+                alt={review.name}
+                className="w-9 h-9 rounded-full object-contain p-0.5 bg-neutral-50 border border-purple-100 group-hover:border-[#9333EA] transition-colors"
+                loading="lazy"
+                draggable={false}
+              />
+              <span className="absolute -bottom-0.5 -right-0.5 bg-[#9333EA] text-white p-0.5 rounded-full ring-1 ring-white">
+                <CheckCircle className="w-2.5 h-2.5 fill-[#9333EA] text-white" />
+              </span>
+            </div>
 
-    let animationFrameId: number;
-    let lastTimestamp: number = performance.now();
-    const speed = 0.55;
+            <div className="min-w-0">
+              <h3 className="font-extrabold text-xs text-neutral-900 tracking-tight truncate">
+                {review.name}
+              </h3>
+              <div className="text-[10px] font-semibold text-neutral-500 truncate">
+                {review.location}
+              </div>
+            </div>
+          </div>
 
-    const step = (now: number) => {
-      const delta = now - lastTimestamp;
-      lastTimestamp = now;
+          {/* 5 Stars Rating */}
+          <div className="flex items-center gap-0.5 text-amber-400 shrink-0">
+            {[...Array(review.rating)].map((_, i) => (
+              <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+            ))}
+          </div>
+        </div>
 
-      if (!isPaused && container) {
-        container.scrollLeft += delta * 0.05 * speed;
+        {/* 2. IMAGEM PRINCIPAL DO REVIEW: Fotografia da Pessoa */}
+        <div className="relative rounded-xl overflow-hidden bg-neutral-50 border border-neutral-100 mb-2.5">
+          <img
+            src={review.productImageUrl}
+            alt={review.name}
+            className="w-full h-35 sm:h-38 object-cover transition-transform duration-300 group-hover:scale-103"
+            loading="lazy"
+            draggable={false}
+          />
+          <div className="absolute bottom-1.5 left-1.5 right-1.5 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded-md border border-black/5 text-[9px] font-bold text-neutral-700 truncate">
+            <span>{review.productName}</span>
+          </div>
+        </div>
 
-        const halfScroll = container.scrollWidth / 2;
-        if (container.scrollLeft >= halfScroll) {
-          container.scrollLeft = container.scrollLeft - halfScroll;
-        }
-      }
+        {/* 3. DEPOIMENTO CURTO E OBJETIVO */}
+        <p className="text-xs text-neutral-700 leading-relaxed font-medium line-clamp-3">
+          &ldquo;{review.reviewText}&rdquo;
+        </p>
+      </div>
 
-      animationFrameId = requestAnimationFrame(step);
-    };
-
-    animationFrameId = requestAnimationFrame(step);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [isPaused]);
-
-  const handleScrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -280, behavior: 'smooth' });
-    }
-  };
-
-  const handleScrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 280, behavior: 'smooth' });
-    }
-  };
-
-  // Duplicate items for continuous infinite scroll
-  const duplicatedReviews = [...REVIEWS_DATA, ...REVIEWS_DATA];
+      {/* Verified badge tag */}
+      <div className="mt-2.5 pt-2 border-t border-neutral-100 flex items-center justify-between text-[10px] font-bold text-neutral-400">
+        <span className="text-emerald-600 font-extrabold">✓ Verified Buyer</span>
+        <span className="text-[#9333EA] font-semibold">KOSNORA</span>
+      </div>
+    </article>
+  );
 
   return (
     <section
       id="reviews"
-      className="bg-[#FCFCFD] text-neutral-900 py-10 sm:py-14 border-b border-neutral-200 relative overflow-hidden"
+      className="bg-[#FCFCFD] text-neutral-900 py-10 sm:py-14 border-t border-b border-neutral-200 relative overflow-hidden"
     >
       {/* Subtle Purple Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[220px] bg-purple-200/20 blur-[100px] pointer-events-none rounded-full" />
@@ -148,10 +170,9 @@ export const ReviewsCarousel: React.FC = () => {
             </p>
           </div>
 
-          {/* Rating Presentation (4.7 / 5) & Controls */}
-          <div className="flex items-center gap-3 self-start md:self-auto">
-            {/* Visual rating score: 4.7 / 5 */}
-            <div className="flex items-center gap-2.5 bg-white border border-neutral-200 px-3.5 py-2 rounded-xl shadow-xs">
+          {/* Rating Presentation (4.7 / 5) — Zero manual arrows */}
+          <div className="flex items-center self-start md:self-auto">
+            <div className="flex items-center gap-2.5 bg-white border border-[#E9D5FF] px-3.5 py-2 rounded-xl shadow-xs">
               <div className="flex items-center gap-0.5 text-[#9333EA]">
                 {[...Array(4)].map((_, i) => (
                   <Star key={i} className="w-3.5 h-3.5 fill-[#9333EA] text-[#9333EA]" />
@@ -167,115 +188,48 @@ export const ReviewsCarousel: React.FC = () => {
               <div className="text-xs font-black text-neutral-900 leading-none">
                 <span>4.7 / 5</span>
               </div>
-            </div>
-
-            {/* Carousel Navigation Buttons */}
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={handleScrollLeft}
-                className="w-8.5 h-8.5 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-neutral-700 hover:text-[#9333EA] hover:border-[#9333EA] transition-all cursor-pointer active:scale-95 shadow-2xs"
-                aria-label="Previous review"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleScrollRight}
-                className="w-8.5 h-8.5 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-neutral-700 hover:text-[#9333EA] hover:border-[#9333EA] transition-all cursor-pointer active:scale-95 shadow-2xs"
-                aria-label="Next review"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              <span className="text-[10px] font-bold text-[#9333EA] uppercase tracking-wider bg-[#FAF5FF] px-1.5 py-0.5 rounded">
+                Verified
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Infinite Horizontal Carousel Track */}
+      {/* Infinite Horizontal Marquee Track (Continuous Hardware-Accelerated 38s Loop, No Manual Drag) */}
       <div
-        className="w-full overflow-hidden"
+        className="w-full overflow-hidden py-2"
+        style={{
+          maskImage: 'linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)',
+        }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        onFocus={() => setIsPaused(true)}
+        onBlur={() => setIsPaused(false)}
         onTouchStart={() => setIsPaused(true)}
         onTouchEnd={() => setIsPaused(false)}
       >
         <div
-          ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth px-4 sm:px-6 py-2"
+          className="flex w-max select-none"
           style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
+            animation: 'kosnora-reviews-marquee 38s linear infinite',
+            animationPlayState: isPaused ? 'paused' : 'running',
+            willChange: 'transform',
           }}
         >
-          {duplicatedReviews.map((review, idx) => (
-            <article
-              key={`${review.id}-${idx}`}
-              className="flex-shrink-0 w-[250px] sm:w-[270px] bg-white border border-neutral-200 hover:border-[#9333EA]/40 rounded-2xl p-3.5 sm:p-4 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between group"
-            >
-              <div>
-                {/* 1. TOP: AVATAR DO PRODUTO (Compacto: 36px circular com a capinha) */}
-                <div className="flex items-center justify-between mb-2.5">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="relative shrink-0">
-                      <img
-                        src={review.avatarUrl}
-                        alt={review.name}
-                        className="w-9 h-9 rounded-full object-contain p-0.5 bg-neutral-50 border border-purple-100 group-hover:border-[#9333EA] transition-colors"
-                        loading="lazy"
-                      />
-                      <span className="absolute -bottom-0.5 -right-0.5 bg-[#9333EA] text-white p-0.5 rounded-full ring-1 ring-white">
-                        <CheckCircle className="w-2.5 h-2.5 fill-[#9333EA] text-white" />
-                      </span>
-                    </div>
+          {/* Group 1: Original Accessible Reviews Set */}
+          <div className="flex gap-4 pr-4 shrink-0">
+            {REVIEWS_DATA.map((review) => renderCard(review, false))}
+          </div>
 
-                    <div className="min-w-0">
-                      <h3 className="font-extrabold text-xs text-neutral-900 tracking-tight truncate">
-                        {review.name}
-                      </h3>
-                      <div className="text-[10px] font-semibold text-neutral-500 truncate">
-                        {review.location}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 5 Stars Rating */}
-                  <div className="flex items-center gap-0.5 text-amber-400 shrink-0">
-                    {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                </div>
-
-                {/* 2. IMAGEM PRINCIPAL DO REVIEW: Fotografia da Pessoa */}
-                <div className="relative rounded-xl overflow-hidden bg-neutral-50 border border-neutral-100 mb-2.5">
-                  <img
-                    src={review.productImageUrl}
-                    alt={review.name}
-                    className="w-full h-35 sm:h-38 object-cover transition-transform duration-300 group-hover:scale-103"
-                    loading="lazy"
-                  />
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded-md border border-black/5 text-[9px] font-bold text-neutral-700 truncate">
-                    <span>{review.productName}</span>
-                  </div>
-                </div>
-
-                {/* 3. DEPOIMENTO CURTO E OBJETIVO (2-3 linhas, legível e direto) */}
-                <p className="text-xs text-neutral-700 leading-relaxed font-medium line-clamp-3">
-                  &ldquo;{review.reviewText}&rdquo;
-                </p>
-              </div>
-
-              {/* Verified badge tag */}
-              <div className="mt-2.5 pt-2 border-t border-neutral-100 flex items-center justify-between text-[10px] font-bold text-neutral-400">
-                <span className="text-emerald-600 font-extrabold">Verified Buyer</span>
-                <span className="text-[#9333EA] font-semibold">KOSNORA</span>
-              </div>
-            </article>
-          ))}
+          {/* Group 2: Cloned Loop Set for Seamless Infinite Motion */}
+          <div className="flex gap-4 pr-4 shrink-0" aria-hidden="true">
+            {REVIEWS_DATA.map((review, idx) => renderCard(review, true, `clone-${idx}-`))}
+          </div>
         </div>
       </div>
     </section>
   );
 };
+

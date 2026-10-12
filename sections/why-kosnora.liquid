@@ -1,407 +1,215 @@
-<section id="reviews" class="kosnora-reviews-section" style="background: #FCFCFD; padding: 2.75rem 0 3.25rem; border-bottom: 1px solid #E5E5E5; color: #111111; position: relative; overflow: hidden;">
+{{ 'kosnora-reviews.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kosnora-reviews.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign default_reviews_count = 5
+  assign has_blocks = false
+  if section.blocks.size > 0
+    assign has_blocks = true
+  endif
+-%}
+
+<section
+  id="reviews"
+  class="kosnora-reviews"
+  data-section-id="{{ section.id }}"
+  data-speed="{{ section.settings.speed | default: 40 }}"
+>
   <!-- Ambient subtle purple gradient -->
-  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 220px; background: rgba(147, 51, 234, 0.04); filter: blur(90px); pointer-events: none; border-radius: 9999px;"></div>
+  <div class="kosnora-reviews__ambient" aria-hidden="true"></div>
 
-  <div class="kosnora-container" style="max-width: 1280px; margin: 0 auto; padding: 0 1rem; position: relative; z-index: 2;">
-    <!-- Compact Section Header -->
-    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.75rem;">
-      <div style="max-width: 600px;">
-        <div style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 9999px; background: #FAF5FF; border: 1px solid #E9D5FF; color: #9333EA; font-size: 10px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem;">
-          <span style="font-size: 11px;">♥</span>
-          <span>{{ section.settings.badge | default: 'CUSTOMER STORIES' }}</span>
-        </div>
-
-        <h2 style="font-size: clamp(1.75rem, 3.5vw, 2.25rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; margin: 0 0 0.25rem; color: #111111; line-height: 1.15;">
+  <div class="kosnora-reviews__container">
+    <!-- Header: Title, Subtitle, and Verified Rating Pill -->
+    <div class="kosnora-reviews__header">
+      <div class="kosnora-reviews__header-left">
+        <span class="kosnora-reviews__tagline">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          VERIFIED REVIEWS
+        </span>
+        <h2 class="kosnora-reviews__title">
           {{ section.settings.headline | default: 'Loved by Our Customers' }}
         </h2>
-
-        <p style="font-size: clamp(0.875rem, 1.8vw, 1rem); color: #555555; font-style: italic; font-weight: 500; margin: 0;">
-          &ldquo;{{ section.settings.subheadline | default: 'Your favorite memories, right on your phone.' }}&rdquo;
+        <p class="kosnora-reviews__subtitle">
+          {{ section.settings.subheadline | default: 'Your favorite memories, right on your phone.' }}
         </p>
       </div>
 
-      <!-- Rating Indicator (4.7 / 5) & Carousel Controls -->
-      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-        <!-- Visual Rating Score: 4.7 / 5 -->
-        <div style="display: flex; align-items: center; gap: 0.625rem; background: #FFFFFF; border: 1px solid #E5E5E5; padding: 0.5rem 0.875rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-          <div style="display: flex; align-items: center; gap: 2px; color: #9333EA;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <!-- 5th star 70% filled (4.7 rating) -->
-            <div style="position: relative; width: 13px; height: 13px; display: inline-block;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="#E5E7EB" stroke="#E5E7EB" stroke-width="1.5" style="position: absolute; inset: 0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <div style="position: absolute; inset: 0; width: 70%; overflow: hidden;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="#9333EA" stroke="#9333EA" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              </div>
-            </div>
-          </div>
-          <span style="font-size: 12px; font-weight: 900; color: #111111; line-height: 1;">
-            {{ section.settings.overall_rating | default: '4.7 / 5' }}
-          </span>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 0.375rem;">
-          <button
-            type="button"
-            id="reviews-prev-btn-{{ section.id }}"
-            aria-label="Previous review"
-            style="width: 34px; height: 34px; border-radius: 50%; background: #FFFFFF; border: 1px solid #E5E5E5; color: #374151; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;"
-            onmouseover="this.style.borderColor='#9333EA'; this.style.color='#9333EA'"
-            onmouseout="this.style.borderColor='#E5E5E5'; this.style.color='#374151'"
-          >
-            &#8592;
-          </button>
-          <button
-            type="button"
-            id="reviews-next-btn-{{ section.id }}"
-            aria-label="Next review"
-            style="width: 34px; height: 34px; border-radius: 50%; background: #FFFFFF; border: 1px solid #E5E5E5; color: #374151; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;"
-            onmouseover="this.style.borderColor='#9333EA'; this.style.color='#9333EA'"
-            onmouseout="this.style.borderColor='#E5E5E5'; this.style.color='#374151'"
-          >
-            &#8594;
-          </button>
-        </div>
+      <!-- Rating Badge -->
+      <div class="kosnora-reviews__badge">
+        <span class="kosnora-reviews__badge-stars">★★★★★</span>
+        <span class="kosnora-reviews__badge-score">{{ section.settings.overall_rating | default: '4.7 / 5' }}</span>
+        <span class="kosnora-reviews__badge-sep" aria-hidden="true"></span>
+        <span class="kosnora-reviews__badge-verified">Verified</span>
       </div>
     </div>
   </div>
 
-  <!-- Carousel Track Container -->
-  <div
-    id="reviews-track-wrap-{{ section.id }}"
-    class="kosnora-reviews-viewport"
-    style="width: 100%; overflow: hidden; position: relative;"
-  >
-    <div
-      id="reviews-track-{{ section.id }}"
-      class="kosnora-reviews-track"
-      style="display: flex; gap: 1rem; overflow-x: auto; scroll-behavior: smooth; padding: 0.5rem 1rem 1rem; scrollbar-width: none; -ms-overflow-style: none;"
-    >
-      {% comment %} 5 Compact Reviews with: Avatar = Capinha | Imagem Principal = Pessoa {% endcomment %}
+  <!-- Automatic Infinite Marquee Viewport (Zero Manual Drag / No Arrows) -->
+  <div class="kosnora-reviews__viewport">
+    <div class="kosnora-reviews__track" style="--kosnora-reviews-duration: {{ 1450 | divided_by: section.settings.speed | default: 38 }}s;">
+      
+      <!-- ============================================================ -->
+      <!-- GROUP 1: Primary Accessible Review Cards Set                -->
+      <!-- ============================================================ -->
+      <div class="kosnora-reviews__group">
+        {%- if has_blocks -%}
+          {%- for block in section.blocks -%}
+            {%- render 'kosnora-review-card-item', block: block, is_clone: false -%}
+          {%- endfor -%}
+        {%- else -%}
+          <!-- Default Review 1 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-1',
+            customer_name: 'Sarah M.',
+            location: 'Miami, FL',
+            avatar_url: 'https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg',
+            review_url: 'https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Love how quickly I can change the picture. Super easy to use!',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 2 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-2',
+            customer_name: 'Emily',
+            location: 'Austin, TX',
+            avatar_url: 'https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg',
+            review_url: 'https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'Adding my favorite photo was fast, simple, and really fun.',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 3 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-3',
+            customer_name: 'Olivia C.',
+            location: 'Seattle, WA',
+            avatar_url: 'https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg',
+            review_url: 'https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'The customization is so convenient. I can change the look anytime!',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 4 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-4',
+            customer_name: 'Tyler B.',
+            location: 'Denver, CO',
+            avatar_url: 'https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg',
+            review_url: 'https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Great design and easy personalization. Really practical!',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 5 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-5',
+            customer_name: 'Marcus V.',
+            location: 'San Diego, CA',
+            avatar_url: 'https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg',
+            review_url: 'https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Such a cool way to keep my favorite memories on my phone.',
+            rating: 5,
+            is_clone: false
+          -%}
+        {%- endif -%}
+      </div>
 
-      <!-- REVIEW 1 -->
-      <article class="kosnora-review-card" style="flex: 0 0 265px; max-width: 265px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 18px; padding: 0.875rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
-        <div>
-          <!-- Top: Avatar do Produto (36px circular com a capinha) -->
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
-            <div style="display: flex; align-items: center; gap: 0.625rem; min-width: 0;">
-              <div style="position: relative; flex-shrink: 0;">
-                <img
-                  src="https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg"
-                  alt="Sarah M."
-                  style="width: 36px; height: 36px; border-radius: 50%; object-fit: contain; padding: 2px; background: #F9FAFB; border: 1.5px solid #E9D5FF; display: block;"
-                  loading="lazy"
-                >
-                <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #9333EA; border-radius: 50%; border: 1.5px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #FFF; font-weight: 900;">✓</span>
-              </div>
-              <div style="min-width: 0;">
-                <h3 style="font-size: 0.8125rem; font-weight: 900; margin: 0; color: #111111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Sarah M.</h3>
-                <div style="font-size: 10px; font-weight: 600; color: #6B7280;">Miami, FL</div>
-              </div>
-            </div>
-            <!-- Stars -->
-            <div style="color: #F59E0B; font-size: 11px; letter-spacing: 1px; flex-shrink: 0;">★★★★★</div>
-          </div>
+      <!-- ============================================================ -->
+      <!-- GROUP 2: Cloned Loop Set for Seamless CSS Animation           -->
+      <!-- Marked with aria-hidden="true" to prevent screen reader dupes -->
+      <!-- ============================================================ -->
+      <div class="kosnora-reviews__group" aria-hidden="true">
+        {%- if has_blocks -%}
+          {%- for block in section.blocks -%}
+            {%- render 'kosnora-review-card-item', block: block, is_clone: true -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-1',
+            customer_name: 'Sarah M.',
+            location: 'Miami, FL',
+            avatar_url: 'https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg',
+            review_url: 'https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Love how quickly I can change the picture. Super easy to use!',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-2',
+            customer_name: 'Emily',
+            location: 'Austin, TX',
+            avatar_url: 'https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg',
+            review_url: 'https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'Adding my favorite photo was fast, simple, and really fun.',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-3',
+            customer_name: 'Olivia C.',
+            location: 'Seattle, WA',
+            avatar_url: 'https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg',
+            review_url: 'https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'The customization is so convenient. I can change the look anytime!',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-4',
+            customer_name: 'Tyler B.',
+            location: 'Denver, CO',
+            avatar_url: 'https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg',
+            review_url: 'https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Great design and easy personalization. Really practical!',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-5',
+            customer_name: 'Marcus V.',
+            location: 'San Diego, CA',
+            avatar_url: 'https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg',
+            review_url: 'https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Such a cool way to keep my favorite memories on my phone.',
+            rating: 5,
+            is_clone: true
+          -%}
+        {%- endif -%}
+      </div>
 
-          <!-- Imagem Principal do Review: Fotografia da Pessoa (~140px) -->
-          <div style="position: relative; border-radius: 12px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 0.625rem;">
-            <img
-              src="https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
-              alt="Sarah M."
-              style="width: 100%; height: 140px; object-fit: cover; display: block;"
-              loading="lazy"
-            >
-            <div style="position: absolute; bottom: 4px; left: 4px; right: 4px; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              Black Personalized Phone Case
-            </div>
-          </div>
-
-          <!-- Depoimento Curto e Objetivo -->
-          <p style="font-size: 0.75rem; color: #374151; font-weight: 500; line-height: 1.45; margin: 0;">
-            &ldquo;Love how quickly I can change the picture. Super easy to use!&rdquo;
-          </p>
-        </div>
-
-        <div style="margin-top: 0.625rem; padding-top: 0.5rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700;">
-          <span style="color: #059669;">Verified Buyer</span>
-          <span style="color: #9333EA;">KOSNORA</span>
-        </div>
-      </article>
-
-      <!-- REVIEW 2 -->
-      <article class="kosnora-review-card" style="flex: 0 0 265px; max-width: 265px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 18px; padding: 0.875rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
-        <div>
-          <!-- Top: Avatar do Produto (36px circular com a capinha) -->
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
-            <div style="display: flex; align-items: center; gap: 0.625rem; min-width: 0;">
-              <div style="position: relative; flex-shrink: 0;">
-                <img
-                  src="https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg"
-                  alt="Emily"
-                  style="width: 36px; height: 36px; border-radius: 50%; object-fit: contain; padding: 2px; background: #F9FAFB; border: 1.5px solid #E9D5FF; display: block;"
-                  loading="lazy"
-                >
-                <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #9333EA; border-radius: 50%; border: 1.5px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #FFF; font-weight: 900;">✓</span>
-              </div>
-              <div style="min-width: 0;">
-                <h3 style="font-size: 0.8125rem; font-weight: 900; margin: 0; color: #111111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Emily</h3>
-                <div style="font-size: 10px; font-weight: 600; color: #6B7280;">Austin, TX</div>
-              </div>
-            </div>
-            <!-- Stars -->
-            <div style="color: #F59E0B; font-size: 11px; letter-spacing: 1px; flex-shrink: 0;">★★★★★</div>
-          </div>
-
-          <!-- Imagem Principal do Review: Fotografia da Pessoa (~140px) -->
-          <div style="position: relative; border-radius: 12px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 0.625rem;">
-            <img
-              src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
-              alt="Emily"
-              style="width: 100%; height: 140px; object-fit: cover; display: block;"
-              loading="lazy"
-            >
-            <div style="position: absolute; bottom: 4px; left: 4px; right: 4px; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              White Personalized Phone Case
-            </div>
-          </div>
-
-          <!-- Depoimento Curto e Objetivo -->
-          <p style="font-size: 0.75rem; color: #374151; font-weight: 500; line-height: 1.45; margin: 0;">
-            &ldquo;Adding my favorite photo was fast, simple, and really fun.&rdquo;
-          </p>
-        </div>
-
-        <div style="margin-top: 0.625rem; padding-top: 0.5rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700;">
-          <span style="color: #059669;">Verified Buyer</span>
-          <span style="color: #9333EA;">KOSNORA</span>
-        </div>
-      </article>
-
-      <!-- REVIEW 3 -->
-      <article class="kosnora-review-card" style="flex: 0 0 265px; max-width: 265px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 18px; padding: 0.875rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
-        <div>
-          <!-- Top: Avatar do Produto (36px circular com a capinha) -->
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
-            <div style="display: flex; align-items: center; gap: 0.625rem; min-width: 0;">
-              <div style="position: relative; flex-shrink: 0;">
-                <img
-                  src="https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg"
-                  alt="Olivia C."
-                  style="width: 36px; height: 36px; border-radius: 50%; object-fit: contain; padding: 2px; background: #F9FAFB; border: 1.5px solid #E9D5FF; display: block;"
-                  loading="lazy"
-                >
-                <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #9333EA; border-radius: 50%; border: 1.5px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #FFF; font-weight: 900;">✓</span>
-              </div>
-              <div style="min-width: 0;">
-                <h3 style="font-size: 0.8125rem; font-weight: 900; margin: 0; color: #111111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Olivia C.</h3>
-                <div style="font-size: 10px; font-weight: 600; color: #6B7280;">Seattle, WA</div>
-              </div>
-            </div>
-            <!-- Stars -->
-            <div style="color: #F59E0B; font-size: 11px; letter-spacing: 1px; flex-shrink: 0;">★★★★★</div>
-          </div>
-
-          <!-- Imagem Principal do Review: Fotografia da Pessoa (~140px) -->
-          <div style="position: relative; border-radius: 12px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 0.625rem;">
-            <img
-              src="https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg"
-              alt="Olivia C."
-              style="width: 100%; height: 140px; object-fit: cover; display: block;"
-              loading="lazy"
-            >
-            <div style="position: absolute; bottom: 4px; left: 4px; right: 4px; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              White Personalized Phone Case
-            </div>
-          </div>
-
-          <!-- Depoimento Curto e Objetivo -->
-          <p style="font-size: 0.75rem; color: #374151; font-weight: 500; line-height: 1.45; margin: 0;">
-            &ldquo;The customization is so convenient. I can change the look anytime!&rdquo;
-          </p>
-        </div>
-
-        <div style="margin-top: 0.625rem; padding-top: 0.5rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700;">
-          <span style="color: #059669;">Verified Buyer</span>
-          <span style="color: #9333EA;">KOSNORA</span>
-        </div>
-      </article>
-
-      <!-- REVIEW 4 -->
-      <article class="kosnora-review-card" style="flex: 0 0 265px; max-width: 265px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 18px; padding: 0.875rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
-        <div>
-          <!-- Top: Avatar do Produto (36px circular com a capinha) -->
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
-            <div style="display: flex; align-items: center; gap: 0.625rem; min-width: 0;">
-              <div style="position: relative; flex-shrink: 0;">
-                <img
-                  src="https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg"
-                  alt="Tyler B."
-                  style="width: 36px; height: 36px; border-radius: 50%; object-fit: contain; padding: 2px; background: #F9FAFB; border: 1.5px solid #E9D5FF; display: block;"
-                  loading="lazy"
-                >
-                <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #9333EA; border-radius: 50%; border: 1.5px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #FFF; font-weight: 900;">✓</span>
-              </div>
-              <div style="min-width: 0;">
-                <h3 style="font-size: 0.8125rem; font-weight: 900; margin: 0; color: #111111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Tyler B.</h3>
-                <div style="font-size: 10px; font-weight: 600; color: #6B7280;">Denver, CO</div>
-              </div>
-            </div>
-            <!-- Stars -->
-            <div style="color: #F59E0B; font-size: 11px; letter-spacing: 1px; flex-shrink: 0;">★★★★★</div>
-          </div>
-
-          <!-- Imagem Principal do Review: Fotografia da Pessoa (~140px) -->
-          <div style="position: relative; border-radius: 12px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 0.625rem;">
-            <img
-              src="https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg"
-              alt="Tyler B."
-              style="width: 100%; height: 140px; object-fit: cover; display: block;"
-              loading="lazy"
-            >
-            <div style="position: absolute; bottom: 4px; left: 4px; right: 4px; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              Black Personalized Phone Case
-            </div>
-          </div>
-
-          <!-- Depoimento Curto e Objetivo -->
-          <p style="font-size: 0.75rem; color: #374151; font-weight: 500; line-height: 1.45; margin: 0;">
-            &ldquo;Great design and easy personalization. Really practical!&rdquo;
-          </p>
-        </div>
-
-        <div style="margin-top: 0.625rem; padding-top: 0.5rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700;">
-          <span style="color: #059669;">Verified Buyer</span>
-          <span style="color: #9333EA;">KOSNORA</span>
-        </div>
-      </article>
-
-      <!-- REVIEW 5 -->
-      <article class="kosnora-review-card" style="flex: 0 0 265px; max-width: 265px; background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 18px; padding: 0.875rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s;">
-        <div>
-          <!-- Top: Avatar do Produto (36px circular com a capinha) -->
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
-            <div style="display: flex; align-items: center; gap: 0.625rem; min-width: 0;">
-              <div style="position: relative; flex-shrink: 0;">
-                <img
-                  src="https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg"
-                  alt="Marcus V."
-                  style="width: 36px; height: 36px; border-radius: 50%; object-fit: contain; padding: 2px; background: #F9FAFB; border: 1.5px solid #E9D5FF; display: block;"
-                  loading="lazy"
-                >
-                <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #9333EA; border-radius: 50%; border: 1.5px solid #FFF; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #FFF; font-weight: 900;">✓</span>
-              </div>
-              <div style="min-width: 0;">
-                <h3 style="font-size: 0.8125rem; font-weight: 900; margin: 0; color: #111111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Marcus V.</h3>
-                <div style="font-size: 10px; font-weight: 600; color: #6B7280;">San Diego, CA</div>
-              </div>
-            </div>
-            <!-- Stars -->
-            <div style="color: #F59E0B; font-size: 11px; letter-spacing: 1px; flex-shrink: 0;">★★★★★</div>
-          </div>
-
-          <!-- Imagem Principal do Review: Fotografia da Pessoa (~140px) -->
-          <div style="position: relative; border-radius: 12px; overflow: hidden; background: #F9FAFB; border: 1px solid #F3F4F6; margin-bottom: 0.625rem;">
-            <img
-              src="https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg"
-              alt="Marcus V."
-              style="width: 100%; height: 140px; object-fit: cover; display: block;"
-              loading="lazy"
-            >
-            <div style="position: absolute; bottom: 4px; left: 4px; right: 4px; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              Black Personalized Phone Case
-            </div>
-          </div>
-
-          <!-- Depoimento Curto e Objetivo -->
-          <p style="font-size: 0.75rem; color: #374151; font-weight: 500; line-height: 1.45; margin: 0;">
-            &ldquo;Such a cool way to keep my favorite memories on my phone.&rdquo;
-          </p>
-        </div>
-
-        <div style="margin-top: 0.625rem; padding-top: 0.5rem; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700;">
-          <span style="color: #059669;">Verified Buyer</span>
-          <span style="color: #9333EA;">KOSNORA</span>
-        </div>
-      </article>
     </div>
   </div>
 </section>
 
-<script>
-  (function() {
-    function initReviewsSection(section) {
-      const track = section.querySelector('.kosnora-reviews-track');
-      const prevBtn = section.querySelector('[id^="reviews-prev-btn"]');
-      const nextBtn = section.querySelector('[id^="reviews-next-btn"]');
-      if (!track) return;
-
-      if (prevBtn) {
-        prevBtn.addEventListener('click', function() {
-          track.scrollBy({ left: -280, behavior: 'smooth' });
-        });
-      }
-
-      if (nextBtn) {
-        nextBtn.addEventListener('click', function() {
-          track.scrollBy({ left: 280, behavior: 'smooth' });
-        });
-      }
-
-      // Smooth auto-scroll loop with pause on hover / touch
-      let isPaused = false;
-      section.addEventListener('mouseenter', () => { isPaused = true; });
-      section.addEventListener('mouseleave', () => { isPaused = false; });
-      section.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
-      section.addEventListener('touchend', () => { isPaused = false; }, { passive: true });
-
-      let autoScrollTimer = setInterval(() => {
-        if (!isPaused && track) {
-          if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
-            track.scrollTo({ left: 0, behavior: 'smooth' });
-          } else {
-            track.scrollBy({ left: 1, behavior: 'auto' });
-          }
-        }
-      }, 30);
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.kosnora-reviews-section').forEach(initReviewsSection);
-      });
-    } else {
-      document.querySelectorAll('.kosnora-reviews-section').forEach(initReviewsSection);
-    }
-
-    document.addEventListener('shopify:section:load', (e) => {
-      const s = e.target.querySelector('.kosnora-reviews-section');
-      if (s) initReviewsSection(s);
-    });
-  })();
-</script>
-
 {% schema %}
 {
-  "name": "Customer Reviews Carousel",
+  "name": "KOSNORA Reviews Carousel",
+  "tag": "section",
+  "class": "kosnora-reviews-section-wrapper",
   "settings": [
     {
       "type": "text",
-      "id": "badge",
-      "label": "Badge Label",
-      "default": "CUSTOMER STORIES"
-    },
-    {
-      "type": "text",
       "id": "headline",
-      "label": "Headline",
+      "label": "Heading",
       "default": "Loved by Our Customers"
     },
     {
       "type": "text",
       "id": "subheadline",
-      "label": "Subheadline",
+      "label": "Subheading",
       "default": "Your favorite memories, right on your phone."
     },
     {
@@ -409,6 +217,16 @@
       "id": "overall_rating",
       "label": "Overall Rating Score",
       "default": "4.7 / 5"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Speed (Pixels per second)",
+      "min": 25,
+      "max": 65,
+      "step": 5,
+      "unit": "px",
+      "default": 40
     }
   ],
   "blocks": [
@@ -416,16 +234,6 @@
       "type": "review",
       "name": "Customer Review",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "avatar_image",
-          "label": "Small Icon / Avatar Photo"
-        },
-        {
-          "type": "image_picker",
-          "id": "review_image",
-          "label": "Main Review Photo"
-        },
         {
           "type": "text",
           "id": "customer_name",
@@ -439,27 +247,43 @@
           "default": "Miami, FL"
         },
         {
-          "type": "text",
-          "id": "product_color",
-          "label": "Product Color",
-          "default": "Black"
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Product Case Icon Photo"
         },
         {
           "type": "text",
-          "id": "iphone_model",
-          "label": "iPhone Model (Optional)",
-          "default": ""
+          "id": "avatar_image_url",
+          "label": "Product Case Icon Image URL (Fallback)",
+          "default": "https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg"
+        },
+        {
+          "type": "image_picker",
+          "id": "review_image",
+          "label": "Main Customer Photo"
+        },
+        {
+          "type": "text",
+          "id": "review_image_url",
+          "label": "Main Customer Photo URL (Fallback)",
+          "default": "https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Purchased Product Name",
+          "default": "Black Personalized Phone Case"
         },
         {
           "type": "textarea",
           "id": "review_text",
-          "label": "Review Quote (Short)",
+          "label": "Review Quote",
           "default": "Love how quickly I can change the picture. Super easy to use!"
         },
         {
           "type": "range",
           "id": "rating",
-          "label": "Rating Stars",
+          "label": "Rating (Stars)",
           "min": 1,
           "max": 5,
           "step": 1,
@@ -470,7 +294,69 @@
   ],
   "presets": [
     {
-      "name": "Customer Reviews Carousel"
+      "name": "KOSNORA Reviews Carousel",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Sarah M.",
+            "location": "Miami, FL",
+            "avatar_image_url": "https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg",
+            "review_image_url": "https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg",
+            "product_name": "Black Personalized Phone Case",
+            "review_text": "Love how quickly I can change the picture. Super easy to use!",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Emily",
+            "location": "Austin, TX",
+            "avatar_image_url": "https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg",
+            "review_image_url": "https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg",
+            "product_name": "White Personalized Phone Case",
+            "review_text": "Adding my favorite photo was fast, simple, and really fun.",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Olivia C.",
+            "location": "Seattle, WA",
+            "avatar_image_url": "https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg",
+            "review_image_url": "https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg",
+            "product_name": "White Personalized Phone Case",
+            "review_text": "The customization is so convenient. I can change the look anytime!",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Tyler B.",
+            "location": "Denver, CO",
+            "avatar_image_url": "https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg",
+            "review_image_url": "https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg",
+            "product_name": "Black Personalized Phone Case",
+            "review_text": "Great design and easy personalization. Really practical!",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Marcus V.",
+            "location": "San Diego, CA",
+            "avatar_image_url": "https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg",
+            "review_image_url": "https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg",
+            "product_name": "Black Personalized Phone Case",
+            "review_text": "Such a cool way to keep my favorite memories on my phone.",
+            "rating": 5
+          }
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,393 @@
+/**
+ * KOSNORA Reviews Carousel — Native Shopify Online Store 2.0 Styles
+ * Smooth, hardware-accelerated infinite horizontal loop
+ */
+
+.kosnora-reviews {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  background: #FCFCFD;
+  color: #111111;
+  padding: 4.5rem 0;
+  border-top: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E5E5E5;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .kosnora-reviews {
+    padding: 3.25rem 0;
+  }
+}
+
+/* Ambient glow accent */
+.kosnora-reviews__ambient {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.06) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header Container */
+.kosnora-reviews__container {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .kosnora-reviews__container {
+    padding: 0 2rem;
+  }
+}
+
+.kosnora-reviews__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2.25rem;
+}
+
+@media (min-width: 640px) {
+  .kosnora-reviews__header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.kosnora-reviews__header-left {
+  max-width: 600px;
+}
+
+.kosnora-reviews__tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9333EA;
+  margin-bottom: 0.375rem;
+}
+
+.kosnora-reviews__title {
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.625rem, 3.5vw, 2.25rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #0A0A0A;
+  margin: 0 0 0.5rem 0;
+}
+
+.kosnora-reviews__subtitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #6B7280;
+  margin: 0;
+}
+
+.kosnora-reviews__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  background: #FFFFFF;
+  border: 1px solid #E9D5FF;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  align-self: flex-start;
+}
+
+.kosnora-reviews__badge-stars {
+  display: inline-flex;
+  color: #F59E0B;
+  font-size: 0.8125rem;
+  letter-spacing: 1px;
+}
+
+.kosnora-reviews__badge-score {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.kosnora-reviews__badge-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #D1D5DB;
+}
+
+.kosnora-reviews__badge-verified {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #9333EA;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Viewport and Seamless Marquee Track */
+.kosnora-reviews__viewport {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0.5rem 0;
+  mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+}
+
+@media (max-width: 640px) {
+  .kosnora-reviews__viewport {
+    mask-image: linear-gradient(to right, transparent 0%, black 1.5%, black 98.5%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 1.5%, black 98.5%, transparent 100%);
+  }
+}
+
+.kosnora-reviews__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: kosnora-reviews-marquee var(--kosnora-reviews-duration, 38s) linear infinite;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Accessible pause on hover / focus */
+.kosnora-reviews:hover .kosnora-reviews__track,
+.kosnora-reviews:focus-within .kosnora-reviews__track,
+.kosnora-reviews.is-paused .kosnora-reviews__track {
+  animation-play-state: paused;
+}
+
+.kosnora-reviews__group {
+  display: flex;
+  gap: 1.25rem;
+  padding-right: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Individual Review Card */
+.kosnora-reviews__card {
+  flex: 0 0 clamp(255px, 72vw, 280px);
+  width: clamp(255px, 72vw, 280px);
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 18px;
+  padding: 0.875rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.kosnora-reviews__card:hover {
+  border-color: rgba(147, 51, 234, 0.35);
+  box-shadow: 0 6px 18px rgba(147, 51, 234, 0.08);
+}
+
+/* Top Card Header: Small Case Avatar + Customer Name + Rating */
+.kosnora-reviews__card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.kosnora-reviews__card-customer {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.kosnora-reviews__avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.kosnora-reviews__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: contain;
+  padding: 2px;
+  background: #F9FAFB;
+  border: 1.5px solid #E9D5FF;
+  display: block;
+  transition: border-color 0.2s;
+}
+
+.kosnora-reviews__card:hover .kosnora-reviews__avatar {
+  border-color: #9333EA;
+}
+
+.kosnora-reviews__avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #9333EA;
+  border: 1.5px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  color: #FFFFFF;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.kosnora-reviews__customer-info {
+  min-width: 0;
+}
+
+.kosnora-reviews__customer-name {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #111111;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kosnora-reviews__customer-loc {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6B7280;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kosnora-reviews__card-stars {
+  color: #F59E0B;
+  font-size: 11px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+/* Main Review Image: Person's photograph */
+.kosnora-reviews__media {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #F9FAFB;
+  border: 1px solid #F3F4F6;
+  margin-bottom: 0.625rem;
+}
+
+.kosnora-reviews__media-img {
+  width: 100%;
+  height: 145px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.kosnora-reviews__card:hover .kosnora-reviews__media-img {
+  transform: scale(1.02);
+}
+
+.kosnora-reviews__media-badge {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  font-size: 9px;
+  font-weight: 700;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Short Quote */
+.kosnora-reviews__quote {
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.45;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Bottom Verified Buyer Footer */
+.kosnora-reviews__card-bottom {
+  margin-top: 0.625rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.kosnora-reviews__verified-label {
+  color: #059669;
+}
+
+.kosnora-reviews__brand-tag {
+  color: #9333EA;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+/* Keyframes for seamless infinite marquee */
+@keyframes kosnora-reviews-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .kosnora-reviews__track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .kosnora-reviews__viewport {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+}

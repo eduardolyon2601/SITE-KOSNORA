@@ -1,0 +1,105 @@
+{%- comment -%}
+  Renders a single KOSNORA Review Card (Used in kosnora-reviews.liquid)
+  Parameters:
+    - block: (optional) Block object from section.blocks
+    - is_clone: (boolean) whether this is a decorative duplicate for infinite loop
+    - card_id: string
+    - customer_name: string
+    - location: string
+    - avatar_url: string
+    - review_url: string
+    - product_name: string
+    - review_text: string
+    - rating: number
+{%- endcomment -%}
+
+{%- liquid
+  if block != blank
+    assign c_name = block.settings.customer_name | default: 'Sarah M.'
+    assign c_loc = block.settings.location | default: 'Miami, FL'
+    assign c_rating = block.settings.rating | default: 5
+    assign c_quote = block.settings.review_text | default: 'Love how quickly I can change the picture. Super easy to use!'
+    assign c_prod = block.settings.product_name | default: 'Black Personalized Phone Case'
+    
+    if block.settings.avatar_image != blank
+      assign c_avatar = block.settings.avatar_image | image_url: width: 100
+    else
+      assign c_avatar = block.settings.avatar_image_url | default: 'https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg'
+    endif
+
+    if block.settings.review_image != blank
+      assign c_review_img = block.settings.review_image | image_url: width: 450
+    else
+      assign c_review_img = block.settings.review_image_url | default: 'https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg'
+    endif
+  else
+    assign c_name = customer_name | default: 'Sarah M.'
+    assign c_loc = location | default: 'Miami, FL'
+    assign c_avatar = avatar_url | default: 'https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg'
+    assign c_review_img = review_url | default: 'https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg'
+    assign c_prod = product_name | default: 'Personalized Phone Case'
+    assign c_quote = review_text | default: 'Love how quickly I can change the picture. Super easy to use!'
+    assign c_rating = rating | default: 5
+  endif
+-%}
+
+<article
+  class="kosnora-reviews__card"
+  {% if is_clone %}aria-hidden="true" tabindex="-1"{% endif %}
+>
+  <div>
+    <!-- Top: Small Product Case Icon Avatar + Customer Info + Stars -->
+    <div class="kosnora-reviews__card-top">
+      <div class="kosnora-reviews__card-customer">
+        <div class="kosnora-reviews__avatar-wrap">
+          <img
+            src="{{ c_avatar }}"
+            alt="{{ c_name | escape }}"
+            class="kosnora-reviews__avatar"
+            width="36"
+            height="36"
+            loading="lazy"
+            draggable="false"
+          >
+          <span class="kosnora-reviews__avatar-badge" aria-hidden="true">✓</span>
+        </div>
+        <div class="kosnora-reviews__customer-info">
+          <h3 class="kosnora-reviews__customer-name">{{ c_name }}</h3>
+          <div class="kosnora-reviews__customer-loc">{{ c_loc }}</div>
+        </div>
+      </div>
+
+      <!-- Rating Stars -->
+      <div class="kosnora-reviews__card-stars" aria-label="{{ c_rating }} out of 5 stars">
+        {%- for i in (1..c_rating) -%}★{%- endfor -%}
+      </div>
+    </div>
+
+    <!-- Main Review Image: Person's Photo (~145px) -->
+    <div class="kosnora-reviews__media">
+      <img
+        src="{{ c_review_img }}"
+        alt="{{ c_name | escape }}"
+        class="kosnora-reviews__media-img"
+        width="280"
+        height="145"
+        loading="lazy"
+        draggable="false"
+      >
+      <div class="kosnora-reviews__media-badge">
+        {{ c_prod }}
+      </div>
+    </div>
+
+    <!-- Short Review Quote -->
+    <p class="kosnora-reviews__quote">
+      &ldquo;{{ c_quote }}&rdquo;
+    </p>
+  </div>
+
+  <!-- Bottom: Verified Buyer Badge -->
+  <div class="kosnora-reviews__card-bottom">
+    <span class="kosnora-reviews__verified-label">✓ Verified Buyer</span>
+    <span class="kosnora-reviews__brand-tag">KOSNORA</span>
+  </div>
+</article>

@@ -7,11 +7,12 @@
       }
     },
     "reviews_carousel": {
-      "type": "reviews-carousel",
+      "type": "kosnora-reviews",
       "settings": {
         "headline": "Loved by Our Customers",
         "subheadline": "Your favorite memories, right on your phone.",
-        "overall_rating": "4.7 / 5"
+        "overall_rating": "4.7 / 5",
+        "speed": 40
       }
     },
     "faq": {

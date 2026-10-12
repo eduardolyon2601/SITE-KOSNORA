@@ -1,0 +1,363 @@
+{{ 'kosnora-reviews.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kosnora-reviews.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign default_reviews_count = 5
+  assign has_blocks = false
+  if section.blocks.size > 0
+    assign has_blocks = true
+  endif
+-%}
+
+<section
+  id="reviews"
+  class="kosnora-reviews"
+  data-section-id="{{ section.id }}"
+  data-speed="{{ section.settings.speed | default: 40 }}"
+>
+  <!-- Ambient subtle purple gradient -->
+  <div class="kosnora-reviews__ambient" aria-hidden="true"></div>
+
+  <div class="kosnora-reviews__container">
+    <!-- Header: Title, Subtitle, and Verified Rating Pill -->
+    <div class="kosnora-reviews__header">
+      <div class="kosnora-reviews__header-left">
+        <span class="kosnora-reviews__tagline">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          VERIFIED REVIEWS
+        </span>
+        <h2 class="kosnora-reviews__title">
+          {{ section.settings.headline | default: 'Loved by Our Customers' }}
+        </h2>
+        <p class="kosnora-reviews__subtitle">
+          {{ section.settings.subheadline | default: 'Your favorite memories, right on your phone.' }}
+        </p>
+      </div>
+
+      <!-- Rating Badge -->
+      <div class="kosnora-reviews__badge">
+        <span class="kosnora-reviews__badge-stars">★★★★★</span>
+        <span class="kosnora-reviews__badge-score">{{ section.settings.overall_rating | default: '4.7 / 5' }}</span>
+        <span class="kosnora-reviews__badge-sep" aria-hidden="true"></span>
+        <span class="kosnora-reviews__badge-verified">Verified</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Automatic Infinite Marquee Viewport (Zero Manual Drag / No Arrows) -->
+  <div class="kosnora-reviews__viewport">
+    <div class="kosnora-reviews__track" style="--kosnora-reviews-duration: {{ 1450 | divided_by: section.settings.speed | default: 38 }}s;">
+      
+      <!-- ============================================================ -->
+      <!-- GROUP 1: Primary Accessible Review Cards Set                -->
+      <!-- ============================================================ -->
+      <div class="kosnora-reviews__group">
+        {%- if has_blocks -%}
+          {%- for block in section.blocks -%}
+            {%- render 'kosnora-review-card-item', block: block, is_clone: false -%}
+          {%- endfor -%}
+        {%- else -%}
+          <!-- Default Review 1 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-1',
+            customer_name: 'Sarah M.',
+            location: 'Miami, FL',
+            avatar_url: 'https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg',
+            review_url: 'https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Love how quickly I can change the picture. Super easy to use!',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 2 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-2',
+            customer_name: 'Emily',
+            location: 'Austin, TX',
+            avatar_url: 'https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg',
+            review_url: 'https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'Adding my favorite photo was fast, simple, and really fun.',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 3 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-3',
+            customer_name: 'Olivia C.',
+            location: 'Seattle, WA',
+            avatar_url: 'https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg',
+            review_url: 'https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'The customization is so convenient. I can change the look anytime!',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 4 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-4',
+            customer_name: 'Tyler B.',
+            location: 'Denver, CO',
+            avatar_url: 'https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg',
+            review_url: 'https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Great design and easy personalization. Really practical!',
+            rating: 5,
+            is_clone: false
+          -%}
+          <!-- Default Review 5 -->
+          {%- render 'kosnora-review-card-item',
+            card_id: 'default-5',
+            customer_name: 'Marcus V.',
+            location: 'San Diego, CA',
+            avatar_url: 'https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg',
+            review_url: 'https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Such a cool way to keep my favorite memories on my phone.',
+            rating: 5,
+            is_clone: false
+          -%}
+        {%- endif -%}
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- GROUP 2: Cloned Loop Set for Seamless CSS Animation           -->
+      <!-- Marked with aria-hidden="true" to prevent screen reader dupes -->
+      <!-- ============================================================ -->
+      <div class="kosnora-reviews__group" aria-hidden="true">
+        {%- if has_blocks -%}
+          {%- for block in section.blocks -%}
+            {%- render 'kosnora-review-card-item', block: block, is_clone: true -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-1',
+            customer_name: 'Sarah M.',
+            location: 'Miami, FL',
+            avatar_url: 'https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg',
+            review_url: 'https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Love how quickly I can change the picture. Super easy to use!',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-2',
+            customer_name: 'Emily',
+            location: 'Austin, TX',
+            avatar_url: 'https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg',
+            review_url: 'https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'Adding my favorite photo was fast, simple, and really fun.',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-3',
+            customer_name: 'Olivia C.',
+            location: 'Seattle, WA',
+            avatar_url: 'https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg',
+            review_url: 'https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg',
+            product_name: 'White Personalized Phone Case',
+            review_text: 'The customization is so convenient. I can change the look anytime!',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-4',
+            customer_name: 'Tyler B.',
+            location: 'Denver, CO',
+            avatar_url: 'https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg',
+            review_url: 'https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Great design and easy personalization. Really practical!',
+            rating: 5,
+            is_clone: true
+          -%}
+          {%- render 'kosnora-review-card-item',
+            card_id: 'clone-5',
+            customer_name: 'Marcus V.',
+            location: 'San Diego, CA',
+            avatar_url: 'https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg',
+            review_url: 'https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg',
+            product_name: 'Black Personalized Phone Case',
+            review_text: 'Such a cool way to keep my favorite memories on my phone.',
+            rating: 5,
+            is_clone: true
+          -%}
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "KOSNORA Reviews Carousel",
+  "tag": "section",
+  "class": "kosnora-reviews-section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Heading",
+      "default": "Loved by Our Customers"
+    },
+    {
+      "type": "text",
+      "id": "subheadline",
+      "label": "Subheading",
+      "default": "Your favorite memories, right on your phone."
+    },
+    {
+      "type": "text",
+      "id": "overall_rating",
+      "label": "Overall Rating Score",
+      "default": "4.7 / 5"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Speed (Pixels per second)",
+      "min": 25,
+      "max": 65,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Customer Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer Name",
+          "default": "Sarah M."
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Customer Location",
+          "default": "Miami, FL"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Product Case Icon Photo"
+        },
+        {
+          "type": "text",
+          "id": "avatar_image_url",
+          "label": "Product Case Icon Image URL (Fallback)",
+          "default": "https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg"
+        },
+        {
+          "type": "image_picker",
+          "id": "review_image",
+          "label": "Main Customer Photo"
+        },
+        {
+          "type": "text",
+          "id": "review_image_url",
+          "label": "Main Customer Photo URL (Fallback)",
+          "default": "https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Purchased Product Name",
+          "default": "Black Personalized Phone Case"
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Quote",
+          "default": "Love how quickly I can change the picture. Super easy to use!"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating (Stars)",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KOSNORA Reviews Carousel",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Sarah M.",
+            "location": "Miami, FL",
+            "avatar_image_url": "https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg",
+            "review_image_url": "https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg",
+            "product_name": "Black Personalized Phone Case",
+            "review_text": "Love how quickly I can change the picture. Super easy to use!",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Emily",
+            "location": "Austin, TX",
+            "avatar_image_url": "https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg",
+            "review_image_url": "https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg",
+            "product_name": "White Personalized Phone Case",
+            "review_text": "Adding my favorite photo was fast, simple, and really fun.",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Olivia C.",
+            "location": "Seattle, WA",
+            "avatar_image_url": "https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg",
+            "review_image_url": "https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg",
+            "product_name": "White Personalized Phone Case",
+            "review_text": "The customization is so convenient. I can change the look anytime!",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Tyler B.",
+            "location": "Denver, CO",
+            "avatar_image_url": "https://i.postimg.cc/hjdwfjXh/Whats-App-Image-2026-10-10-at-01-42-00.jpg",
+            "review_image_url": "https://i.postimg.cc/V6CTd6JS/Whats-App-Image-2026-10-10-at-01-54-00.jpg",
+            "product_name": "Black Personalized Phone Case",
+            "review_text": "Great design and easy personalization. Really practical!",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "customer_name": "Marcus V.",
+            "location": "San Diego, CA",
+            "avatar_image_url": "https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg",
+            "review_image_url": "https://i.postimg.cc/3Rv6dRk0/Whats-App-Image-2026-10-10-at-02-13-29.jpg",
+            "product_name": "Black Personalized Phone Case",
+            "review_text": "Such a cool way to keep my favorite memories on my phone.",
+            "rating": 5
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
