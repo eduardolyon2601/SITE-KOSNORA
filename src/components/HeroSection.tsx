@@ -86,7 +86,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 : 'border-neutral-200 bg-white hover:border-neutral-300'
             }`}
           >
-            {/* Header Row: Capa #X, Dot, Status */}
+            {/* Header Row: Case #X, Dot, Status */}
             <div className="flex items-center justify-between gap-2 mb-2.5">
               <button
                 type="button"

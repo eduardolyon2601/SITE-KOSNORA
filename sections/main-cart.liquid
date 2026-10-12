@@ -1,7 +1,7 @@
 {%- comment -%}
   KOSNORA - Native Shopify Online Store 2.0 Official Cart Section
   Fully complies with Shopify Cart Object specifications, shows images, variants,
-  custom properties (Capa, iPhone Model, Case Color), discounts, and standard checkout flow.
+  custom properties (Case #, iPhone Model, Case Color), discounts, and standard checkout flow.
 {%- endcomment -%}
 
 <section class="kosnora-cart-section" style="background: #FFFFFF; color: #111827; padding: 2.5rem 1rem 4rem 1rem; min-height: 70vh;">
@@ -55,7 +55,7 @@
                       {% endif %}
                     </div>
 
-                    <!-- Custom Line Item Properties (iPhone Model, Case Color, Capa #) -->
+                    <!-- Custom Line Item Properties (iPhone Model, Case Color, Case #) -->
                     {% if item.properties.size > 0 %}
                       <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
                         {% for p in item.properties %}

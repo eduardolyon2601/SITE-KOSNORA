@@ -1,24 +1,24 @@
 {
   "general": {
-    "skip_to_content": "Pular para o conteúdo",
-    "close": "Fechar",
+    "skip_to_content": "Skip to content",
+    "close": "Close",
     "menu": "Menu"
   },
   "products": {
     "product": {
-      "add_to_cart": "Comprar Agora",
-      "sold_out": "Esgotado",
-      "unavailable": "Indisponível",
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
       "price": {
-        "regular_price": "Preço original",
-        "sale_price": "Preço promocional"
+        "regular_price": "Regular price",
+        "sale_price": "Sale price"
       }
     }
   },
   "cart": {
-    "title": "Seu Carrinho",
-    "empty": "Seu carrinho está vazio no momento",
-    "checkout": "Finalizar Compra",
+    "title": "Your Cart",
+    "empty": "Your cart is currently empty",
+    "checkout": "Checkout",
     "subtotal": "Subtotal"
   }
 }

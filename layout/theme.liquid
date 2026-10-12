@@ -13,21 +13,21 @@
     {%- if page_title -%}
       <title>{{ page_title }} &ndash; {{ shop.name }}</title>
     {%- else -%}
-      <title>KOSNORA &ndash; Premium Phone Case</title>
+      <title>KOSNORA &ndash; Smart NFC Phone Case</title>
     {%- endif -%}
 
     {%- if page_description -%}
       <meta name="description" content="{{ page_description | escape }}">
     {%- else -%}
-      <meta name="description" content="Discover KOSNORA, premium phone cases engineered with sleek minimalist design, long-lasting durability, and maximum impact protection.">
+      <meta name="description" content="Meet KOSNORA, a customizable smart phone case designed to change the image on the back of your phone whenever you want.">
     {%- endif -%}
 
     <!-- Social & OpenGraph Meta -->
     <meta property="og:site_name" content="{{ shop.name | default: 'KOSNORA' }}">
     <meta property="og:url" content="{{ canonical_url }}">
-    <meta property="og:title" content="{{ page_title | default: 'KOSNORA — Premium Phone Case' }}">
+    <meta property="og:title" content="{{ page_title | default: 'KOSNORA — Smart NFC Phone Case' }}">
     <meta property="og:type" content="website">
-    <meta property="og:description" content="{{ page_description | default: 'Discover KOSNORA, premium phone cases engineered with sleek minimalist design, long-lasting durability, and maximum impact protection.' }}">
+    <meta property="og:description" content="{{ page_description | default: 'Meet KOSNORA, a customizable smart phone case designed to change the image on the back of your phone whenever you want.' }}">
     <meta name="twitter:card" content="summary_large_image">
 
     {{ content_for_header }}

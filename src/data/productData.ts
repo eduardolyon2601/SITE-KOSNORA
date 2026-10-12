@@ -94,7 +94,7 @@ export const PRICING_TIERS: PricingTier[] = [
     totalPrice: 259.88,
     savingsTotal: 59.72,
     savingsPerUnit: 14.93,
-    tagline: '4x KOSNORA Cases (Limite Máximo)',
+    tagline: '4x KOSNORA Cases (Maximum Limit)',
   },
 ];
 

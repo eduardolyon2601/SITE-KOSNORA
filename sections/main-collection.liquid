@@ -2,7 +2,7 @@
   <div class="kosnora-container" style="max-width: 1200px; margin: 0 auto;">
     <div style="text-align: center; margin-bottom: 3rem;">
       <h1 class="kosnora-headline" style="font-size: 2.5rem; font-weight: 900; color: #111111; text-transform: uppercase;">
-        {{ collection.title | default: 'Coleções' }}
+        {{ collection.title | default: 'Collections' }}
       </h1>
       {% if collection.description != blank %}
         <p style="color: #6B7280; font-size: 1rem; max-width: 600px; margin: 0.5rem auto 0;">
@@ -29,13 +29,13 @@
               {{ product.price | money }}
             </div>
             <a href="{{ product.url }}" class="kosnora-btn-primary" style="display: flex; align-items: center; justify-content: center; width: 100%; padding: 0.85rem; border-radius: 10px; text-decoration: none; font-weight: 800; font-size: 0.875rem; background: linear-gradient(135deg, #9333EA 0%, #8015F5 50%, #6B21A8 100%); color: #FFF;">
-              VER DETALHES
+              VIEW DETAILS
             </a>
           </div>
         </div>
       {% else %}
         <div style="grid-column: 1 / -1; text-align: center; color: #6B7280; padding: 3rem 0;">
-          Nenhum produto encontrado nesta coleção.
+          No products found in this collection.
         </div>
       {% endfor %}
     </div>

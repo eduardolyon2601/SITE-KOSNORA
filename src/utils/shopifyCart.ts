@@ -66,7 +66,7 @@ export async function addVariantsToShopifyCart(
   selectedUnits: Array<{ variantId: string | number; model: string; color: string; unitIndex?: number; totalUnits?: number }>
 ): Promise<{ success: boolean; cart?: any; checkoutUrl?: string }> {
   if (typeof window === 'undefined') {
-    throw new Error('Ambiente de execução inválido.');
+    throw new Error('Invalid runtime environment.');
   }
 
   const root = window.Shopify?.routes?.root || window.KOSNORA_STORE?.root || '/';

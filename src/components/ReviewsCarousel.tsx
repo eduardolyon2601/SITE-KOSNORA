@@ -82,7 +82,7 @@ export const ReviewsCarousel: React.FC = () => {
       tabIndex={isClone ? -1 : undefined}
     >
       <div>
-        {/* 1. TOP: AVATAR DO PRODUTO (Compacto: 36px circular com a capinha) */}
+        {/* 1. TOP: PRODUCT CASE AVATAR (Compact: 36px circular with case) */}
         <div className="flex items-center justify-between mb-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="relative shrink-0">
