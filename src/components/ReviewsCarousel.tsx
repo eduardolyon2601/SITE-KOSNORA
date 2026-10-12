@@ -27,7 +27,7 @@ export const REVIEWS_DATA: CustomerReview[] = [
   },
   {
     id: 'review-2',
-    name: 'Marcus V.',
+    name: 'Emily',
     location: 'Austin, TX',
     verified: true,
     avatarUrl: 'https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg',
@@ -60,7 +60,7 @@ export const REVIEWS_DATA: CustomerReview[] = [
   },
   {
     id: 'review-5',
-    name: 'Emily & Chris D.',
+    name: 'Marcus V.',
     location: 'San Diego, CA',
     verified: true,
     avatarUrl: 'https://i.postimg.cc/vBVjcB4T/Whats-App-Image-2026-10-10-at-01-42-00-(1).jpg',

@@ -358,7 +358,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               />
               <img
                 src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
-                alt="Marcus V."
+                alt="Emily"
                 className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
               />
               <img
@@ -541,7 +541,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   />
                   <img
                     src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
-                    alt="Marcus V."
+                    alt="Emily"
                     className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
                   />
                   <img
