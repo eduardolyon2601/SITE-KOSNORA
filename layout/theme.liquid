@@ -89,6 +89,7 @@
 
     <!-- KOSNORA Native Styles -->
     {{ 'kosnora.css' | asset_url | stylesheet_tag }}
+    {{ 'kosnora-announcement-bar.css' | asset_url | stylesheet_tag }}
     {{ 'kosnora-multi-variant-bundle.css' | asset_url | stylesheet_tag }}
     {{ 'kosnora-reviews.css' | asset_url | stylesheet_tag }}
 
@@ -102,6 +103,9 @@
     <a class="skip-to-content-link" href="#MainContent" style="position: absolute; left: -9999px; z-index: 999; padding: 1em; background: #FFF; color: #000;">
       Skip to content
     </a>
+
+    <!-- Infinite Benefits Announcement Bar Section (Top of site, above Header) -->
+    {% section 'kosnora-announcement-bar' %}
 
     <!-- Header Section -->
     {% section 'header' %}

@@ -1,0 +1,101 @@
+.kosnora-announcement {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  background: var(--kosnora-bar-bg, #24153D);
+  color: var(--kosnora-bar-text, #FFFFFF);
+  position: relative;
+  z-index: 60;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kosnora-announcement *,
+.kosnora-announcement *::before,
+.kosnora-announcement *::after {
+  box-sizing: border-box;
+}
+
+.kosnora-announcement__viewport {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+}
+
+.kosnora-announcement__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: kosnora-marquee
+    var(--kosnora-bar-speed, 30s)
+    linear
+    infinite;
+}
+
+.kosnora-announcement__group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-width: max-content;
+}
+
+.kosnora-announcement__item {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 24px;
+  padding: 10px 24px;
+  white-space: nowrap;
+}
+
+.kosnora-announcement__text {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--kosnora-bar-text, #FFFFFF);
+}
+
+.kosnora-announcement__separator {
+  font-size: 11px;
+  color: #C084FC;
+  opacity: 0.85;
+  user-select: none;
+}
+
+@keyframes kosnora-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 749px) {
+  .kosnora-announcement__item {
+    gap: 16px;
+    padding: 9px 18px;
+  }
+
+  .kosnora-announcement__text {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  .kosnora-announcement__separator {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kosnora-announcement__track {
+    animation: none;
+  }
+
+  .kosnora-announcement__viewport {
+    overflow-x: auto;
+  }
+}

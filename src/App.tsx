@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShoppingBag } from 'lucide-react';
+import { AnnouncementBar } from './components/AnnouncementBar';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { ReviewsCarousel } from './components/ReviewsCarousel';
@@ -115,6 +116,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-['Montserrat',sans-serif] flex flex-col selection:bg-[#F3E8FF] selection:text-[#6B21A8] overflow-x-hidden">
+      {/* Infinite Benefits Announcement Bar (Top of Site) */}
+      <AnnouncementBar />
+
       {/* Header with Official KNR Logo */}
       <Header
         onShopClick={() => setIsCartOpen(true)}

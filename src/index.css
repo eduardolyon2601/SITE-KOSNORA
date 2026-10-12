@@ -88,8 +88,22 @@
   }
 }
 
+@keyframes kosnora-announcement-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-kosnora-announcement-marquee {
+  animation: kosnora-announcement-marquee 30s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .kosnora-reviews-marquee-track {
+  .kosnora-reviews-marquee-track,
+  .animate-kosnora-announcement-marquee {
     animation: none !important;
     transform: none !important;
   }

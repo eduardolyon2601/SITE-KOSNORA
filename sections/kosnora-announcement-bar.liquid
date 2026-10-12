@@ -1,0 +1,151 @@
+{{ 'kosnora-announcement-bar.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="kosnora-announcement"
+  style="
+    --kosnora-bar-bg: {{ section.settings.background_color | default: '#24153D' }};
+    --kosnora-bar-text: {{ section.settings.text_color | default: '#FFFFFF' }};
+    --kosnora-bar-speed: {{ section.settings.speed | default: 30 }}s;
+  "
+  aria-label="Store benefits"
+>
+  <div class="kosnora-announcement__viewport">
+    <div class="kosnora-announcement__track">
+
+      {% for copy in (1..2) %}
+        <div
+          class="kosnora-announcement__group"
+          {% if copy == 2 %}
+            aria-hidden="true"
+          {% endif %}
+        >
+          {%- comment -%} Repeat the message sequence within each group to ensure full coverage on ultra-wide screens without gaps {%- endcomment -%}
+          {% for repetition in (1..2) %}
+            {% if section.blocks.size > 0 %}
+              {% for block in section.blocks %}
+                <span
+                  class="kosnora-announcement__item"
+                  {% if copy == 1 and repetition == 1 %}
+                    {{ block.shopify_attributes }}
+                  {% endif %}
+                >
+                  <span class="kosnora-announcement__text">
+                    {{ block.settings.text | escape }}
+                  </span>
+                  <span class="kosnora-announcement__separator" aria-hidden="true">
+                    ✦
+                  </span>
+                </span>
+              {% endfor %}
+            {% else %}
+              <span class="kosnora-announcement__item">
+                <span class="kosnora-announcement__text">FREE SHIPPING ON ALL ORDERS</span>
+                <span class="kosnora-announcement__separator" aria-hidden="true">✦</span>
+              </span>
+              <span class="kosnora-announcement__item">
+                <span class="kosnora-announcement__text">30-DAY RETURNS</span>
+                <span class="kosnora-announcement__separator" aria-hidden="true">✦</span>
+              </span>
+              <span class="kosnora-announcement__item">
+                <span class="kosnora-announcement__text">TRACK YOUR ORDER</span>
+                <span class="kosnora-announcement__separator" aria-hidden="true">✦</span>
+              </span>
+              <span class="kosnora-announcement__item">
+                <span class="kosnora-announcement__text">SECURE CHECKOUT</span>
+                <span class="kosnora-announcement__separator" aria-hidden="true">✦</span>
+              </span>
+              <span class="kosnora-announcement__item">
+                <span class="kosnora-announcement__text">MAKE YOUR CASE YOURS</span>
+                <span class="kosnora-announcement__separator" aria-hidden="true">✦</span>
+              </span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KOSNORA Infinite Bar",
+  "tag": "section",
+  "class": "kosnora-announcement-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#24153D"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Loop duration (seconds)",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Benefit message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Message",
+          "default": "FREE SHIPPING ON ALL ORDERS"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "KOSNORA Infinite Bar",
+      "blocks": [
+        {
+          "type": "message",
+          "settings": {
+            "text": "FREE SHIPPING ON ALL ORDERS"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "30-DAY RETURNS"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "TRACK YOUR ORDER"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "SECURE CHECKOUT"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "MAKE YOUR CASE YOURS"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
