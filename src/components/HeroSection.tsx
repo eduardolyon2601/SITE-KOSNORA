@@ -352,18 +352,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs">
             <div className="flex -space-x-2 shrink-0">
               <img
-                src="https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
-                alt="Sarah M."
+                src="https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg"
+                alt="Product Case 1"
                 className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
               />
               <img
-                src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
-                alt="Emily"
+                src="https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg"
+                alt="Product Case 2"
                 className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
               />
               <img
-                src="https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg"
-                alt="Olivia C."
+                src="https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg"
+                alt="Product Case 3"
                 className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
               />
             </div>
@@ -535,18 +535,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="inline-flex items-center gap-2.5 mb-3 px-3 py-1.5 rounded-full bg-white border border-[#E9D5FF] shadow-xs self-start">
                 <div className="flex -space-x-2 shrink-0">
                   <img
-                    src="https://i.postimg.cc/zfM6zWGb/Whats-App-Image-2026-10-09-at-02-08-45.jpg"
-                    alt="Sarah M."
+                    src="https://i.postimg.cc/0N3FkmyD/Whats-App-Image-2026-10-10-at-01-38-27.jpg"
+                    alt="Product Case 1"
                     className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
                   />
                   <img
-                    src="https://i.postimg.cc/XvhmjFYy/Whats-App-Image-2026-10-09-at-02-20-20.jpg"
-                    alt="Emily"
+                    src="https://i.postimg.cc/s28qjSgh/Whats-App-Image-2026-10-10-at-01-30-48.jpg"
+                    alt="Product Case 2"
                     className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
                   />
                   <img
-                    src="https://i.postimg.cc/q7YSJnvK/Whats-App-Image-2026-10-09-at-02-08-58.jpg"
-                    alt="Olivia C."
+                    src="https://i.postimg.cc/cJj2xYLt/Whats-App-Image-2026-10-10-at-01-30-48-(1).jpg"
+                    alt="Product Case 3"
                     className="w-5 h-5 rounded-full ring-2 ring-white object-cover"
                   />
                 </div>
