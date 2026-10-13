@@ -71,19 +71,19 @@
 
   function calculateBundlePricing(quantity) {
     if (quantity === 1) {
-      return { total: 79.9, subtotal: 79.9, discount: 0, unitPrice: 79.9, promoTag: 'Single Case' };
+      return { total: 69.90, subtotal: 69.90, discount: 0, unitPrice: 69.90, promoTag: 'Single Case' };
     }
     if (quantity === 2) {
-      return { total: 139.9, subtotal: 159.8, discount: 19.9, unitPrice: 69.95, promoTag: '2 Cases (Save $19.90)' };
+      return { total: 129.90, subtotal: 139.80, discount: 9.90, unitPrice: 64.95, promoTag: '2 Cases (Save $9.90)' };
     }
     if (quantity === 3) {
-      return { total: 194.9, subtotal: 239.7, discount: 44.8, unitPrice: 64.97, promoTag: '3 Cases (Save $44.80)' };
+      return { total: 189.90, subtotal: 209.70, discount: 19.80, unitPrice: 63.30, promoTag: '3 Cases (Save $19.80)' };
     }
-    const unitPrice = 64.97;
-    const total = 259.88;
-    const subtotal = 319.6;
-    const discount = 59.72;
-    return { total, subtotal, discount, unitPrice, promoTag: '4 Cases (Save $59.72)' };
+    const unitPrice = 59.98;
+    const total = 239.90;
+    const subtotal = 279.60;
+    const discount = 39.70;
+    return { total, subtotal, discount, unitPrice, promoTag: '4 Cases (Save $39.70)' };
   }
 
   function formatMoney(amount) {

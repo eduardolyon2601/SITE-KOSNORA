@@ -252,15 +252,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="h-6 flex items-center justify-center -mt-1 mb-1 max-w-full min-w-0">
           {isDouble ? (
             <div className="px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs text-center truncate max-w-full">
-              Best Seller · Save $19.90
+              Best Seller · Save $9.90
             </div>
           ) : isTriple ? (
             <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs text-center truncate max-w-full">
-              Best Value · Save $44.80
+              Best Value · Save $24.80
             </div>
           ) : isQuadruple ? (
             <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-[9px] font-black uppercase tracking-wider shadow-xs text-center truncate max-w-full">
-              Max Bundle · Save $59.72
+              Max Bundle · Save $29.72
             </div>
           ) : (
             <div className="px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 text-[9px] font-bold uppercase tracking-wider text-center truncate max-w-full">
@@ -298,11 +298,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="min-h-[18px] mt-0.5">
                 {tier.quantity > 1 ? (
                   <span className="text-[10px] font-bold text-emerald-600 block">
-                    {tier.quantity === 2
-                      ? 'Save $19.90 on bundle'
-                      : tier.quantity === 3
-                      ? 'Save $44.80 on bundle'
-                      : 'Save $59.72 on bundle'}
+                    Save {formatCurrency(tier.savingsTotal)} on bundle
                   </span>
                 ) : (
                   <span className="text-[10px] font-medium text-neutral-400 block">

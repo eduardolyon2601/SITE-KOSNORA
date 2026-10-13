@@ -56,14 +56,14 @@ export const PRODUCT_IMAGES: ProductImage[] = [
   },
 ];
 
-// Pricing Tiers (1 for $79.90, 2 for 139.90, and 3 for 194.90)
+// Pricing Tiers (1 for $69.90, 2 for $129.90, 3 for $189.90, and 4 for $239.90)
 export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'single',
     quantity: 1,
     label: '1 CASE',
-    unitPrice: 79.90,
-    totalPrice: 79.90,
+    unitPrice: 69.90,
+    totalPrice: 69.90,
     savingsTotal: 0,
     tagline: '1x KOSNORA Case',
   },
@@ -71,10 +71,10 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'double',
     quantity: 2,
     label: '2 CASES',
-    unitPrice: 69.95,
-    totalPrice: 139.90,
-    savingsTotal: 19.90,
-    savingsPerUnit: 9.95,
+    unitPrice: 64.95,
+    totalPrice: 129.90,
+    savingsTotal: 9.90,
+    savingsPerUnit: 4.95,
     popular: true,
     tagline: '2x KOSNORA Cases',
   },
@@ -82,10 +82,10 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'triple',
     quantity: 3,
     label: '3 CASES',
-    unitPrice: 64.97,
-    totalPrice: 194.90,
-    savingsTotal: 44.80,
-    savingsPerUnit: 14.93,
+    unitPrice: 63.30,
+    totalPrice: 189.90,
+    savingsTotal: 19.80,
+    savingsPerUnit: 6.60,
     bestValue: true,
     tagline: '3x KOSNORA Cases',
   },
@@ -93,10 +93,10 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'quadruple',
     quantity: 4,
     label: '4 CASES',
-    unitPrice: 64.97,
-    totalPrice: 259.88,
-    savingsTotal: 59.72,
-    savingsPerUnit: 14.93,
+    unitPrice: 59.98,
+    totalPrice: 239.90,
+    savingsTotal: 39.70,
+    savingsPerUnit: 9.93,
     tagline: '4x KOSNORA Cases (Maximum Limit)',
   },
 ];
@@ -109,69 +109,70 @@ export const MAX_ORDER_CAPAS = 4;
 
 /**
  * Calculates progressive volume pricing according to official KOSNORA rules:
- * - 1 Unit: $79.90 (unit: $79.90, discount: $0.00)
- * - 2 Units: $139.90 (unit: $69.95, discount: $19.90 - 2x 79.90 = 159.80)
- * - 3 Units: $194.90 (unit: $64.97, discount: $44.80 - 3x 79.90 = 239.70)
- * - 4 Units (MAXIMUM BUNDLE): $259.88 (unit: $64.97, discount: $59.72 - 4x 79.90 = 319.60)
+ * - 1 Unit: $69.90 (unit: $69.90, discount: $0.00)
+ * - 2 Units: $129.90 (unit: $64.95, discount: $9.90 - 2x 69.90 = 139.80)
+ * - 3 Units: $189.90 (unit: $63.30, discount: $19.80 - 3x 69.90 = 209.70)
+ * - 4 Units (MAXIMUM BUNDLE): $239.90 (unit: $59.98, discount: $39.70 - 4x 69.90 = 279.60)
  */
 export function calculateCartPricing(quantity: number, currency = '$'): CartCalculation {
   const clampedQty = Math.min(MAX_ORDER_CAPAS, Math.max(1, Math.round(quantity || 1)));
-  const basePricePerUnit = 79.90;
-  const subtotal = Number((clampedQty * basePricePerUnit).toFixed(2));
+  const baseStandardPerUnit = 69.90;
+  const standardSubtotal = Number((clampedQty * baseStandardPerUnit).toFixed(2));
 
   if (clampedQty === 1) {
+    const total = 69.90;
     return {
       quantity: 1,
-      unitPrice: basePricePerUnit,
-      subtotal,
+      unitPrice: total,
+      subtotal: total,
       discount: 0,
-      total: basePricePerUnit,
+      total,
       discountLabel: null,
       currency,
     };
   }
 
   if (clampedQty === 2) {
-    const total = 139.90;
-    const unitPrice = 69.95;
-    const discount = Number((subtotal - total).toFixed(2)); // 19.90
+    const total = 129.90;
+    const unitPrice = 64.95;
+    const discount = Number((standardSubtotal - total).toFixed(2)); // 9.90
     return {
       quantity: 2,
       unitPrice,
-      subtotal,
+      subtotal: standardSubtotal,
       discount,
       total,
-      discountLabel: '2-Case Bundle (Save $19.90)',
+      discountLabel: '2-Case Bundle (Save $9.90)',
       currency,
     };
   }
 
   if (clampedQty === 3) {
-    const total = 194.90;
-    const unitPrice = 64.97;
-    const discount = Number((subtotal - total).toFixed(2)); // 44.80
+    const total = 189.90;
+    const unitPrice = 63.30;
+    const discount = Number((standardSubtotal - total).toFixed(2)); // 19.80
     return {
       quantity: 3,
       unitPrice,
-      subtotal,
+      subtotal: standardSubtotal,
       discount,
       total,
-      discountLabel: '3-Case Bundle (Save $44.80)',
+      discountLabel: '3-Case Bundle (Save $19.80)',
       currency,
     };
   }
 
   // Exact 4 units (Maximum order limit of 4 cases per order)
-  const unitPrice = 64.97;
-  const total = Number((4 * unitPrice).toFixed(2)); // 259.88
-  const discount = Number((subtotal - total).toFixed(2)); // 59.72
+  const unitPrice = 59.98;
+  const total = 239.90;
+  const discount = Number((standardSubtotal - total).toFixed(2)); // 39.70
   return {
     quantity: 4,
     unitPrice,
-    subtotal,
+    subtotal: standardSubtotal,
     discount,
     total,
-    discountLabel: 'Max 4-Case Bundle (Save $59.72)',
+    discountLabel: 'Max 4-Case Bundle (Save $39.70)',
     currency,
   };
 }
@@ -194,7 +195,7 @@ export const WHATS_INCLUDED = [
 export const FAQ_LIST: FaqItem[] = [
   {
     question: 'How do I choose my bundle and complete my purchase?',
-    answer: 'Select your preferred iPhone model and color, then choose between 1 case ($79.90), 2 cases ($139.90), 3 cases ($194.90), or up to our maximum 4 cases ($259.88). Mix and match any models and colors in your order, then click ADD TO CART to review your bundle savings and proceed through Shopify secure checkout.',
+    answer: 'Select your preferred iPhone model and color, then choose between 1 case ($69.90), 2 cases ($129.90), 3 cases ($189.90), or up to our maximum 4 cases ($239.90). Mix and match any models and colors in your order, then click ADD TO CART to review your bundle savings and proceed through Shopify secure checkout.',
   },
   {
     question: 'Does the case protect both the camera and the screen?',

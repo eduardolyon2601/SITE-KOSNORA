@@ -518,32 +518,33 @@ function initDrawer() {
 
   /**
    * KOSNORA Progressive Pricing Rules:
-   * 1 unit: $79.90 ($79.90/each, 0 discount)
-   * 2 units: $139.90 ($69.95/each, $19.90 discount from 159.80)
-   * 3 units: $194.90 ($64.97/each, $44.80 discount from 239.70)
-   * 4 units: $259.88 ($64.97/each, $59.72 discount from 319.60)
+   * 1 unit: $69.90 ($69.90/each, 0 discount)
+   * 2 units: $129.90 ($64.95/each, $9.90 discount from 139.80)
+   * 3 units: $189.90 ($63.30/each, $19.80 discount from 209.70)
+   * 4 units: $239.90 ($59.98/each, $39.70 discount from 279.60)
    */
   function calculatePricing(qty) {
     qty = Math.max(1, parseInt(qty, 10) || 1);
-    const baseUnitPrice = 79.90;
-    const subtotal = Number((qty * baseUnitPrice).toFixed(2));
+    const standardBasePrice = 69.90;
+    const subtotal = Number((qty * standardBasePrice).toFixed(2));
 
     if (qty === 1) {
+      const total = 69.90;
       return {
         qty: 1,
-        unitPrice: baseUnitPrice,
-        subtotal,
+        unitPrice: total,
+        subtotal: total,
         discount: 0,
-        total: baseUnitPrice,
+        total,
         tag: null,
         savingsText: null
       };
     }
 
     if (qty === 2) {
-      const total = 139.90;
-      const unitPrice = 69.95;
-      const discount = Number((subtotal - total).toFixed(2)); // 19.90
+      const total = 129.90;
+      const unitPrice = 64.95;
+      const discount = Number((subtotal - total).toFixed(2)); // 9.90
       return {
         qty: 2,
         unitPrice,
@@ -556,9 +557,9 @@ function initDrawer() {
     }
 
     if (qty === 3) {
-      const total = 194.90;
-      const unitPrice = 64.97;
-      const discount = Number((subtotal - total).toFixed(2)); // 44.80
+      const total = 189.90;
+      const unitPrice = 63.30;
+      const discount = Number((subtotal - total).toFixed(2)); // 19.80
       return {
         qty: 3,
         unitPrice,
@@ -572,9 +573,9 @@ function initDrawer() {
 
     // 4 units (maximum bundle limit)
     const clampedQty = Math.min(4, qty);
-    const unitPrice = 64.97;
-    const total = 259.88;
-    const discount = Number((subtotal - total).toFixed(2));
+    const unitPrice = 59.98;
+    const total = 239.90;
+    const discount = Number((subtotal - total).toFixed(2)); // 39.70
     return {
       qty: clampedQty,
       unitPrice,

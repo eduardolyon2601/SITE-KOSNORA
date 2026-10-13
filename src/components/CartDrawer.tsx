@@ -130,7 +130,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="p-3 rounded-xl bg-[#FAF5FF] border border-[#E9D5FF] flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 text-[#9333EA] font-bold">
                   <Sparkles className="w-4 h-4 shrink-0" />
-                  <span>Get 2 cases for $139.90 & save $19.90!</span>
+                  <span>Get 2 cases for $129.90 & save $9.90!</span>
                 </div>
                 <button
                   type="button"
@@ -146,7 +146,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 text-emerald-800 font-bold">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>2-Case Bundle Unlocked! Save $19.90</span>
+                  <span>2-Case Bundle Unlocked! Save $9.90</span>
                 </div>
                 {totalQuantity < MAX_ORDER_CAPAS && (
                   <button
@@ -373,7 +373,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               {/* Subtotal */}
               <div className="flex justify-between text-xs font-semibold text-neutral-600">
-                <span>Subtotal ({totalQuantity}x $79.90):</span>
+                <span>Subtotal ({totalQuantity}x $69.90):</span>
                 <span>{formatCurrency(pricing.subtotal)}</span>
               </div>
 
