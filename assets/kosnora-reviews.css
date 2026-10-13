@@ -15,6 +15,8 @@
   border-bottom: 1px solid #E5E5E5;
   overflow: hidden;
   box-sizing: border-box;
+  contain: paint;
+  isolation: isolate;
 }
 
 @media (max-width: 768px) {
@@ -29,7 +31,8 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px;
+  width: min(100%, 600px);
+  max-width: 100%;
   height: 240px;
   background: radial-gradient(circle, rgba(147, 51, 234, 0.06) 0%, transparent 70%);
   filter: blur(80px);
@@ -42,16 +45,11 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1280px;
+  max-width: 1200px;
   margin-inline: auto;
-  padding: 0 1.25rem;
+  padding-inline: clamp(16px, 4vw, 32px);
   box-sizing: border-box;
-}
-
-@media (min-width: 640px) {
-  .kosnora-reviews__container {
-    padding: 0 2rem;
-  }
+  min-width: 0;
 }
 
 .kosnora-reviews__header {
@@ -149,8 +147,10 @@
   position: relative;
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow: hidden;
   padding: 0.5rem 0;
+  box-sizing: border-box;
   mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
 }
@@ -165,6 +165,8 @@
 .kosnora-reviews__track {
   display: flex;
   width: max-content;
+  max-width: none;
+  min-width: 0;
   will-change: transform;
   animation: kosnora-reviews-marquee var(--kosnora-reviews-duration, 38s) linear infinite;
   user-select: none;

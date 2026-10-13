@@ -12,12 +12,12 @@ export const KosnoraLogo: React.FC<KosnoraLogoProps> = ({
   className = '',
   size = 'md',
 }) => {
-  // Proportional sizes made slightly smaller and completely clean
+  // Proportional sizes for mobile and desktop, maintaining original aspect ratio
   const sizeClasses = {
-    xs: 'h-4 sm:h-5',
-    sm: 'h-5 sm:h-6',
-    md: 'h-6 sm:h-7',
-    lg: 'h-8 sm:h-10',
+    xs: 'h-5 sm:h-6',
+    sm: 'h-6 sm:h-7',
+    md: 'h-8 sm:h-10',
+    lg: 'h-10 sm:h-12',
   };
 
   return (

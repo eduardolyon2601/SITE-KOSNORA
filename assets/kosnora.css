@@ -80,18 +80,38 @@ body {
 }
 
 /* Container */
-.kosnora-container {
+.kosnora-container,
+.kosnora-page-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1200px;
   margin-inline: auto;
-  padding: 0 1.25rem;
+  padding-inline: clamp(16px, 4vw, 32px);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.kosnora-container *,
+.kosnora-container *::before,
+.kosnora-container *::after,
+.kosnora-page-container *,
+.kosnora-page-container *::before,
+.kosnora-page-container *::after {
   box-sizing: border-box;
 }
 
-@media (min-width: 640px) {
-  .kosnora-container {
-    padding: 0 2rem;
-  }
+.kosnora-container img,
+.kosnora-container video,
+.kosnora-page-container img,
+.kosnora-page-container video {
+  max-width: 100%;
+  height: auto;
+}
+
+.kosnora-container .product-grid,
+.kosnora-container .product-details,
+.kosnora-page-container .product-grid,
+.kosnora-page-container .product-details {
+  min-width: 0;
 }
 
 /* Typography Rules */
@@ -309,11 +329,20 @@ body {
 }
 
 .kosnora-logo img {
-  height: 24px;
+  height: 32px;
   width: auto;
-  max-width: 100px;
+  max-width: 140px;
   object-fit: contain;
   display: block;
+}
+
+@media (min-width: 640px) {
+  .kosnora-header .kosnora-logo img,
+  .kosnora-header-center .kosnora-logo img,
+  .kosnora-header-logo-img {
+    height: 40px !important;
+    max-width: 160px !important;
+  }
 }
 
 /* Sections - All converted to clean 100% pure white theme */
@@ -415,12 +444,15 @@ body {
   justify-content: flex-end;
   opacity: 0;
   visibility: hidden;
+  overflow: hidden;
+  pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .kosnora-drawer-backdrop.open {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 .kosnora-drawer {

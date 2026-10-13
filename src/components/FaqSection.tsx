@@ -6,8 +6,8 @@ export const FaqSection: React.FC = () => {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-white text-neutral-900 py-12 sm:py-16 border-b border-neutral-200">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq" className="bg-white text-neutral-900 py-12 sm:py-16 border-b border-neutral-200 w-full max-w-full min-w-0 box-border">
+      <div className="kosnora-page-container w-full max-w-[800px] mx-auto px-4 sm:px-6 lg:px-8 min-w-0 box-border">
         <div className="text-center max-w-xl mx-auto mb-10">
           <span className="text-xs font-black tracking-widest text-[#9333EA] uppercase block mb-1">
             FREQUENTLY ASKED QUESTIONS

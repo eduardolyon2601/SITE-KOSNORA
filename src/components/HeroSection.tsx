@@ -240,21 +240,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }`}
       >
         {/* Fixed Top Badge Slot */}
-        <div className="h-6 flex items-center justify-center -mt-1 mb-1">
+        <div className="h-6 flex items-center justify-center -mt-1 mb-1 max-w-full min-w-0">
           {isDouble ? (
-            <div className="px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+            <div className="px-2.5 py-0.5 rounded-full bg-[#9333EA] text-white text-[9px] font-black uppercase tracking-wider shadow-xs text-center truncate max-w-full">
               Best Seller · Save $19.90
             </div>
           ) : isTriple ? (
-            <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+            <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#9333EA] to-[#6B21A8] text-white text-[9px] font-black uppercase tracking-wider shadow-xs text-center truncate max-w-full">
               Best Value · Save $44.80
             </div>
           ) : isQuadruple ? (
-            <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-[9px] font-black uppercase tracking-wider shadow-xs whitespace-nowrap">
+            <div className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-[9px] font-black uppercase tracking-wider shadow-xs text-center truncate max-w-full">
               Max Bundle · Save $59.72
             </div>
           ) : (
-            <div className="px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
+            <div className="px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 text-[9px] font-bold uppercase tracking-wider text-center truncate max-w-full">
               Single Case
             </div>
           )}
@@ -341,8 +341,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   return (
-    <section id="pricing" className="kosnora-product-section bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative overflow-x-clip w-full max-w-full min-w-0 box-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full min-w-0">
+    <section id="pricing" className="kosnora-product-section bg-white text-neutral-900 pt-6 pb-12 sm:pt-10 sm:pb-16 border-b border-neutral-200 relative w-full max-w-full min-w-0 box-border">
+      <div className="kosnora-page-container w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-w-0 box-border">
         
         {/* ============================================================ */}
         {/* MOBILE VIEW (< lg)                                           */}
@@ -394,7 +394,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Mobile Media: Looping Video / Photo (Stable Fixed Dimensions, Zero Distortion) */}
-          <div className="relative w-full max-w-[340px] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 flex items-center justify-center shrink-0">
+          <div className="relative w-full max-w-[min(100%,340px)] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 flex items-center justify-center">
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
               {isPlayingVideo ? (
                 <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
@@ -478,7 +478,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* ============================================================ */}
         {/* DESKTOP VIEW (>= lg)                                         */}
         {/* ============================================================ */}
-        <div className="hidden lg:block max-w-6xl mx-auto w-full min-w-0 box-border">
+        <div className="hidden lg:block w-full max-w-full min-w-0 box-border">
           <div className="grid grid-cols-12 gap-8 xl:gap-12 items-start w-full min-w-0">
             
             {/* LEFT COLUMN: Media Container (Pinned, Fixed Aspect Ratio, Never Stretched) */}

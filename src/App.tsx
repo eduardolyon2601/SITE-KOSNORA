@@ -115,7 +115,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900 font-['Montserrat',sans-serif] flex flex-col selection:bg-[#F3E8FF] selection:text-[#6B21A8] overflow-x-hidden">
+    <div className="min-h-screen bg-white text-neutral-900 font-['Montserrat',sans-serif] flex flex-col selection:bg-[#F3E8FF] selection:text-[#6B21A8] w-full max-w-full min-w-0 box-border">
       {/* Infinite Benefits Announcement Bar (Top of Site) */}
       <AnnouncementBar />
 
@@ -125,7 +125,7 @@ export default function App() {
         cartCount={cartUnits.length}
       />
 
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full min-w-0 box-border">
         {/* 1. HERO (Multi-Unit Phone Case Customization & Bundle Tiers) */}
         <HeroSection
           units={cartUnits}

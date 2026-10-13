@@ -11,12 +11,12 @@ const BENEFIT_MESSAGES = [
 export const AnnouncementBar: React.FC = () => {
   return (
     <div
-      className="kosnora-announcement w-full max-w-full overflow-hidden bg-[#24153D] text-white relative z-50 border-b border-white/10 select-none"
+      className="kosnora-announcement relative w-full max-w-full min-w-0 overflow-hidden bg-[#24153D] text-white z-50 border-b border-white/10 select-none box-border"
       role="region"
       aria-label="Store benefits"
     >
-      <div className="w-full overflow-hidden flex">
-        <div className="flex w-max shrink-0 animate-kosnora-announcement-marquee will-change-transform">
+      <div className="kosnora-announcement__viewport w-full max-w-full min-w-0 overflow-hidden flex box-border">
+        <div className="kosnora-announcement__track flex w-max max-w-none shrink-0 animate-kosnora-announcement-marquee will-change-transform">
           {/* Group 1: Primary list (repeated twice for wide display coverage) */}
           <div className="flex shrink-0 items-center min-w-max">
             {[...BENEFIT_MESSAGES, ...BENEFIT_MESSAGES].map((text, idx) => (

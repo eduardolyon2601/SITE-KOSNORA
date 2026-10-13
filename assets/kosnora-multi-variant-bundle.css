@@ -6,6 +6,10 @@
   color: #111827;
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   border-bottom: 1px solid #E5E7EB;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .kosnora-bundle-grid {
@@ -75,6 +79,9 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  box-sizing: border-box;
+  contain: paint;
+  isolation: isolate;
 }
 
 .kosnora-bundle-video-wrap {
@@ -87,6 +94,8 @@
   align-items: center;
   justify-content: center;
   z-index: 2;
+  contain: paint;
+  isolation: isolate;
 }
 
 .kosnora-bundle-video-wrap iframe {
@@ -176,6 +185,8 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   align-self: flex-start;
   margin-bottom: 0.75rem;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .kosnora-avatars-row {

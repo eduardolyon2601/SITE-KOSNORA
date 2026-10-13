@@ -52,8 +52,8 @@ export const Footer: React.FC = () => {
 
   return (
     <>
-      <footer className="bg-white text-neutral-600 py-10 sm:py-14 border-t border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <footer className="bg-white text-neutral-600 pt-10 sm:pt-14 pb-24 sm:pb-14 border-t border-neutral-200 w-full max-w-full min-w-0 box-border">
+        <div className="kosnora-page-container w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 min-w-0 box-border">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-neutral-200">
             {/* Brand Column */}
             <div className="md:col-span-5 space-y-3">

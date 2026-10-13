@@ -147,12 +147,12 @@ export const ReviewsCarousel: React.FC = () => {
   return (
     <section
       id="reviews"
-      className="bg-[#FCFCFD] text-neutral-900 py-10 sm:py-14 border-t border-b border-neutral-200 relative overflow-hidden"
+      className="kosnora-reviews bg-[#FCFCFD] text-neutral-900 py-10 sm:py-14 border-t border-b border-neutral-200 relative w-full max-w-full min-w-0 overflow-hidden box-border"
     >
       {/* Subtle Purple Ambient Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[220px] bg-purple-200/20 blur-[100px] pointer-events-none rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(100%,500px)] h-[220px] bg-purple-200/20 blur-[100px] pointer-events-none rounded-full" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="kosnora-page-container w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 min-w-0 box-border">
         {/* Compact Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-7 gap-4">
           <div className="max-w-xl">
@@ -198,7 +198,7 @@ export const ReviewsCarousel: React.FC = () => {
 
       {/* Infinite Horizontal Marquee Track (Continuous Hardware-Accelerated 38s Loop, No Manual Drag) */}
       <div
-        className="w-full overflow-hidden py-2"
+        className="kosnora-reviews__viewport w-full max-w-full min-w-0 overflow-hidden py-2 box-border"
         style={{
           maskImage: 'linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)',
           WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2.5%, black 97.5%, transparent 100%)',
@@ -211,7 +211,7 @@ export const ReviewsCarousel: React.FC = () => {
         onTouchEnd={() => setIsPaused(false)}
       >
         <div
-          className="flex w-max select-none"
+          className="kosnora-reviews__track flex w-max max-w-none min-w-0 shrink-0 select-none"
           style={{
             animation: 'kosnora-reviews-marquee 38s linear infinite',
             animationPlayState: isPaused ? 'paused' : 'running',

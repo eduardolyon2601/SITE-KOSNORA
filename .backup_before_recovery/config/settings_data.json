@@ -1,0 +1,43 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "color_bg_main": "#FFFFFF",
+    "color_bg_card": "#FFFFFF",
+    "color_accent": "#9333EA",
+    "color_text_main": "#111111",
+    "color_text_secondary": "#555555",
+    "social_instagram": "@kosnora",
+    "social_tiktok": "@kosnora",
+    "sections": {
+      "kosnora-announcement-bar": {
+        "type": "kosnora-announcement-bar",
+        "settings": {
+          "background_color": "#7625C7",
+          "text_color": "#ffffff",
+          "speed": 40
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "brand_name": "KOSNORA"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "brand_name": "KOSNORA"
+        }
+      }
+    },
+    "content_for_index": []
+  }
+}

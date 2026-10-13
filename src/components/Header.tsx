@@ -42,15 +42,15 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md shadow-xs transition-colors">
+    <header className="sticky top-0 z-40 w-full max-w-full min-w-0 bg-white/95 backdrop-blur-md shadow-xs transition-colors box-border">
       {/* Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 grid grid-cols-3 items-center">
+      <div className="kosnora-page-container w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 grid grid-cols-3 items-center min-w-0 box-border">
         {/* LEFT COLUMN: Three Horizontal Lines (Pure Underlines, No Border/Box) */}
-        <div className="flex items-center justify-start relative" ref={menuRef}>
+        <div className="flex items-center justify-start relative min-w-0" ref={menuRef}>
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 -ml-2 flex flex-col items-start justify-center gap-1.25 transition-opacity hover:opacity-70 cursor-pointer bg-transparent border-0 outline-none"
+            className="p-2 flex flex-col items-start justify-center gap-1.25 transition-opacity hover:opacity-70 cursor-pointer bg-transparent border-0 outline-none"
             aria-label="Menu"
             title="Menu"
           >
@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({ onShopClick, cartCount = 1 }) =>
         {/* CENTER COLUMN: Official Brand Logo perfectly centered */}
         <div className="flex items-center justify-center">
           <a href="#" className="flex items-center justify-center cursor-pointer" aria-label="KOSNORA">
-            <KosnoraLogo size="sm" />
+            <KosnoraLogo size="md" />
           </a>
         </div>
 
