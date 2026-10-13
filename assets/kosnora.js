@@ -271,6 +271,12 @@ function initDrawer() {
   const ctaTotal = document.getElementById('drawer-cta-total');
   const proceedBtn = document.getElementById('drawer-proceed-checkout');
 
+  // Clear Cart & Empty State Elements
+  const clearCartBtn = document.getElementById('drawer-clear-cart-btn');
+  const emptyStateEl = document.getElementById('drawer-empty-state');
+  const configAreaEl = document.getElementById('drawer-config-area');
+  const footerAreaEl = document.getElementById('drawer-footer-area');
+
   // Hidden form inputs
   const varInput = document.getElementById('drawer-variant-id');
   const qtyInput = document.getElementById('drawer-quantity-input');
@@ -284,6 +290,7 @@ function initDrawer() {
   let drawerUnits = [
     { model: currentModel, color: currentColor }
   ];
+  let isClearingDrawer = false;
 
   const COLOR_IMAGE_MAP = {
     'Gray': 'https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg',
@@ -349,11 +356,9 @@ function initDrawer() {
             ${isAvailable ? '✓ In stock' : '✕ Out of stock'}
           </span>
         </div>
-        ${drawerUnits.length > 1 ? `
-          <button type="button" class="drawer-remove-unit-btn" data-unit-idx="${idx}" style="background: none; border: none; color: #EF4444; font-size: 11px; font-weight: 800; cursor: pointer; padding: 2px 6px; border-radius: 4px;">
-            Remove ✕
-          </button>
-        ` : ''}
+        <button type="button" class="drawer-remove-unit-btn" data-unit-idx="${idx}" style="background: none; border: none; color: #EF4444; font-size: 11px; font-weight: 800; cursor: pointer; padding: 2px 6px; border-radius: 4px;" aria-label="Remove case ${idx + 1}">
+          Remove ✕
+        </button>
       `;
       card.appendChild(headerRow);
 
@@ -432,8 +437,10 @@ function initDrawer() {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const removeIdx = parseInt(btn.getAttribute('data-unit-idx'), 10);
-        if (drawerUnits.length > 1) {
-          drawerUnits.splice(removeIdx, 1);
+        drawerUnits.splice(removeIdx, 1);
+        if (drawerUnits.length === 0) {
+          handleClearDrawerCart();
+        } else {
           renderDrawerUnits();
           updateCartUI();
           syncShopifyCartLive();
@@ -480,6 +487,97 @@ function initDrawer() {
       }
       return true;
     }
+  }
+
+  function setDrawerEmptyUI(isEmpty) {
+    if (isEmpty) {
+      if (configAreaEl) configAreaEl.style.display = 'none';
+      if (emptyStateEl) emptyStateEl.style.display = 'flex';
+      if (clearCartBtn) clearCartBtn.style.display = 'none';
+      if (footerAreaEl) footerAreaEl.style.display = 'none';
+      if (itemCountLabel) itemCountLabel.textContent = '0 items selected';
+      if (proceedBtn) {
+        proceedBtn.disabled = true;
+        proceedBtn.style.opacity = '0.5';
+        proceedBtn.style.cursor = 'not-allowed';
+      }
+    } else {
+      if (configAreaEl) configAreaEl.style.display = 'flex';
+      if (emptyStateEl) emptyStateEl.style.display = 'none';
+      if (clearCartBtn) clearCartBtn.style.display = 'inline-flex';
+      if (footerAreaEl) footerAreaEl.style.display = 'block';
+      if (proceedBtn) {
+        proceedBtn.disabled = false;
+        proceedBtn.style.opacity = '1';
+        proceedBtn.style.cursor = 'pointer';
+      }
+    }
+  }
+
+  async function handleClearDrawerCart() {
+    if (isClearingDrawer) return; // Prevent duplicate submissions
+    isClearingDrawer = true;
+
+    let originalBtnHtml = '';
+    if (clearCartBtn) {
+      clearCartBtn.disabled = true;
+      clearCartBtn.style.opacity = '0.7';
+      clearCartBtn.style.cursor = 'not-allowed';
+      originalBtnHtml = clearCartBtn.innerHTML;
+      clearCartBtn.innerHTML = `
+        <span style="display:inline-block; width:10px; height:10px; border:2px solid #FECACA; border-top-color:#DC2626; border-radius:50%; animation:kosnora-spin 0.8s linear infinite;"></span>
+        <span class="drawer-clear-text">Removendo...</span>
+      `;
+    }
+
+    try {
+      const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || (window.KOSNORA_STORE && window.KOSNORA_STORE.root) || '/';
+      const response = await fetch(`${root}cart/clear.js`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        let msg = 'Não foi possível esvaziar o carrinho.';
+        try {
+          const errData = await response.json();
+          msg = errData.description || errData.message || msg;
+        } catch (_) {}
+        throw new Error(msg);
+      }
+
+      // Succeeded! Empty drawer units and update visual state immediately without reloading
+      drawerUnits = [];
+      currentQty = 0;
+      setDrawerEmptyUI(true);
+
+      // Update header badges
+      document.querySelectorAll('.kosnora-cart-badge, [data-cart-count]').forEach(b => {
+        b.textContent = '0';
+      });
+
+    } catch (err) {
+      console.error('[KOSNORA] Drawer clear error:', err);
+      showDrawerAlert(err.message || 'Erro ao remover os produtos do carrinho. Tente novamente.', 'error');
+      if (clearCartBtn) {
+        clearCartBtn.disabled = false;
+        clearCartBtn.style.opacity = '1';
+        clearCartBtn.style.cursor = 'pointer';
+        if (originalBtnHtml) clearCartBtn.innerHTML = originalBtnHtml;
+      }
+    } finally {
+      isClearingDrawer = false;
+    }
+  }
+
+  if (clearCartBtn) {
+    clearCartBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleClearDrawerCart();
+    });
   }
 
   if (addUnitBtn) {
@@ -1190,6 +1288,16 @@ function initDrawer() {
       e.preventDefault();
       e.stopPropagation();
 
+      const isCartBag = btn.classList.contains('kosnora-cart-bag-btn') || Boolean(btn.closest('.kosnora-cart-bag-btn'));
+      if (isCartBag && drawerUnits.length === 0) {
+        setDrawerEmptyUI(true);
+        if (drawerBackdrop) drawerBackdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        return;
+      }
+
+      setDrawerEmptyUI(false);
+
       // Capture selected model from the landing page
       const desktopModelSelect = document.getElementById('hero-desktop-model-select');
       const mobileModelSelect = document.getElementById('hero-mobile-model-select');
@@ -1210,7 +1318,7 @@ function initDrawer() {
 
       // Guard: Do NOT open drawer if combination is out of stock!
       const isAvailable = isCombinationInStoreInventory(currentModel, currentColor);
-      if (!isAvailable) {
+      if (!isAvailable && !isCartBag) {
         updateLandingPageStockUI();
         return;
       }

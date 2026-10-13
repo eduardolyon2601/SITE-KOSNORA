@@ -123,6 +123,42 @@ export async function addVariantsToShopifyCart(
   return { success: true, cart: confirmedCart || result };
 }
 
+/**
+ * Empties the Shopify cart using the official Shopify Ajax Cart API endpoint (/cart/clear.js).
+ */
+export async function clearShopifyCart(): Promise<{ success: boolean; cart?: any }> {
+  if (typeof window === 'undefined') {
+    return { success: true };
+  }
+
+  const root = window.Shopify?.routes?.root || window.KOSNORA_STORE?.root || '/';
+
+  try {
+    const response = await fetch(`${root}cart/clear.js`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      let errDetail = 'Não foi possível esvaziar o carrinho.';
+      try {
+        const errJson = await response.json();
+        errDetail = errJson.description || errJson.message || errDetail;
+      } catch (_) {}
+      throw new Error(errDetail);
+    }
+
+    const clearedCart = await response.json();
+    return { success: true, cart: clearedCart };
+  } catch (err: any) {
+    console.warn('[KOSNORA] clearShopifyCart notice:', err?.message || err);
+    return { success: true };
+  }
+}
+
 function isColorMatch(optionVal: string, targetColor: string): boolean {
   if (!optionVal || !targetColor) return false;
   const v = optionVal.toLowerCase().trim();

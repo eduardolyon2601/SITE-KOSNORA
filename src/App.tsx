@@ -8,6 +8,7 @@ import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { getPricingTiers, MAX_ORDER_CAPAS } from './data/productData';
+import { clearShopifyCart } from './utils/shopifyCart';
 import { PricingTier, CartItemUnit } from './types';
 
 export default function App() {
@@ -100,12 +101,13 @@ export default function App() {
 
   const handleRemoveUnit = (index: number) => {
     setCartUnits((prev) => {
-      if (prev.length <= 1) return prev;
       const next = prev.filter((_, i) => i !== index);
 
       // Update selected tier based on new count
       const allTiers = getPricingTiers();
-      if (next.length === 1) {
+      if (next.length === 0) {
+        // Cart is empty
+      } else if (next.length === 1) {
         setSelectedTier(allTiers[0]);
       } else if (next.length === 2) {
         setSelectedTier(allTiers.find((t) => t.quantity === 2) || allTiers[1]);
@@ -119,6 +121,15 @@ export default function App() {
 
       return next;
     });
+  };
+
+  const handleClearCart = async () => {
+    try {
+      await clearShopifyCart();
+    } catch (err) {
+      console.warn('Shopify cart clear notification:', err);
+    }
+    setCartUnits([]);
   };
 
   return (
@@ -179,6 +190,7 @@ export default function App() {
         onUpdateUnit={handleUpdateUnit}
         onAddUnit={handleAddUnit}
         onRemoveUnit={handleRemoveUnit}
+        onClearCart={handleClearCart}
       />
     </div>
   );
