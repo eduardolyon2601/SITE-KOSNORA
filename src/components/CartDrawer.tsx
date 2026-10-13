@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2, Plus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock, AlertCircle, Sparkles } from 'lucide-react';
 import { calculateCartPricing, formatCurrency, PRODUCT_IMAGES, PRODUCT_NAME, IPHONE_MODELS, MAX_ORDER_CAPAS } from '../data/productData';
-import { isVariantInStoreCatalog } from '../data/storeInventory';
+import { isVariantInStoreCatalog, findAvailableColorForModel } from '../data/storeInventory';
 import { redirectMultiUnitCheckout } from '../utils/shopifyCart';
 import { CartItemUnit } from '../types';
 
@@ -246,14 +246,31 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           </label>
                           <select
                             value={unit.model}
-                            onChange={(e) => onUpdateUnit(idx, { model: e.target.value })}
-                            className="w-full py-1 px-2 text-xs font-bold text-neutral-900 bg-neutral-50 border border-neutral-200 rounded-lg focus:outline-none focus:border-[#9333EA] cursor-pointer"
+                            onChange={(e) => {
+                              const newModel = e.target.value;
+                              if (isVariantInStoreCatalog(newModel, unit.color)) {
+                                onUpdateUnit(idx, { model: newModel });
+                              } else {
+                                const candidateColors = PRODUCT_IMAGES.map((img) => img.name);
+                                const fallbackColor = findAvailableColorForModel(newModel, candidateColors);
+                                if (fallbackColor) {
+                                  onUpdateUnit(idx, { model: newModel, color: fallbackColor });
+                                } else {
+                                  onUpdateUnit(idx, { model: newModel });
+                                }
+                              }
+                            }}
+                            className={`w-full py-1 px-2 text-xs font-bold rounded-lg focus:outline-none focus:border-[#9333EA] cursor-pointer ${
+                              !isUnitAvailable
+                                ? 'bg-amber-50 text-amber-950 border border-amber-300'
+                                : 'text-neutral-900 bg-neutral-50 border border-neutral-200'
+                            }`}
                           >
                             {IPHONE_MODELS.map((m) => {
                               const isModelAvailableForColor = isVariantInStoreCatalog(m, unit.color);
                               return (
-                                <option key={m} value={m}>
-                                  {m}{!isModelAvailableForColor ? ' · (Out of stock)' : ''}
+                                <option key={m} value={m} disabled={!isModelAvailableForColor}>
+                                  {m}{!isModelAvailableForColor ? ' · Sold out' : ''}
                                 </option>
                               );
                             })}
@@ -273,18 +290,23 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                                 <button
                                   key={img.id}
                                   type="button"
-                                  onClick={() => onUpdateUnit(idx, { color: img.name })}
-                                  className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1 ${
+                                  disabled={!isColorAvailableForModel}
+                                  onClick={() => {
+                                    if (!isColorAvailableForModel) return;
+                                    onUpdateUnit(idx, { color: img.name });
+                                  }}
+                                  className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
                                     isSelected
-                                      ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-2xs'
+                                      ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-2xs cursor-pointer'
                                       : isColorAvailableForModel
-                                      ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
-                                      : 'bg-neutral-100 border border-neutral-200 text-neutral-400 opacity-70'
+                                      ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 cursor-pointer'
+                                      : 'bg-neutral-100 border border-neutral-200 text-neutral-400 opacity-60 cursor-not-allowed line-through select-none pointer-events-none'
                                   }`}
-                                  title={isColorAvailableForModel ? `${img.name} available` : `${img.name} out of stock for ${unit.model}`}
+                                  aria-disabled={!isColorAvailableForModel}
+                                  title={isColorAvailableForModel ? `${img.name} available` : `${img.name} sold out for ${unit.model}`}
                                 >
                                   <span
-                                    className="w-2 h-2 rounded-full border border-black/10 inline-block"
+                                    className={`w-2 h-2 rounded-full border border-black/10 inline-block ${!isColorAvailableForModel ? 'grayscale opacity-60' : ''}`}
                                     style={{
                                       backgroundColor:
                                         img.name === 'Gray' ? '#808080' :
@@ -294,6 +316,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                                     }}
                                   />
                                   <span>{img.name}</span>
+                                  {!isColorAvailableForModel && (
+                                    <span className="text-[7px] font-bold text-amber-800 bg-amber-100 px-0.5 rounded no-underline">
+                                      Sold out
+                                    </span>
+                                  )}
                                 </button>
                               );
                             })}

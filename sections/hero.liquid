@@ -41,6 +41,18 @@
             </div>
           </div>
 
+          <!-- Discreet Gallery Media Switcher (Separated from color and model selectors) -->
+          <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px;">
+            <button type="button" id="kosnora-desktop-btn-video" style="padding: 5px 12px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;" title="Ver vídeo de apresentação">
+              <span>▶</span>
+              <span>Ver vídeo</span>
+            </button>
+            <button type="button" id="kosnora-desktop-btn-photo" style="padding: 5px 12px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;" title="Ver foto">
+              <span>📷</span>
+              <span>Ver foto</span>
+            </button>
+          </div>
+
           <div style="width: 100%; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #E5E7EB; display: flex; justify-content: space-around; font-size: 11px; font-weight: 600; color: #6B7280;">
             <span>🛡️ 30-Day Guarantee</span>
             <span>•</span>
@@ -125,21 +137,15 @@
             </select>
           </div>
 
-          <!-- Media / Color Options (Compact & Discreet - Video by default, stops when color is clicked) -->
+          <!-- Color Options (Strictly actual product colors, video decoupled) -->
           <div style="width: 100%; margin-bottom: 1rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;">Media / Color:</span>
-              <span id="active-desktop-label" style="font-size: 11px; font-weight: 900; color: #9333EA; text-transform: uppercase; letter-spacing: 0.05em;">Video</span>
+              <span style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;">Color:</span>
+              <span id="active-desktop-label" style="font-size: 11px; font-weight: 900; color: #9333EA; text-transform: uppercase; letter-spacing: 0.05em;">Gray</span>
             </div>
             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-              <!-- Video Button (Default Active) -->
-              <button type="button" data-gallery-desktop data-name="Video" class="active-thumb" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #FAF5FF; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
-                <span style="font-size: 10px; color: #9333EA;">▶</span>
-                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #9333EA; letter-spacing: 0.04em;">Video</span>
-              </button>
-
               <!-- Color options -->
-              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
+              <button type="button" data-gallery-desktop data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" class="active-thumb" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #FAF5FF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
                 <div style="width: 14px; height: 18px; border-radius: 3px; overflow: hidden; background: #F3F4F6; flex-shrink: 0;">
                   <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" alt="Gray" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
@@ -366,12 +372,21 @@
         </div>
       </div>
 
-      <!-- Mobile Media / Color Thumbnails (Compact pills with Video default) -->
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin-top: 1rem;">
-        <button type="button" data-gallery-mobile data-name="Video" class="active-thumb" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #9333EA; color: #FFF; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-          <span>▶ Video</span>
+      <!-- Discreet Gallery Media Switcher (Separated from color and model selectors) -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px;">
+        <button type="button" id="kosnora-mobile-btn-video" style="padding: 5px 12px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;" title="Ver vídeo de apresentação">
+          <span>▶</span>
+          <span>Ver vídeo</span>
         </button>
-        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+        <button type="button" id="kosnora-mobile-btn-photo" style="padding: 5px 12px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;" title="Ver foto">
+          <span>📷</span>
+          <span>Ver foto</span>
+        </button>
+      </div>
+
+      <!-- Mobile Color Thumbnails (Strictly actual product colors) -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin-top: 1rem;">
+        <button type="button" data-gallery-mobile data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" data-name="Gray" class="active-thumb" style="padding: 4px 10px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #FAF5FF; color: #9333EA; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
           <div style="width: 12px; height: 15px; border-radius: 2px; overflow: hidden; background: #F3F4F6;">
             <img src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg" style="width: 100%; height: 100%; object-fit: contain;">
           </div>

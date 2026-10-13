@@ -27,42 +27,83 @@ function initHeroGallery() {
     } catch (e) {}
   }
 
-  // Desktop
+  // Desktop Gallery Elements
   const desktopVideo = document.getElementById('kosnora-desktop-video');
   const desktopVimeoIframe = document.getElementById('kosnora-vimeo-desktop');
   const desktopImg = document.getElementById('kosnora-desktop-img');
   const desktopBadge = document.getElementById('desktop-color-badge');
   const desktopLabel = document.getElementById('active-desktop-label');
   const desktopThumbs = document.querySelectorAll('[data-gallery-desktop]');
+  const desktopBtnVideo = document.getElementById('kosnora-desktop-btn-video');
+  const desktopBtnPhoto = document.getElementById('kosnora-desktop-btn-photo');
+
+  function showDesktopVideo() {
+    if (desktopVideo) desktopVideo.style.display = 'block';
+    if (desktopImg) desktopImg.style.display = 'none';
+    if (desktopBadge) desktopBadge.style.display = 'none';
+    playVimeo(desktopVimeoIframe);
+    if (desktopBtnVideo) {
+      desktopBtnVideo.style.background = '#9333EA';
+      desktopBtnVideo.style.color = '#FFF';
+      desktopBtnVideo.style.borderColor = '#9333EA';
+    }
+    if (desktopBtnPhoto) {
+      desktopBtnPhoto.style.background = '#FFF';
+      desktopBtnPhoto.style.color = '#374151';
+      desktopBtnPhoto.style.borderColor = '#E5E7EB';
+    }
+  }
+
+  function showDesktopPhoto(src, name) {
+    pauseVimeo(desktopVimeoIframe);
+    if (desktopVideo) desktopVideo.style.display = 'none';
+    if (desktopImg) {
+      if (src) desktopImg.src = src;
+      desktopImg.style.display = 'block';
+    }
+    if (desktopBadge) {
+      if (name) desktopBadge.textContent = name;
+      desktopBadge.style.display = 'block';
+    }
+    if (desktopLabel && name) {
+      desktopLabel.textContent = name;
+    }
+    if (desktopBtnVideo) {
+      desktopBtnVideo.style.background = '#FFF';
+      desktopBtnVideo.style.color = '#374151';
+      desktopBtnVideo.style.borderColor = '#E5E7EB';
+    }
+    if (desktopBtnPhoto) {
+      desktopBtnPhoto.style.background = '#9333EA';
+      desktopBtnPhoto.style.color = '#FFF';
+      desktopBtnPhoto.style.borderColor = '#9333EA';
+    }
+  }
+
+  if (desktopBtnVideo) {
+    desktopBtnVideo.addEventListener('click', () => {
+      showDesktopVideo();
+    });
+  }
+
+  if (desktopBtnPhoto) {
+    desktopBtnPhoto.addEventListener('click', () => {
+      const activeThumb = document.querySelector('[data-gallery-desktop].active-thumb');
+      const src = activeThumb ? activeThumb.getAttribute('data-src') : '';
+      const name = activeThumb ? activeThumb.getAttribute('data-name') : '';
+      showDesktopPhoto(src, name);
+    });
+  }
 
   if (desktopThumbs.length) {
     desktopThumbs.forEach(btn => {
       btn.addEventListener('click', () => {
         const src = btn.getAttribute('data-src');
         const name = btn.getAttribute('data-name');
-        const isVideo = !src || name === 'Video';
+        if (!name || name === 'Video') return;
 
-        if (isVideo) {
-          // Show Video and resume loop
-          if (desktopVideo) desktopVideo.style.display = 'block';
-          if (desktopImg) desktopImg.style.display = 'none';
-          if (desktopBadge) desktopBadge.style.display = 'none';
-          if (desktopLabel) desktopLabel.textContent = 'Video';
-          playVimeo(desktopVimeoIframe);
-        } else {
-          // Customer clicked a color: STOP VIDEO LOOP IMMEDIATELY & show photo
-          pauseVimeo(desktopVimeoIframe);
-          if (desktopVideo) desktopVideo.style.display = 'none';
-          if (desktopImg) {
-            desktopImg.src = src;
-            desktopImg.style.display = 'block';
-          }
-          if (desktopBadge) {
-            desktopBadge.textContent = name;
-            desktopBadge.style.display = 'block';
-          }
-          if (desktopLabel) desktopLabel.textContent = name;
-        }
+        // Switching color pauses video immediately and reveals that color photo
+        showDesktopPhoto(src, name);
 
         desktopThumbs.forEach(b => {
           b.classList.remove('active-thumb');
@@ -77,46 +118,84 @@ function initHeroGallery() {
         const activeSpans = btn.querySelectorAll('span');
         activeSpans.forEach(s => { s.style.color = '#9333EA'; });
 
-        if (!isVideo && name) {
-          window.dispatchEvent(new CustomEvent('kosnora:colorchange', { detail: { name, src } }));
-        }
+        window.dispatchEvent(new CustomEvent('kosnora:colorchange', { detail: { name, src } }));
       });
     });
   }
 
-  // Mobile
+  // Mobile Gallery Elements
   const mobileVideo = document.getElementById('kosnora-mobile-video');
   const mobileVimeoIframe = document.getElementById('kosnora-vimeo-mobile');
   const mobileImg = document.getElementById('kosnora-mobile-img');
   const mobileBadge = document.getElementById('mobile-color-badge');
   const mobileThumbs = document.querySelectorAll('[data-gallery-mobile]');
+  const mobileBtnVideo = document.getElementById('kosnora-mobile-btn-video');
+  const mobileBtnPhoto = document.getElementById('kosnora-mobile-btn-photo');
+
+  function showMobileVideo() {
+    if (mobileVideo) mobileVideo.style.display = 'block';
+    if (mobileImg) mobileImg.style.display = 'none';
+    if (mobileBadge) mobileBadge.style.display = 'none';
+    playVimeo(mobileVimeoIframe);
+    if (mobileBtnVideo) {
+      mobileBtnVideo.style.background = '#9333EA';
+      mobileBtnVideo.style.color = '#FFF';
+      mobileBtnVideo.style.borderColor = '#9333EA';
+    }
+    if (mobileBtnPhoto) {
+      mobileBtnPhoto.style.background = '#FFF';
+      mobileBtnPhoto.style.color = '#374151';
+      mobileBtnPhoto.style.borderColor = '#E5E7EB';
+    }
+  }
+
+  function showMobilePhoto(src, name) {
+    pauseVimeo(mobileVimeoIframe);
+    if (mobileVideo) mobileVideo.style.display = 'none';
+    if (mobileImg) {
+      if (src) mobileImg.src = src;
+      mobileImg.style.display = 'block';
+    }
+    if (mobileBadge) {
+      if (name) mobileBadge.textContent = name;
+      mobileBadge.style.display = 'block';
+    }
+    if (mobileBtnVideo) {
+      mobileBtnVideo.style.background = '#FFF';
+      mobileBtnVideo.style.color = '#374151';
+      mobileBtnVideo.style.borderColor = '#E5E7EB';
+    }
+    if (mobileBtnPhoto) {
+      mobileBtnPhoto.style.background = '#9333EA';
+      mobileBtnPhoto.style.color = '#FFF';
+      mobileBtnPhoto.style.borderColor = '#9333EA';
+    }
+  }
+
+  if (mobileBtnVideo) {
+    mobileBtnVideo.addEventListener('click', () => {
+      showMobileVideo();
+    });
+  }
+
+  if (mobileBtnPhoto) {
+    mobileBtnPhoto.addEventListener('click', () => {
+      const activeThumb = document.querySelector('[data-gallery-mobile].active-thumb');
+      const src = activeThumb ? activeThumb.getAttribute('data-src') : '';
+      const name = activeThumb ? activeThumb.getAttribute('data-name') : '';
+      showMobilePhoto(src, name);
+    });
+  }
 
   if (mobileThumbs.length) {
     mobileThumbs.forEach(btn => {
       btn.addEventListener('click', () => {
         const src = btn.getAttribute('data-src');
         const name = btn.getAttribute('data-name');
-        const isVideo = !src || name === 'Video';
+        if (!name || name === 'Video') return;
 
-        if (isVideo) {
-          // Show Video and resume loop
-          if (mobileVideo) mobileVideo.style.display = 'block';
-          if (mobileImg) mobileImg.style.display = 'none';
-          if (mobileBadge) mobileBadge.style.display = 'none';
-          playVimeo(mobileVimeoIframe);
-        } else {
-          // Customer clicked a color: STOP VIDEO LOOP IMMEDIATELY & show photo
-          pauseVimeo(mobileVimeoIframe);
-          if (mobileVideo) mobileVideo.style.display = 'none';
-          if (mobileImg) {
-            mobileImg.src = src;
-            mobileImg.style.display = 'block';
-          }
-          if (mobileBadge) {
-            mobileBadge.textContent = name;
-            mobileBadge.style.display = 'block';
-          }
-        }
+        // Switching color pauses video immediately and reveals that color photo
+        showMobilePhoto(src, name);
 
         mobileThumbs.forEach(b => {
           b.classList.remove('active-thumb');
@@ -129,9 +208,7 @@ function initHeroGallery() {
         btn.style.background = '#9333EA';
         btn.style.color = '#FFF';
 
-        if (!isVideo && name) {
-          window.dispatchEvent(new CustomEvent('kosnora:colorchange', { detail: { name, src } }));
-        }
+        window.dispatchEvent(new CustomEvent('kosnora:colorchange', { detail: { name, src } }));
       });
     });
   }
@@ -1073,23 +1150,32 @@ function initDrawer() {
       Array.from(sel.options).forEach(opt => {
         const rawModel = opt.value;
         const optAvail = isCombinationInStoreInventory(rawModel, currentColor);
-        opt.textContent = optAvail ? rawModel : `${rawModel} · (Out of stock)`;
+        opt.disabled = !optAvail;
+        opt.textContent = optAvail ? rawModel : `${rawModel} · Sold out`;
       });
     });
 
-    // 4. Update color thumbnails with status indication
+    // 4. Update color thumbnails with status indication and disable selection if sold out
     const allThumbs = document.querySelectorAll('[data-gallery-desktop], [data-gallery-mobile]');
     allThumbs.forEach(thumb => {
       const colorName = thumb.getAttribute('data-name');
       if (!colorName || colorName === 'Video') return;
       const colAvail = isCombinationInStoreInventory(currentModel, colorName);
       if (!colAvail) {
-        thumb.title = `${colorName} - Out of stock for ${currentModel}`;
+        thumb.title = `${colorName} - Sold out for ${currentModel}`;
+        thumb.setAttribute('aria-disabled', 'true');
+        thumb.style.pointerEvents = 'none';
+        thumb.style.cursor = 'not-allowed';
         if (!thumb.classList.contains('active-thumb')) {
-          thumb.style.opacity = '0.7';
+          thumb.style.opacity = '0.5';
+          thumb.style.filter = 'grayscale(80%)';
         }
       } else {
         thumb.title = `${colorName} - In stock`;
+        thumb.removeAttribute('aria-disabled');
+        thumb.style.pointerEvents = 'auto';
+        thumb.style.cursor = 'pointer';
+        thumb.style.filter = 'none';
         if (!thumb.classList.contains('active-thumb')) {
           thumb.style.opacity = '1';
         }

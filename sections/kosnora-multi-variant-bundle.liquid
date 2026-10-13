@@ -61,6 +61,18 @@
           </div>
         </div>
 
+        <!-- Discreet Gallery Media Switcher (Separated from color and model selectors) -->
+        <div class="kosnora-gallery-media-bar" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 12px; margin-bottom: 4px;">
+          <button type="button" id="bundle-watch-video-btn-{{ section.id }}" class="kosnora-media-toggle-btn active" style="padding: 6px 14px; border-radius: 9999px; border: 1.5px solid #9333EA; background: #9333EA; color: #FFF; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" title="Ver vídeo de apresentação">
+            <span>▶</span>
+            <span>Ver vídeo</span>
+          </button>
+          <button type="button" id="bundle-watch-photo-btn-{{ section.id }}" class="kosnora-media-toggle-btn" style="padding: 6px 14px; border-radius: 9999px; border: 1.5px solid #E5E7EB; background: #FFF; color: #374151; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" title="Ver foto da capa">
+            <span>📷</span>
+            <span>Ver foto</span>
+          </button>
+        </div>
+
         <!-- Trust Badges Under Image -->
         <div class="kosnora-bundle-badges">
           <span>🛡️ 30-Day Guarantee</span>
@@ -167,10 +179,6 @@
                 <span class="kosnora-selected-color-name" id="bundle-color-name-display-{{ section.id }}">Gray</span>
               </div>
               <div class="kosnora-color-buttons-list" id="bundle-color-buttons-{{ section.id }}">
-                <button type="button" class="kosnora-color-pill" data-color="Video" title="Play Video">
-                  <span class="play-icon">▶</span>
-                  <span>Video</span>
-                </button>
                 <button type="button" class="kosnora-color-pill active" data-color="Gray" data-src="https://i.postimg.cc/m24tHsKv/Whats-App-Image-2026-10-09-at-02-56-11.jpg">
                   <span class="color-dot" style="background-color: #808080;"></span>
                   <span>Gray</span>

@@ -124,8 +124,30 @@
 
     // Gallery elements
     const videoWrap = document.getElementById(`bundle-video-container-${sectionId}`);
+    const vimeoIframe = document.getElementById(`bundle-vimeo-${sectionId}`);
     const mainImg = document.getElementById(`bundle-main-image-${sectionId}`);
     const colorBadge = document.getElementById(`bundle-color-badge-${sectionId}`);
+    const watchVideoBtn = document.getElementById(`bundle-watch-video-btn-${sectionId}`);
+    const watchPhotoBtn = document.getElementById(`bundle-watch-photo-btn-${sectionId}`);
+
+    // Presentation Video Gallery state (completely separated from variant/color selection)
+    let isPlayingVideo = true;
+
+    function pauseBundleVimeo() {
+      if (vimeoIframe) {
+        try {
+          vimeoIframe.contentWindow.postMessage('{"method":"pause"}', '*');
+        } catch (e) {}
+      }
+    }
+
+    function playBundleVimeo() {
+      if (vimeoIframe) {
+        try {
+          vimeoIframe.contentWindow.postMessage('{"method":"play"}', '*');
+        } catch (e) {}
+      }
+    }
 
     // Summary & CTA elements
     const summaryLabel = document.getElementById(`bundle-summary-label-${sectionId}`);
@@ -143,7 +165,7 @@
     let selectedQuantity = 1;
     let activeUnitIndex = 0;
     let units = [
-      { id: 'unit-1', model: 'iPhone 16 Pro Max', color: 'Gray', isPlayingVideo: true }
+      { id: 'unit-1', model: 'iPhone 16 Pro Max', color: 'Gray' }
     ];
 
     /**
@@ -259,16 +281,17 @@
 
       if (modelSelect) {
         modelSelect.value = currentUnit.model;
-        // Update options out-of-stock text
+        // Update options out-of-stock text and disabled state
         Array.from(modelSelect.options).forEach(opt => {
           const m = opt.value;
           const isOos = isCombinationOutOfStock(m, currentUnit.color);
-          opt.textContent = isOos ? `${m} · (Out of stock)` : m;
+          opt.disabled = isOos;
+          opt.textContent = isOos ? `${m} · Sold out` : m;
         });
       }
 
       if (colorNameDisplay) {
-        colorNameDisplay.textContent = currentUnit.isPlayingVideo ? 'Video' : currentUnit.color;
+        colorNameDisplay.textContent = currentUnit.color;
       }
 
       // Update color pill buttons
@@ -276,15 +299,17 @@
         const pills = colorButtonsWrap.querySelectorAll('.kosnora-color-pill');
         pills.forEach(pill => {
           const colorName = pill.getAttribute('data-color');
-          if (colorName === 'Video') {
-            pill.classList.toggle('active', !!currentUnit.isPlayingVideo);
-          } else {
-            const isSelected = !currentUnit.isPlayingVideo && colorName.toLowerCase() === currentUnit.color.toLowerCase();
-            const isOos = isCombinationOutOfStock(currentUnit.model, colorName);
-            pill.classList.toggle('active', isSelected);
-            pill.classList.toggle('is-out-of-stock', isOos);
-            pill.title = isOos ? `${colorName} - Out of stock for ${currentUnit.model}` : `${colorName} - In stock`;
-          }
+          if (!colorName || colorName === 'Video') return;
+          const isSelected = colorName.toLowerCase() === currentUnit.color.toLowerCase();
+          const isOos = isCombinationOutOfStock(currentUnit.model, colorName);
+          pill.classList.toggle('active', isSelected);
+          pill.classList.toggle('is-out-of-stock', isOos);
+          pill.disabled = isOos;
+          pill.setAttribute('aria-disabled', isOos ? 'true' : 'false');
+          pill.style.pointerEvents = isOos ? 'none' : 'auto';
+          pill.style.cursor = isOos ? 'not-allowed' : 'pointer';
+          pill.style.opacity = isOos ? '0.5' : '1';
+          pill.title = isOos ? `${colorName} - Sold out for ${currentUnit.model}` : `${colorName} - In stock`;
         });
       }
 
@@ -308,12 +333,28 @@
         }
       }
 
+      // Media toggle buttons sync
+      if (watchVideoBtn) {
+        watchVideoBtn.classList.toggle('active', isPlayingVideo);
+        watchVideoBtn.style.background = isPlayingVideo ? '#9333EA' : '#FFF';
+        watchVideoBtn.style.color = isPlayingVideo ? '#FFF' : '#374151';
+        watchVideoBtn.style.borderColor = isPlayingVideo ? '#9333EA' : '#E5E7EB';
+      }
+      if (watchPhotoBtn) {
+        watchPhotoBtn.classList.toggle('active', !isPlayingVideo);
+        watchPhotoBtn.style.background = !isPlayingVideo ? '#9333EA' : '#FFF';
+        watchPhotoBtn.style.color = !isPlayingVideo ? '#FFF' : '#374151';
+        watchPhotoBtn.style.borderColor = !isPlayingVideo ? '#9333EA' : '#E5E7EB';
+      }
+
       // Visual Gallery sync
-      if (currentUnit.isPlayingVideo) {
+      if (isPlayingVideo) {
         if (videoWrap) videoWrap.style.display = 'flex';
         if (mainImg) mainImg.style.display = 'none';
         if (colorBadge) colorBadge.style.display = 'none';
+        playBundleVimeo();
       } else {
+        pauseBundleVimeo();
         if (videoWrap) videoWrap.style.display = 'none';
         if (mainImg) {
           mainImg.style.display = 'block';
@@ -400,8 +441,7 @@
           units.push({
             id: `unit-${Date.now()}-${idx + 1}`,
             model: defaultModels[idx % defaultModels.length],
-            color: defaultColors[idx % defaultColors.length],
-            isPlayingVideo: false
+            color: defaultColors[idx % defaultColors.length]
           });
         }
       } else if (units.length > targetQty) {
@@ -457,15 +497,29 @@
         pill.addEventListener('click', () => {
           if (!units[activeUnitIndex]) return;
           const colorName = pill.getAttribute('data-color');
-          if (colorName === 'Video') {
-            units[activeUnitIndex].isPlayingVideo = true;
-          } else {
-            units[activeUnitIndex].isPlayingVideo = false;
-            units[activeUnitIndex].color = colorName;
-          }
+          if (!colorName || colorName === 'Video') return;
+          if (isCombinationOutOfStock(units[activeUnitIndex].model, colorName)) return;
+          // Selecting a color switches to that photo and keeps variant selection
+          isPlayingVideo = false;
+          units[activeUnitIndex].color = colorName;
           renderUnitTabs();
           updateActiveUnitUI();
         });
+      });
+    }
+
+    // Event: Gallery Video/Photo toggle buttons (Discreet, separated from product options)
+    if (watchVideoBtn) {
+      watchVideoBtn.addEventListener('click', () => {
+        isPlayingVideo = true;
+        updateActiveUnitUI();
+      });
+    }
+
+    if (watchPhotoBtn) {
+      watchPhotoBtn.addEventListener('click', () => {
+        isPlayingVideo = false;
+        updateActiveUnitUI();
       });
     }
 
@@ -478,8 +532,7 @@
         units.push({
           id: `unit-${Date.now()}-${idx + 1}`,
           model: defaultModels[idx % defaultModels.length],
-          color: defaultColors[idx % defaultColors.length],
-          isPlayingVideo: false
+          color: defaultColors[idx % defaultColors.length]
         });
         activeUnitIndex = units.length - 1;
 

@@ -527,7 +527,7 @@ export const OUT_OF_STOCK_COMBINATIONS: Array<{ color: string; model: string }> 
   { color: 'Grey', model: 'iPhone 12' },
 ];
 
-function normalizeModel(model: string): string {
+export function normalizeModel(model: string): string {
   return model
     .toLowerCase()
     .replace(/^iphone\s*/i, '')
@@ -535,7 +535,7 @@ function normalizeModel(model: string): string {
     .trim();
 }
 
-function normalizeColor(color: string): string {
+export function normalizeColor(color: string): string {
   const c = color.toLowerCase().trim();
   if (['gray', 'grey', 'cinza', 'titanium', 'grafite'].includes(c)) return 'grey';
   if (['black', 'preto', 'dark', 'midnight'].includes(c)) return 'black';
@@ -592,5 +592,29 @@ export function getAvailableModelsForColor(color: string): string[] {
 export function getAvailableColorsForModel(model: string): string[] {
   const normModel = normalizeModel(model);
   return STORE_AVAILABLE_VARIANTS.filter((v) => normalizeModel(v.model) === normModel).map((v) => v.color);
+}
+
+/**
+ * Finds the first valid, in-stock iPhone model from a candidate list for a given color.
+ */
+export function findAvailableModelForColor(color: string, candidateModels: string[]): string | null {
+  for (const m of candidateModels) {
+    if (isVariantInStoreCatalog(m, color)) {
+      return m;
+    }
+  }
+  return null;
+}
+
+/**
+ * Finds the first valid, in-stock color from a candidate list for a given iPhone model.
+ */
+export function findAvailableColorForModel(model: string, candidateColors: string[]): string | null {
+  for (const c of candidateColors) {
+    if (isVariantInStoreCatalog(model, c)) {
+      return c;
+    }
+  }
+  return null;
 }
 

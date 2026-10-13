@@ -30,15 +30,22 @@ export default function App() {
 
       if (prev.length < targetQty) {
         const next = [...prev];
-        const defaultModels = ['iPhone 16 Pro Max', 'iPhone 15 Pro Max', 'iPhone 14 Pro', 'iPhone 13 Pro', 'iPhone 16 Pro'];
-        const defaultColors = ['Gray', 'Black', 'White', 'Pink', 'Orange'];
+        // Pre-verified 100% in-stock pairings
+        const defaultPairings = [
+          { model: 'iPhone 16 Pro Max', color: 'Gray' },
+          { model: 'iPhone 15 Pro Max', color: 'Black' },
+          { model: 'iPhone 14 Pro', color: 'White' },
+          { model: 'iPhone 13 Pro', color: 'Pink' },
+          { model: 'iPhone 17 Pro', color: 'Orange' },
+        ];
 
         while (next.length < targetQty) {
           const idx = next.length;
+          const pairing = defaultPairings[idx % defaultPairings.length];
           next.push({
             id: `unit-${Date.now()}-${idx + 1}`,
-            model: defaultModels[idx % defaultModels.length],
-            color: defaultColors[idx % defaultColors.length],
+            model: pairing.model,
+            color: pairing.color,
           });
         }
         return next;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Star, ShieldCheck, Check, ShoppingBag, Truck, Layers } from 'lucide-react';
+import { ArrowRight, Star, ShieldCheck, Check, ShoppingBag, Truck, Layers, Play, Image as ImageIcon } from 'lucide-react';
 import { PricingTier, CartItemUnit } from '../types';
 import { getPricingTiers, PRODUCT_IMAGES, IPHONE_MODELS, formatCurrency } from '../data/productData';
-import { isVariantInStoreCatalog } from '../data/storeInventory';
+import { isVariantInStoreCatalog, findAvailableColorForModel, findAvailableModelForColor } from '../data/storeInventory';
 
 interface HeroSectionProps {
   onCtaClick: () => void;
@@ -75,7 +75,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {units.map((u, i) => {
         const isSelectedUnit = i === activeUnitIndex;
         const isUnitAvailable = isVariantInStoreCatalog(u.model, u.color);
-        const isUnitVideoActive = isPlayingVideo && isSelectedUnit;
 
         return (
           <div
@@ -135,17 +134,41 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
                   iPhone Model:
                 </span>
+                {!isUnitAvailable && (
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                    Sold out combination
+                  </span>
+                )}
               </div>
               <select
                 value={u.model}
-                onChange={(e) => onUpdateUnit(i, { model: e.target.value })}
-                className="w-full max-w-full min-w-0 py-1.5 px-2.5 text-xs font-bold text-neutral-800 bg-white border border-neutral-300 rounded-lg shadow-2xs focus:outline-none focus:border-[#9333EA] cursor-pointer"
+                onChange={(e) => {
+                  const newModel = e.target.value;
+                  // If changing model keeps the combination available, keep it;
+                  // otherwise if unavailable, automatically find an in-stock color for the new model
+                  if (isVariantInStoreCatalog(newModel, u.color)) {
+                    onUpdateUnit(i, { model: newModel });
+                  } else {
+                    const candidateColors = PRODUCT_IMAGES.map((img) => img.name);
+                    const fallbackColor = findAvailableColorForModel(newModel, candidateColors);
+                    if (fallbackColor) {
+                      onUpdateUnit(i, { model: newModel, color: fallbackColor });
+                    } else {
+                      onUpdateUnit(i, { model: newModel });
+                    }
+                  }
+                }}
+                className={`w-full max-w-full min-w-0 py-1.5 px-2.5 text-xs font-bold rounded-lg shadow-2xs focus:outline-none focus:border-[#9333EA] cursor-pointer ${
+                  !isUnitAvailable
+                    ? 'border-amber-400 bg-amber-50/50 text-amber-950'
+                    : 'text-neutral-800 bg-white border border-neutral-300'
+                }`}
               >
                 {IPHONE_MODELS.map((m) => {
                   const isModelAvailable = isVariantInStoreCatalog(m, u.color);
                   return (
-                    <option key={m} value={m}>
-                      {m}{!isModelAvailable ? ' · (Out of stock)' : ''}
+                    <option key={m} value={m} disabled={!isModelAvailable}>
+                      {m}{!isModelAvailable ? ' · Sold out' : ''}
                     </option>
                   );
                 })}
@@ -159,57 +182,43 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   Case #{i + 1} Color:
                 </span>
                 <span className="text-[11px] font-black text-[#9333EA] uppercase tracking-wider truncate ml-2">
-                  {isUnitVideoActive ? 'Video' : u.color}
+                  {u.color}
                 </span>
               </div>
 
               <div className="flex flex-wrap items-center gap-1.5 w-full min-w-0">
-                {i === 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onActiveUnitIndexChange(0);
-                      setIsPlayingVideo(true);
-                    }}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1 shrink-0 ${
-                      isPlayingVideo && activeUnitIndex === 0
-                        ? 'bg-[#9333EA] text-white shadow-xs ring-1 ring-[#9333EA]/30'
-                        : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-50'
-                    }`}
-                  >
-                    <span>▶ Video</span>
-                  </button>
-                )}
-
                 {PRODUCT_IMAGES.map((img) => {
-                  const isSelectedColor = !isUnitVideoActive && u.color.toLowerCase() === img.name.toLowerCase();
+                  const isSelectedColor = u.color.toLowerCase() === img.name.toLowerCase();
                   const isColorAvailable = isVariantInStoreCatalog(u.model, img.name);
 
                   return (
                     <button
                       key={img.id}
                       type="button"
+                      disabled={!isColorAvailable}
                       onClick={() => {
+                        if (!isColorAvailable) return;
                         onUpdateUnit(i, { color: img.name });
                         onActiveUnitIndexChange(i);
                         setIsPlayingVideo(false);
                       }}
-                      className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                      className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0 ${
                         isSelectedColor
-                          ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30'
+                          ? 'bg-[#FAF5FF] border border-[#9333EA] text-[#9333EA] shadow-xs ring-1 ring-[#9333EA]/30 cursor-pointer'
                           : isColorAvailable
-                          ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
-                          : 'bg-neutral-50 border border-neutral-200 text-neutral-400 hover:bg-neutral-100 opacity-75'
+                          ? 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 cursor-pointer'
+                          : 'bg-neutral-100 border border-neutral-200 text-neutral-400 opacity-60 cursor-not-allowed line-through select-none pointer-events-none'
                       }`}
-                      title={isColorAvailable ? `${img.name} - In stock` : `${img.name} - Out of stock for ${u.model}`}
+                      aria-disabled={!isColorAvailable}
+                      title={isColorAvailable ? `${img.name} - In stock` : `${img.name} - Sold out for ${u.model}`}
                     >
                       <div className="w-3 h-4 rounded overflow-hidden bg-neutral-100 border border-black/10 shrink-0 flex items-center justify-center">
-                        <img src={img.url} alt={img.name} className="w-full h-full object-contain" />
+                        <img src={img.url} alt={img.name} className={`w-full h-full object-contain ${!isColorAvailable ? 'grayscale opacity-60' : ''}`} />
                       </div>
                       <span>{img.name}</span>
                       {!isColorAvailable && (
-                        <span className="text-[8px] font-bold text-amber-700 bg-amber-100 px-1 py-0.2 rounded leading-none">
-                          Out of stock
+                        <span className="text-[8px] font-bold text-amber-800 bg-amber-100 px-1 py-0.2 rounded leading-none no-underline">
+                          Sold out
                         </span>
                       )}
                     </button>
@@ -396,6 +405,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Mobile Media: Looping Video / Photo (Stable Fixed Dimensions, Zero Distortion) */}
           <div className="relative w-full max-w-[min(100%,340px)] sm:max-w-[400px] aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-xl p-2 sm:p-2.5 flex items-center justify-center">
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
+              {/* Discreet In-Gallery Quick Switcher */}
+              <button
+                type="button"
+                onClick={() => setIsPlayingVideo(!isPlayingVideo)}
+                className="absolute top-3 right-3 px-2.5 py-1.5 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md text-white text-[11px] font-bold flex items-center gap-1.5 shadow-md cursor-pointer z-30 transition-all border border-white/20"
+                title={isPlayingVideo ? `Ver foto da cor ${currentImage.name}` : "Ver vídeo de apresentação"}
+              >
+                {isPlayingVideo ? (
+                  <>
+                    <ImageIcon className="w-3.5 h-3.5" />
+                    <span>Ver foto</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3.5 h-3.5 fill-[#C084FC] text-[#C084FC]" />
+                    <span>Ver vídeo</span>
+                  </>
+                )}
+              </button>
+
               {isPlayingVideo ? (
                 <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
                   <iframe
@@ -407,7 +436,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   />
                   <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 pointer-events-none shadow-sm z-20">
                     <span className="w-2 h-2 rounded-full bg-[#9333EA] animate-pulse inline-block" />
-                    <span>Video</span>
+                    <span>Vídeo de Apresentação</span>
                   </div>
                 </div>
               ) : (
@@ -424,6 +453,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </>
               )}
             </div>
+          </div>
+
+          {/* Discreet Gallery Media Switcher (Separated from color and model selectors) */}
+          <div className="w-full max-w-[min(100%,340px)] sm:max-w-[400px] flex items-center justify-center gap-2 mt-2.5 mb-1">
+            <button
+              type="button"
+              onClick={() => setIsPlayingVideo(true)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                isPlayingVideo
+                  ? 'bg-[#9333EA] text-white shadow-xs'
+                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-300'
+              }`}
+              title="Ver vídeo de apresentação do produto"
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>Ver vídeo</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsPlayingVideo(false)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                !isPlayingVideo
+                  ? 'bg-[#9333EA] text-white shadow-xs'
+                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-300'
+              }`}
+              title={`Ver foto (${currentImage.name})`}
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Ver foto ({currentImage.name})</span>
+            </button>
           </div>
 
           {/* Heading for Mobile Case Customization */}
@@ -485,6 +544,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="col-span-5 flex flex-col items-center sticky top-24 self-start min-w-0">
               <div className="relative w-full aspect-[645/800] rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-2xl p-2.5 xl:p-3 flex items-center justify-center shrink-0">
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black flex items-center justify-center">
+                  {/* Discreet In-Gallery Quick Switcher */}
+                  <button
+                    type="button"
+                    onClick={() => setIsPlayingVideo(!isPlayingVideo)}
+                    className="absolute top-3.5 right-3.5 px-3 py-1.5 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md text-white text-[11px] font-bold flex items-center gap-1.5 shadow-md cursor-pointer z-30 transition-all border border-white/20"
+                    title={isPlayingVideo ? `Ver foto da cor ${currentImage.name}` : "Ver vídeo de apresentação"}
+                  >
+                    {isPlayingVideo ? (
+                      <>
+                        <ImageIcon className="w-3.5 h-3.5" />
+                        <span>Ver foto</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-3.5 h-3.5 fill-[#C084FC] text-[#C084FC]" />
+                        <span>Ver vídeo</span>
+                      </>
+                    )}
+                  </button>
+
                   {isPlayingVideo ? (
                     <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
                       <iframe
@@ -496,7 +575,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       />
                       <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 pointer-events-none shadow-sm z-20">
                         <span className="w-2 h-2 rounded-full bg-[#9333EA] animate-pulse inline-block" />
-                        <span>Video</span>
+                        <span>Vídeo de Apresentação</span>
                       </div>
                     </div>
                   ) : (
@@ -513,6 +592,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </>
                   )}
                 </div>
+              </div>
+
+              {/* Discreet Gallery Media Switcher (Separated from color and model selectors) */}
+              <div className="w-full flex items-center justify-center gap-2.5 mt-3 mb-1">
+                <button
+                  type="button"
+                  onClick={() => setIsPlayingVideo(true)}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    isPlayingVideo
+                      ? 'bg-[#9333EA] text-white shadow-xs'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-300'
+                  }`}
+                  title="Ver vídeo de apresentação do produto"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Ver vídeo</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsPlayingVideo(false)}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    !isPlayingVideo
+                      ? 'bg-[#9333EA] text-white shadow-xs'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-300'
+                  }`}
+                  title={`Ver foto (${currentImage.name})`}
+                >
+                  <ImageIcon className="w-3.5 h-3.5" />
+                  <span>Ver foto ({currentImage.name})</span>
+                </button>
               </div>
 
               {/* Trust assurances under photo */}
