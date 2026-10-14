@@ -783,40 +783,53 @@ function initDrawer() {
     }
   }
 
+  function canonicalModel(model) {
+    if (!model) return '';
+    const s = String(model).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const m = s.match(/(1[2-7])/);
+    if (!m) return s;
+    const gen = m[1];
+    if (s.includes('promax') || (s.includes('pro') && s.includes('max'))) {
+      return gen + 'promax';
+    }
+    if (s.includes('pro')) {
+      return gen + 'pro';
+    }
+    if (s.includes('plus')) {
+      return gen + 'plus';
+    }
+    return gen;
+  }
+
+  function canonicalColor(color) {
+    if (!color) return '';
+    const c = String(color).toLowerCase().trim();
+    if (['gray', 'grey', 'cinza', 'titanium', 'grafite', 'slate'].some(s => c.includes(s))) return 'grey';
+    if (['black', 'preto', 'dark', 'midnight', 'obsidian', 'noir'].some(s => c.includes(s))) return 'black';
+    if (['pink', 'rosa', 'rose', 'blush'].some(s => c.includes(s))) return 'pink';
+    if (['white', 'branco', 'silver', 'prata', 'starlight', 'pearl'].some(s => c.includes(s))) return 'white';
+    if (['orange', 'laranja', 'sunset', 'amber'].some(s => c.includes(s))) return 'orange';
+    return c;
+  }
+
   function isColorMatch(optionVal, targetColor) {
     if (!optionVal || !targetColor) return false;
-    const v = optionVal.toLowerCase().trim();
-    const t = targetColor.toLowerCase().trim();
-    if (v === t || v.includes(t) || t.includes(v)) return true;
-
-    const synonyms = {
-      'gray': ['gray', 'grey', 'cinza', 'titanium', 'grafite', 'slate'],
-      'black': ['black', 'preto', 'obsidian', 'dark', 'midnight', 'noir'],
-      'pink': ['pink', 'rosa', 'rose', 'blush'],
-      'white': ['white', 'branco', 'silver', 'prata', 'starlight', 'pearl'],
-      'orange': ['orange', 'laranja', 'sunset', 'amber']
-    };
-
-    for (const key in synonyms) {
-      if (synonyms[key].includes(t)) {
-        if (synonyms[key].some(s => v.includes(s))) return true;
-      }
+    const canOpt = canonicalColor(optionVal);
+    const canTarget = canonicalColor(targetColor);
+    if (canOpt && canTarget) {
+      return canOpt === canTarget;
     }
-    return false;
+    return optionVal.toLowerCase().trim() === targetColor.toLowerCase().trim();
   }
 
   function isModelMatch(optionVal, targetModel) {
     if (!optionVal || !targetModel) return false;
-    const v = optionVal.toLowerCase().trim();
-    const t = targetModel.toLowerCase().trim();
-    if (v === t || v.includes(t) || t.includes(v)) return true;
-
-    const strippedTarget = t.replace(/^iphone\s*/i, '').trim();
-    const strippedOpt = v.replace(/^iphone\s*/i, '').trim();
-    if (strippedTarget && (strippedOpt === strippedTarget || strippedOpt.includes(strippedTarget) || strippedTarget.includes(strippedOpt))) {
-      return true;
+    const canOpt = canonicalModel(optionVal);
+    const canTarget = canonicalModel(targetModel);
+    if (canOpt && canTarget) {
+      return canOpt === canTarget;
     }
-    return false;
+    return optionVal.toLowerCase().trim() === targetModel.toLowerCase().trim();
   }
 
   // Official Shopify variants registered in store
@@ -1057,16 +1070,28 @@ function initDrawer() {
 
     const variants = activeProduct.variants;
 
-    // 1. Match both Model and Color in options
+    // 1. Match both Model and Color in options (Strict canonical match)
     let matched = variants.find(v => {
       const opts = [v.option1, v.option2, v.option3].filter(Boolean);
       return opts.some(o => isColorMatch(o, colorName)) && opts.some(o => isModelMatch(o, modelName));
     });
 
-    // 2. Match both Model and Color in title
+    // 2. Strict SKU matching (specifically distinguishing iPhone 15 Pro '22955740093' from 15 Pro Max '22955740094')
+    if (!matched) {
+      const canM = canonicalModel(modelName);
+      matched = variants.find(v => {
+        if (!v.sku) return false;
+        const s = String(v.sku);
+        if (canM === '15pro' && s.includes('22955740093')) return true;
+        if (canM === '15promax' && s.includes('22955740094')) return true;
+        return false;
+      });
+    }
+
+    // 3. Match both Model and Color in title (Strict canonical match)
     if (!matched) {
       matched = variants.find(v => {
-        const title = (v.title || '').toLowerCase();
+        const title = v.title || '';
         return isColorMatch(title, colorName) && isModelMatch(title, modelName);
       });
     }

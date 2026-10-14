@@ -539,6 +539,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               100% secure · Your custom configuration and bundle savings are preserved
             </p>
           </div>
+        )}
 
         </div>
       </div>

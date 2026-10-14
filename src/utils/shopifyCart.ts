@@ -6,7 +6,7 @@
  * Supports both Native Shopify Online Store 2.0 (Ajax Cart API) and External App Mode (Storefront API / Permalinks).
  */
 
-import { isVariantInStoreCatalog } from '../data/storeInventory';
+import { isVariantInStoreCatalog, STORE_AVAILABLE_VARIANTS } from '../data/storeInventory';
 import { CartItemUnit } from '../types';
 
 declare global {
@@ -159,40 +159,55 @@ export async function clearShopifyCart(): Promise<{ success: boolean; cart?: any
   }
 }
 
-function isColorMatch(optionVal: string, targetColor: string): boolean {
-  if (!optionVal || !targetColor) return false;
-  const v = optionVal.toLowerCase().trim();
-  const t = targetColor.toLowerCase().trim();
-  if (v === t || v.includes(t) || t.includes(v)) return true;
+export function canonicalModel(model: string): string {
+  if (!model) return '';
+  const s = String(model).toLowerCase().replace(/[^a-z0-9]/g, '');
+  const genMatch = s.match(/(1[2-7])/);
+  if (!genMatch) return s;
+  const gen = genMatch[1];
 
-  const synonyms: Record<string, string[]> = {
-    gray: ['gray', 'grey', 'cinza', 'titanium', 'grafite', 'slate'],
-    black: ['black', 'preto', 'obsidian', 'dark', 'midnight', 'noir'],
-    pink: ['pink', 'rosa', 'rose', 'blush'],
-    white: ['white', 'branco', 'silver', 'prata', 'starlight', 'pearl'],
-    orange: ['orange', 'laranja', 'sunset', 'amber'],
-  };
-
-  for (const key in synonyms) {
-    if (synonyms[key].includes(t)) {
-      if (synonyms[key].some((s) => v.includes(s))) return true;
-    }
+  // promax must strictly precede pro
+  if (s.includes('promax') || (s.includes('pro') && s.includes('max'))) {
+    return `${gen}promax`;
   }
-  return false;
+  if (s.includes('pro')) {
+    return `${gen}pro`;
+  }
+  if (s.includes('plus')) {
+    return `${gen}plus`;
+  }
+  return `${gen}`;
 }
 
-function isModelMatch(optionVal: string, targetModel: string): boolean {
-  if (!optionVal || !targetModel) return false;
-  const v = optionVal.toLowerCase().trim();
-  const t = targetModel.toLowerCase().trim();
-  if (v === t || v.includes(t) || t.includes(v)) return true;
+export function canonicalColor(color: string): string {
+  if (!color) return '';
+  const c = String(color).toLowerCase().trim();
+  if (['gray', 'grey', 'cinza', 'titanium', 'grafite', 'slate'].some((s) => c.includes(s))) return 'grey';
+  if (['black', 'preto', 'dark', 'midnight', 'obsidian', 'noir'].some((s) => c.includes(s))) return 'black';
+  if (['pink', 'rosa', 'rose', 'blush'].some((s) => c.includes(s))) return 'pink';
+  if (['white', 'branco', 'silver', 'prata', 'starlight', 'pearl'].some((s) => c.includes(s))) return 'white';
+  if (['orange', 'laranja', 'sunset', 'amber'].some((s) => c.includes(s))) return 'orange';
+  return c;
+}
 
-  const strippedTarget = t.replace(/^iphone\s*/i, '').trim();
-  const strippedOpt = v.replace(/^iphone\s*/i, '').trim();
-  if (strippedTarget && (strippedOpt === strippedTarget || strippedOpt.includes(strippedTarget) || strippedTarget.includes(strippedOpt))) {
-    return true;
+export function isModelMatch(optionVal: string, targetModel: string): boolean {
+  if (!optionVal || !targetModel) return false;
+  const canOpt = canonicalModel(optionVal);
+  const canTarget = canonicalModel(targetModel);
+  if (canOpt && canTarget) {
+    return canOpt === canTarget;
   }
-  return false;
+  return optionVal.toLowerCase().trim() === targetModel.toLowerCase().trim();
+}
+
+export function isColorMatch(optionVal: string, targetColor: string): boolean {
+  if (!optionVal || !targetColor) return false;
+  const canOpt = canonicalColor(optionVal);
+  const canTarget = canonicalColor(targetColor);
+  if (canOpt && canTarget) {
+    return canOpt === canTarget;
+  }
+  return optionVal.toLowerCase().trim() === targetColor.toLowerCase().trim();
 }
 
 /**
@@ -281,12 +296,30 @@ export async function loadShopifyProduct(): Promise<any | null> {
     console.warn('[KOSNORA] product lookup:', err);
   }
 
-  return null;
+  // Pre-registered official catalog variants for Case Kosnora Digital
+  return {
+    id: 'case-kosnora-digital',
+    title: 'Case Kosnora Digital',
+    handle: 'case-kosnora-digital',
+    variants: STORE_AVAILABLE_VARIANTS.map((v) => {
+      const parts = v.sku.split(':');
+      const numericId = parts[parts.length - 1] || '';
+      return {
+        id: numericId,
+        title: `${v.model} / ${v.color}`,
+        option1: v.model,
+        option2: v.color,
+        sku: v.sku,
+        available: v.available,
+      };
+    }),
+    options: ['Model', 'Color'],
+  };
 }
 
 /**
  * Finds the variant corresponding to the selected Model and Color options.
- * Matches strictly against Shopify variant options and titles.
+ * Matches strictly against Shopify variant options, SKUs, and titles.
  * If activeProduct is loaded but has no matching variant, returns null (never swaps secretly).
  */
 export async function resolveShopifyVariant(
@@ -314,28 +347,39 @@ export async function resolveShopifyVariant(
     const variants = product.variants;
 
     if (model && color) {
-      // 1. Both Model and Color match in options
+      // 1. Both Model and Color match in options (Exact canonical match)
       let matched = variants.find((v: any) => {
         const opts = [v.option1, v.option2, v.option3].filter(Boolean);
         return opts.some((o: string) => isColorMatch(o, color)) && opts.some((o: string) => isModelMatch(o, model));
       });
 
-      // 2. Both Model and Color match in variant title (e.g. "iPhone 16 Pro Max / Orange")
+      // 2. Strict SKU matching (Specifically distinguishing iPhone 15 Pro '22955740093' from 15 Pro Max '22955740094')
+      if (!matched) {
+        const canM = canonicalModel(model);
+        matched = variants.find((v: any) => {
+          if (!v.sku) return false;
+          const s = String(v.sku);
+          if (canM === '15pro' && s.includes('22955740093')) return true;
+          if (canM === '15promax' && s.includes('22955740094')) return true;
+          return false;
+        });
+      }
+
+      // 3. Both Model and Color match in variant title (e.g. "iPhone 15 Pro / Black")
       if (!matched) {
         matched = variants.find((v: any) => {
-          const t = (v.title || '').toLowerCase();
+          const t = v.title || '';
           return isColorMatch(t, color) && isModelMatch(t, model);
         });
       }
 
-      // 3. Match Color alone if product only differentiates by Color
+      // 4. Match Color alone only if product has NO model option at all
       if (!matched) {
         const hasModelOption = product.options?.some((opt: any) => {
           const name = typeof opt === 'string' ? opt : opt.name;
           return /model|modelo|device|aparelho/i.test(name || '');
         });
 
-        // Only fallback to matching Color if the store does not have distinct Model options
         if (!hasModelOption) {
           matched = variants.find((v: any) => {
             const opts = [v.option1, v.option2, v.option3].filter(Boolean);
@@ -360,6 +404,22 @@ export async function resolveShopifyVariant(
 
       // Active product exists but no variant matches the selected combination!
       return null;
+    }
+  }
+
+  // Fallback: Check registered variant in store inventory directly
+  if (model && color) {
+    const canM = canonicalModel(model);
+    const canC = canonicalColor(color);
+    const matchedEntry = STORE_AVAILABLE_VARIANTS.find(
+      (v) => canonicalModel(v.model) === canM && canonicalColor(v.color) === canC
+    );
+    if (matchedEntry) {
+      const parts = matchedEntry.sku.split(':');
+      const numericId = parts[parts.length - 1] || '';
+      if (numericId) {
+        return { id: numericId, title: `${matchedEntry.model} / ${matchedEntry.color}`, available: true };
+      }
     }
   }
 

@@ -1,4 +1,7 @@
 {%- assign hero_product = section.settings.product | default: target_product | default: product -%}
+{%- if hero_product == nil or hero_product.id == blank -%}
+  {%- assign hero_product = all_products['case-kosnora-digital'] | default: all_products['ink-nfc-phone-case-for-iphone-17-16-15-14-pro-max-12-diy-picture-smart-screen-phone-cases-four-colors-image-screen-battery-free'] | default: all_products['kosnora-case'] | default: all_products['kosnora'] -%}
+{%- endif -%}
 {%- if hero_product != blank and hero_product.id != blank -%}
   <script type="application/json" id="kosnora-hero-product-data">
     {{ hero_product | json }}

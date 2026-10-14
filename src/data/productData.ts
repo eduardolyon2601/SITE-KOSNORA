@@ -194,23 +194,27 @@ export const WHATS_INCLUDED = [
 
 export const FAQ_LIST: FaqItem[] = [
   {
-    question: 'How do I choose my bundle and complete my purchase?',
-    answer: 'Select your preferred iPhone model and color, then choose between 1 case ($69.90), 2 cases ($129.90), 3 cases ($189.90), or up to our maximum 4 cases ($239.90). Mix and match any models and colors in your order, then click ADD TO CART to review your bundle savings and proceed through Shopify secure checkout.',
+    question: 'Is the phone case waterproof?',
+    answer: 'Yes. The phone case is waterproof and can be submerged up to 2 meters deep. Water will not damage the photo displayed on the case.',
   },
   {
-    question: 'Does the case protect both the camera and the screen?',
-    answer: 'Yes! The KOSNORA case is engineered with shock-absorbent composite bumpers and raised protective bezels surrounding both your camera array and front display to guard against everyday scratches and drops.',
+    question: 'Will the photo stay on the case after I remove it from my phone?',
+    answer: 'Yes. The photo remains saved on the case even after you remove it from your phone.',
   },
   {
-    question: 'How long does shipping take within the United States?',
-    answer: 'Orders are processed and dispatched within 24 to 48 business hours with fast domestic US shipping. You will receive an end-to-end tracking number to monitor your delivery directly to your door.',
+    question: 'How do I change the photo on my case?',
+    answer: 'A QR code is included in the product box. Scan it to access the app used to change the photo, then follow the app’s instructions to choose and display a new image on your case.',
   },
   {
-    question: 'What is your guarantee and return policy?',
-    answer: 'We provide an unconditional 30-Day Money-Back Guarantee. If for any reason you are not completely satisfied with the fit or quality, our customer support team will issue a prompt replacement or full refund.',
+    question: 'How long does it take to change the photo?',
+    answer: 'It’s quick. Your new photo will appear on the case in less than 30 seconds.',
   },
   {
-    question: 'How do I contact customer support?',
-    answer: 'Our official support team is available Monday through Friday from 9:00 AM to 6:00 PM EST via email at support@kosnora.com or WhatsApp / phone at +1 (970) 996-2930.',
+    question: 'Which iPhone models are compatible?',
+    answer: 'KOSNORA cases are compatible with iPhone models from the iPhone 12 series through the iPhone 17 series, including iPhone 16 Pro Max, iPhone 16 Pro, iPhone 16 Plus, iPhone 16, iPhone 15 Pro Max, iPhone 15 Pro, iPhone 15 Plus, iPhone 15, iPhone 14 Pro Max, iPhone 14 Pro, iPhone 14 Plus, iPhone 14, iPhone 13 Pro, iPhone 13, iPhone 12 Pro Max, iPhone 12 Pro, iPhone 12, and iPhone 17 series. Select your exact iPhone model from the options on our page.',
+  },
+  {
+    question: 'What is included in the box?',
+    answer: 'Each box contains your KOSNORA Smart NFC E-Ink Phone Case, a quick-start card with the official QR code to download the companion photo-transfer app, and protective packaging.',
   },
 ];
