@@ -183,6 +183,7 @@
     function playBundleVimeo() {
       if (vimeoIframe) {
         try {
+          vimeoIframe.contentWindow.postMessage('{"method":"setVolume","value":0}', '*');
           vimeoIframe.contentWindow.postMessage('{"method":"play"}', '*');
         } catch (e) {}
       }

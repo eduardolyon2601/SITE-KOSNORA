@@ -23,6 +23,7 @@ function initHeroGallery() {
   function playVimeo(iframe) {
     if (!iframe) return;
     try {
+      iframe.contentWindow.postMessage('{"method":"setVolume","value":0}', '*');
       iframe.contentWindow.postMessage('{"method":"play"}', '*');
     } catch (e) {}
   }

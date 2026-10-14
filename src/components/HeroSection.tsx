@@ -424,7 +424,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {isPlayingVideo ? (
                 <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
                   <iframe
-                    src="https://player.vimeo.com/video/1234575864?h=86322bd9-a325-437a-a838-9ae5a0653601&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
+                    src="https://player.vimeo.com/video/1235563463?autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full scale-150 origin-center border-0 pointer-events-none"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
@@ -563,7 +563,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   {isPlayingVideo ? (
                     <div className="absolute inset-0 w-full h-full bg-black z-10 overflow-hidden flex items-center justify-center">
                       <iframe
-                        src="https://player.vimeo.com/video/1234575864?h=86322bd9-a325-437a-a838-9ae5a0653601&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
+                        src="https://player.vimeo.com/video/1235563463?autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&controls=0&background=1"
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full scale-150 origin-center border-0 pointer-events-none"
                         allow="autoplay; fullscreen; picture-in-picture"
                         allowFullScreen
