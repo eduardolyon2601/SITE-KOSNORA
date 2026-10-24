@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { AnnouncementBar } from './components/AnnouncementBar';
 import { Header } from './components/Header';
@@ -12,6 +12,10 @@ import { clearShopifyCart } from './utils/shopifyCart';
 import { PricingTier, CartItemUnit } from './types';
 
 export default function App() {
+  useEffect(() => {
+    document.title = '\u200B';
+  }, []);
+
   const initialTiers = getPricingTiers();
   const [selectedTier, setSelectedTier] = useState<PricingTier>(initialTiers[0]);
   const [isCartOpen, setIsCartOpen] = useState(false);
