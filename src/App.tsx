@@ -13,7 +13,7 @@ import { PricingTier, CartItemUnit } from './types';
 
 export default function App() {
   useEffect(() => {
-    document.title = '\u200B';
+    document.title = 'Kosnora';
   }, []);
 
   const initialTiers = getPricingTiers();
