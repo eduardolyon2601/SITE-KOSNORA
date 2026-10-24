@@ -27,8 +27,8 @@ export const AnnouncementBar: React.FC = memo(() => {
         <div
           className="kosnora-announcement__track flex flex-row flex-nowrap w-max max-w-none shrink-0 animate-kosnora-announcement-marquee will-change-transform"
           style={{
-            animation: 'kosnora-announcement-marquee 50s linear infinite',
-            WebkitAnimation: 'kosnora-announcement-marquee 50s linear infinite',
+            animation: 'kosnora-announcement-marquee 33s linear infinite',
+            WebkitAnimation: 'kosnora-announcement-marquee 33s linear infinite',
           }}
         >
           {/* Group 1: Primary list */}

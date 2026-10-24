@@ -42,7 +42,7 @@
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  animation: kosnora-marquee var(--kosnora-bar-speed, 50s) linear infinite;
+  animation: kosnora-marquee var(--kosnora-bar-speed, 33s) linear infinite;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }

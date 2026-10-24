@@ -100,7 +100,7 @@
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  animation: kosnora-announcement-marquee 50s linear infinite;
+  animation: kosnora-announcement-marquee 33s linear infinite;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
@@ -210,7 +210,7 @@
 }
 
 .animate-kosnora-announcement-marquee {
-  animation: kosnora-announcement-marquee 50s linear infinite;
+  animation: kosnora-announcement-marquee 33s linear infinite;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   -webkit-backface-visibility: hidden;
