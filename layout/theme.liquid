@@ -8,13 +8,18 @@
     <link rel="canonical" href="{{ canonical_url }}">
 
     {%- if settings.favicon != blank -%}
-      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
-      <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png">
+      <link rel="icon" type="image/png" sizes="192x192" href="{{ settings.favicon | image_url: width: 192, height: 192 }}">
+      <link rel="icon" type="image/png" sizes="48x48" href="{{ settings.favicon | image_url: width: 48, height: 48 }}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+      <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 48, height: 48 }}" type="image/png">
       <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
     {%- else -%}
+      <link rel="icon" type="image/png" sizes="192x192" href="{{ 'favicon-192x192.png' | asset_url }}">
+      <link rel="icon" type="image/png" sizes="48x48" href="{{ 'favicon-48x48.png' | asset_url }}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ 'favicon-32x32.png' | asset_url }}">
       <link rel="icon" type="image/png" href="{{ 'favicon.png' | asset_url }}">
-      <link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}" type="image/png">
-      <link rel="apple-touch-icon" href="{{ 'favicon.png' | asset_url }}">
+      <link rel="shortcut icon" href="{{ 'favicon.ico' | asset_url }}">
+      <link rel="apple-touch-icon" href="{{ 'apple-touch-icon.png' | asset_url }}">
     {%- endif -%}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

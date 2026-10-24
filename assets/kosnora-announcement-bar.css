@@ -32,19 +32,25 @@
 
 .kosnora-announcement__track {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   width: max-content;
   max-width: none;
   min-width: 0;
   align-items: center;
   will-change: transform;
-  animation: kosnora-marquee
-    var(--kosnora-bar-speed, 30s)
-    linear
-    infinite;
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  animation: kosnora-marquee var(--kosnora-bar-speed, 50s) linear infinite;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 .kosnora-announcement__group {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   flex: 0 0 auto;
   align-items: center;
   min-width: max-content;
@@ -77,12 +83,12 @@
 }
 
 @keyframes kosnora-marquee {
-  from {
-    transform: translateX(0);
+  0% {
+    transform: translate3d(0, 0, 0);
   }
 
-  to {
-    transform: translateX(-50%);
+  100% {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -102,12 +108,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .kosnora-announcement__track {
-    animation: none;
-  }
-
-  .kosnora-announcement__viewport {
-    overflow-x: auto;
-  }
-}

@@ -5,7 +5,7 @@
   style="
     --kosnora-bar-bg: {{ section.settings.background_color | default: '#24153D' }};
     --kosnora-bar-text: {{ section.settings.text_color | default: '#FFFFFF' }};
-    --kosnora-bar-speed: {{ section.settings.speed | default: 30 }}s;
+    --kosnora-bar-speed: {{ section.settings.speed | default: 50 }}s;
   "
   aria-label="Store benefits"
 >
@@ -19,8 +19,8 @@
             aria-hidden="true"
           {% endif %}
         >
-          {%- comment -%} Repeat the message sequence within each group to ensure full coverage on ultra-wide screens without gaps {%- endcomment -%}
-          {% for repetition in (1..2) %}
+          {%- comment -%} Repeat 4 times within each group to ensure full coverage (> 4,500px) on ultra-wide screens without gaps {%- endcomment -%}
+          {% for repetition in (1..4) %}
             {% if section.blocks.size > 0 %}
               {% for block in section.blocks %}
                 <span
@@ -89,10 +89,10 @@
       "type": "range",
       "id": "speed",
       "label": "Loop duration (seconds)",
-      "min": 10,
-      "max": 80,
+      "min": 20,
+      "max": 100,
       "step": 2,
-      "default": 30
+      "default": 50
     }
   ],
   "blocks": [
