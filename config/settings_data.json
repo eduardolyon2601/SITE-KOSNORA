@@ -23,7 +23,7 @@
         "settings": {
           "background_color": "#7625c7",
           "text_color": "#ffffff",
-          "speed": 40
+          "speed": 20
         }
       },
       "header": {
