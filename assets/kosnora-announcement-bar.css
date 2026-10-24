@@ -108,3 +108,9 @@
   }
 }
 
+@media (max-width: 767px) {
+  .kosnora-announcement__track {
+    animation-duration: calc(var(--kosnora-bar-speed, 33s) / 2) !important;
+  }
+}
+

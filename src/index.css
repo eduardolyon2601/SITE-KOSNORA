@@ -100,7 +100,7 @@
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  animation: kosnora-announcement-marquee 33s linear infinite;
+  animation: kosnora-announcement-marquee var(--kosnora-announcement-speed, 33s) linear infinite;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
@@ -210,11 +210,26 @@
 }
 
 .animate-kosnora-announcement-marquee {
-  animation: kosnora-announcement-marquee 33s linear infinite;
+  animation: kosnora-announcement-marquee var(--kosnora-announcement-speed, 33s) linear infinite;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+:root {
+  --kosnora-announcement-speed: 33s;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --kosnora-announcement-speed: 16.5s;
+  }
+
+  .kosnora-announcement__track,
+  .animate-kosnora-announcement-marquee {
+    animation-duration: 16.5s !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
