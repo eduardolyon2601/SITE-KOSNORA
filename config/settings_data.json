@@ -23,7 +23,7 @@
         "settings": {
           "background_color": "#7625c7",
           "text_color": "#ffffff",
-          "speed": 20
+          "speed": 33
         }
       },
       "header": {
@@ -34,7 +34,6 @@
       },
       "footer": {
         "type": "footer",
-        "custom_css": [],
         "settings": {
           "brand_name": "KOSNORA"
         }
